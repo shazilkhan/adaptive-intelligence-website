@@ -807,6 +807,9 @@ export interface ApiEcoPageEcoPage extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     heroBackgroundType: Schema.Attribute.Enumeration<['Image', 'Video']> &
       Schema.Attribute.DefaultTo<'Image'>;
+    heroBackgroundVideo: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
     heroDescription: Schema.Attribute.Text;
     heroTitle: Schema.Attribute.String;
     hubCards: Schema.Attribute.Component<'eco.hub-card', true>;
