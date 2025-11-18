@@ -1,97 +1,78 @@
-// src/pages/team.js
 import React from 'react';
 import Header from '@/components/header/Header';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 import Image from "next/image";
-import Link from "next/link";
-import Head from 'next/head'; // Import Head for SEO
-// --- getStaticProps Function ---
+import Head from 'next/head';
+
+// --- getStaticProps ---
 export async function getStaticProps() {
-  let teamMembers = []; // Default to empty array
+  let teamMembers = [];
+  let pageData = null;
 
   try {
-    // Manually constructed populate query for Strapi v5
-    // Populate the 'headshot' field.
-    const populateQuery = 'populate[0]=headshot';
-    // Optional: Add sorting manually if needed later
-    // const sortQuery = 'sort[0]=group:asc&sort[1]=name:asc';
-    // const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/team-members?${populateQuery}&${sortQuery}`;
+    // 1. Fetch Team Members
+    const membersRes = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/team-members?populate[0]=headshot`);
+    if (membersRes.ok) {
+      const json = await membersRes.json();
+      teamMembers = json.data || [];
+    }
 
-    const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/team-members?${populateQuery}`;
-    console.log("Fetching team members from:", apiUrl);
-
-    const res = await fetch(apiUrl);
-    if (!res.ok) {
-      console.error(`API fetch failed: ${res.status}`);
-      const errorText = await res.text();
-      console.error("Strapi Error:", errorText.substring(0, 500));
-      // Keep teamMembers empty on error
-    } else {
-        const json = await res.json();
-        teamMembers = json.data || []; // Assign directly for Strapi v5
-        console.log(`✅ Fetched ${teamMembers.length} team members.`);
+    // 2. Fetch Team Page Settings
+    try {
+        const pageRes = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/team-page?populate=*`);
+        if (pageRes.ok) {
+            const json = await pageRes.json();
+            pageData = json.data || null;
+        }
+    } catch (e) {
+        console.warn("Team Page Single Type not found:", e);
     }
 
   } catch (error) {
-    console.error("❌ Error fetching team members:", error.message);
-    // Keep teamMembers as empty array on error
+    console.error("❌ Error fetching team data:", error.message);
   }
 
   return {
     props: {
-      teamMembers, // Pass the fetched data as teamMembers prop
+      teamMembers,
+      pageData,
     },
-    revalidate: 60, // Re-fetch data every 60 seconds
+    revalidate: 10,
   };
 }
 
-// --- Helper Component for Individual Cards ---
+// --- Card Component ---
 const TeamMemberCard = ({ member }) => {
-  // Use simple .url access for Strapi v5 headshot
   const imageUrl = member.headshot?.url
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${member.headshot.url}`
-    : '/images/placeholder-headshot.png'; // Provide a path to your placeholder
+    : '/images/placeholder-headshot.png'; 
 
-  // Ensure shortBio is derived correctly, limiting length
   let shortBio = member.bio_short || '';
   if (!shortBio && member.bio_long) {
-      // Basic extraction - adjust logic if bio_long is complex Rich Text
-      const plainTextBio = member.bio_long.replace(/<[^>]*>?/gm, ''); // Simple HTML tag removal
-      shortBio = plainTextBio.substring(0, 160) + (plainTextBio.length > 160 ? '...' : '');
-  }
-  if (!shortBio) {
-      shortBio = `Expert in ${member.title}.`; // Ultimate fallback
+      const plainTextBio = member.bio_long.replace(/<[^>]*>?/gm, ''); 
+      shortBio = plainTextBio.substring(0, 160) + '...';
   }
 
   return (
-    // Card structure inspired by hub-card
     <div className="team-card h-100 d-flex flex-column">
       <div className="team-headshot-wrapper">
         <Image
           src={imageUrl}
           alt={`Headshot of ${member.name}`}
-          width={400} // Base width for quality
-          height={400} // Maintain 1:1 aspect ratio
-          className="team-headshot-img" // Add specific class
+          width={400} 
+          height={400} 
+          className="team-headshot-img" 
         />
-         {/* Optional Overlay on hover */}
-         <div className="headshot-overlay d-flex align-items-center justify-content-center">
-             {/* Can add view profile button here later */}
-         </div>
+        <div className="headshot-overlay d-flex align-items-center justify-content-center"></div>
       </div>
       <div className="team-info d-flex flex-column flex-grow-1">
-        {/* Use Recoleta font for name */}
         <h3 className="team-name font-recoleta">{member.name}</h3>
-        {/* Use pink color for title */}
         <p className="team-title">{member.title}</p>
         <p className="team-bio-short flex-grow-1">{shortBio}</p>
         {member.linkedin_url && (
-          // Updated button style
           <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer" className="linkedin-button mt-auto">
             <span>Connect</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
           </a>
         )}
       </div>
@@ -100,52 +81,80 @@ const TeamMemberCard = ({ member }) => {
 };
 
 
-// --- Main Page Component ---
-const TeamPage = ({ teamMembers }) => { // Correctly receive teamMembers prop
+const TeamPage = ({ teamMembers, pageData }) => { 
 
-  // Group members (ensure data exists before filtering)
   const executives = teamMembers?.filter(m => m.group === 'Executive') || [];
   const creatives = teamMembers?.filter(m => m.group === 'Creative') || [];
 
+  // --- HERO LOGIC ---
+  const heroType = pageData?.heroBackgroundType || 'Image';
+  const heroVideoUrl = pageData?.heroBackgroundVideo?.url 
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundVideo.url}` 
+    : null;
+  const heroImageUrl = pageData?.heroBackgroundImage?.url 
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundImage.url}` 
+    : null;
+
+  const hasMediaBackground = (heroType === 'Video') || (heroType === 'Image');
+
   return (
-    <> {/* <---- Main Fragment Start */}
+    <>
       <Head>
         <title>Team | Adaptive Intelligence</title>
-        <meta name="description" content="Meet the executive team and creatives behind Adaptive Intelligence: strategists, technologists, and storytellers blending human insight with adaptive marketing." />
+        <meta name="description" content="Meet the executive team and creatives behind Adaptive Intelligence." />
       </Head>
 
-      <Header />
+      {/* Pass white/dark based on background */}
+      <Header menuTextColor={hasMediaBackground ? "white" : "dark"} />
 
-      {/* Section A: Intro */}
-      <section className="team-intro pt-180 pb-100 lg-pt-150 lg-pb-80 text-center">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-8 mx-auto">
-              <h1 className="hero-headline font-recoleta">
-                Meet the team behind Adaptive Intelligence
-              </h1>
-              <p className="hero-body fs-20 mt-30 mb-40">
-                We’re a collective of strategists, technologists, and creatives who believe the world runs on great ideas and responsible execution. Where artificial stops at automation, we go further, pairing data with discernment, ethics with outcomes, and creativity with measurable growth.
-              </p>
-              <p className="hero-subtext fs-18 fw-500">
-                Get to know the executive team and the minds shaping the work.
-              </p>
-            </div>
-          </div>
+      {/* --- CINEMATIC HERO --- */}
+      <div className="team-hero-section">
+        <div className="hero-bg-wrapper">
+            {heroType === 'Video' && heroVideoUrl ? (
+                <video autoPlay loop muted playsInline className="hero-bg-media">
+                    <source src={heroVideoUrl} type="video/mp4" />
+                </video>
+            ) : heroImageUrl ? (
+                <Image 
+                    src={heroImageUrl}
+                    alt="Hero Background"
+                    fill
+                    className="hero-bg-media"
+                    style={{ objectFit: 'cover' }}
+                    priority
+                />
+            ) : (
+                <div className="hero-bg-fallback" />
+            )}
+            <div className="hero-overlay" />
         </div>
-      </section>
 
-      {/* Section B: Team Grids */}
+        <div className="container position-relative z-2">
+            <div className="row">
+                <div className="col-xl-10 m-auto text-center">
+                    <div className="title-style-fourteen" data-aos="fade-up">
+                        <h1 className="main-title font-recoleta fw-normal text-white">
+                           {pageData?.heroTitle || "Meet the team behind Adaptive Intelligence"}
+                        </h1>
+                        <p className="text-lg text-white text-center lh-lg mt-25 md-mt-20" data-aos="fade-up">
+                           {pageData?.heroDescription || "We’re a collective of strategists, technologists, and creatives who believe the world runs on great ideas and responsible execution."}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      {/* --- TEAM GRIDS --- */}
       <section className="team-grid-section pb-150 lg-pb-120 pt-150 lg-pt-120">
         <div className="container">
-
           {/* Executive Team */}
           {executives.length > 0 && (
             <div className="team-group mb-100 lg-mb-80">
               <h2 className="group-title text-center font-recoleta">Executive Team</h2>
               <div className="row g-4 justify-content-center mt-40">
                 {executives.map(member => (
-                  <div key={member.id} className="col-xl-3 col-lg-4 col-md-6 col-sm-6 d-flex"> {/* Responsive columns */}
+                  <div key={member.id} className="col-xl-3 col-lg-4 col-md-6 col-sm-6 d-flex"> 
                     <TeamMemberCard member={member} />
                   </div>
                 ))}
@@ -159,7 +168,7 @@ const TeamPage = ({ teamMembers }) => { // Correctly receive teamMembers prop
               <h2 className="group-title text-center font-recoleta">Creative & Strategy</h2>
               <div className="row g-4 justify-content-center mt-40">
                 {creatives.map(member => (
-                  <div key={member.id} className="col-xl-3 col-lg-4 col-md-6 col-sm-6 d-flex"> {/* Responsive columns */}
+                  <div key={member.id} className="col-xl-3 col-lg-4 col-md-6 col-sm-6 d-flex">
                     <TeamMemberCard member={member} />
                   </div>
                 ))}
@@ -167,16 +176,73 @@ const TeamPage = ({ teamMembers }) => { // Correctly receive teamMembers prop
             </div>
           )}
 
-           {/* Fallback if no members */}
-           {(!teamMembers || teamMembers.length === 0) && ( // Check if array is null or empty
+           {(!teamMembers || teamMembers.length === 0) && ( 
                <p className="text-center fs-20">Team member information is currently unavailable.</p>
            )}
-
         </div>
       </section>
 
       <FooterWithSettings />
 
+      {/* FIXED STYLES: 
+         The condition is now INSIDE the style string, not around the tag.
+      */}
+      <style jsx global>{`
+        /* Base Hero Styles */
+        .team-hero-section { 
+            position: relative; 
+            overflow: hidden; 
+            height: 80vh; 
+            min-height: 600px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            color: white; 
+            text-align: center; 
+            width: 100%;
+        }
+        .hero-bg-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .hero-bg-media { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+        .hero-bg-fallback { 
+            width: 100%; 
+            height: 100%; 
+            background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+        }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1; }
+        .z-2 { z-index: 2; }
+        .group-title { margin-bottom: 20px; font-size: 2.5rem; color: #151937; }
+
+        /* Conditional Header Colors */
+        ${hasMediaBackground ? `
+            /* Force White Menu Links (When NOT fixed) */
+            body .theme-main-menu:not(.fixed) .navbar-nav .nav-link {
+                color: white !important;
+            }
+
+            /* Force Pink Active/Hover Links (Overrides White) */
+            body .theme-main-menu:not(.fixed) .navbar-nav .nav-item.active .nav-link,
+            body .theme-main-menu:not(.fixed) .navbar-nav .nav-item.current-menu-item .nav-link,
+            body .theme-main-menu:not(.fixed) .navbar-nav .nav-item:hover .nav-link {
+                color: #FF1292 !important;
+            }
+
+            /* "Let's Talk" Button: White Border/Text */
+            body .theme-main-menu:not(.fixed) .lets-talk-btn {
+                color: white !important;
+                border-color: white !important;
+                background: transparent !important;
+            }
+
+            /* "Let's Talk" Button Hover: Black Text, White Bg */
+            body .theme-main-menu:not(.fixed) .lets-talk-btn:hover {
+                color: black !important;
+                background: white !important;
+            }
+        ` : ''}
+      `}</style>
     </>
   );
 };
