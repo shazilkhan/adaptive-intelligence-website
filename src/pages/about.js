@@ -2,45 +2,33 @@ import React from 'react';
 import Link from "next/link";
 import Image from "next/image";
 import Header from '@/components/header/Header';
-import Testimonial from "@/components/home-page/Testimonial";
-import Faq from "@/components/home-page/Faq";
-import FooterContent from "@/components/footer/FooterContent";
-import Subscribe from "@/components/footer/Subscribe";
-import CopyrightFooter from "@/components/footer/CopyrightFooter";
 import OurMission from "@/components/about/OurMission";
-import Block2 from "@/components/about/Block2";
 import CounterSection from "@/components/home-page/Counter";
-import Hero from "@/components/home-page/hero";
 import LetsTalkButton from '@/components/LetsTalkButton';
-import Counter from "@/components/home-page/Counter";
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
+import Faq from "@/components/home-page/Faq";
 
 export const metadata = {
   title: "About Adaptive Intelligence | About Our Agency",
   description: "Learn about Adaptive Intelligence and why we're committed to sustainable, innovative marketing efforts.",
 };
 
+// ... getStaticProps remains exactly the same ...
 export async function getStaticProps() {
   const fallbackData = { trees: 311, acres: 1.2, carbon: 328, bottles: 1674 };
   let finalStats = fallbackData;
 
   try {
     const sheetId = '1ICb8PWttvv0leKmfmJWXSGhXkZz5UAxChmFamV_bh1c';
-    const sheetName = 'Total%20Footprint'; // CORRECTED Sheet Name (URL Encoded)
+    const sheetName = 'Total%20Footprint'; 
     const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
-    console.log("Fetching Google Sheet URL:", url);
-
+    
     const response = await fetch(url);
 
     if (response.ok) {
       const csvText = await response.text();
-      // console.log("Raw CSV Text Received:\n", csvText); // Keep for debugging if needed
-
-      // Split CSV into rows, remove quotes, remove empty rows
       const rows = csvText.replace(/"/g, '').split('\n').filter(row => row.trim() !== '');
-      console.log(`CSV split into ${rows.length} non-empty rows.`);
 
-      // Check if we have at least a header and one data row
       if (rows.length >= 2) {
         let totalTrees = 0;
         let totalAcres = 0;
@@ -48,68 +36,35 @@ export async function getStaticProps() {
         let totalBottles = 0;
         let processedRowCount = 0;
 
-        // Loop through rows, explicitly skipping header (index 0) and potential totals/empty rows
         for (let i = 1; i < rows.length; i++) {
           const rowText = rows[i].trim();
-          // Already skipped empty rows with filter, but double-check
           if (rowText === '') continue;
 
           const columns = rowText.split(',');
-          // Ensure row has enough columns AND first column isn't "TOTALS" (case-insensitive)
           if (columns.length >= 5 && columns[0]?.toLowerCase().trim() !== 'totals') {
-
-            // Parse values, default to 0 if parsing fails or cell is empty
             const trees = parseFloat(columns[1]?.trim().replace(/,/g, '')) || 0;
             const acres = parseFloat(columns[2]?.trim().replace(/,/g, '')) || 0;
             const carbon = parseFloat(columns[3]?.trim().replace(/,/g, '')) || 0;
             const bottles = parseFloat(columns[4]?.trim().replace(/,/g, '')) || 0;
 
-            // Add to totals
             totalTrees += trees;
             totalAcres += acres;
             totalCarbon += carbon;
             totalBottles += bottles;
-            processedRowCount++; // Count how many rows we actually summed
-
-          } else {
-             // Log rows that are skipped
-             console.warn(`Skipping row ${i + 1} due to insufficient columns or being a totals row:`, columns);
+            processedRowCount++; 
           }
         }
-
-        console.log(`Processed ${processedRowCount} data rows for summation.`);
-
-        // Round acres to one decimal place
+        
         totalAcres = parseFloat(totalAcres.toFixed(1));
 
-        const calculatedTotals = {
-            trees: totalTrees,
-            acres: totalAcres,
-            carbon: totalCarbon,
-            bottles: totalBottles
-        };
-
-        console.log("Calculated Totals:", calculatedTotals);
-
-        // Update finalStats only if we processed at least one row
         if (processedRowCount > 0) {
-             console.log("✅ Calculated totals successfully. Updating finalStats.");
-             finalStats = calculatedTotals;
-        } else {
-             console.warn("⚠️ No valid data rows found to calculate totals. Using fallback.");
+             finalStats = { trees: totalTrees, acres: totalAcres, carbon: totalCarbon, bottles: totalBottles };
         }
-
-      } else {
-         console.warn("⚠️ Not enough rows in CSV (need header + data). Using fallback.");
       }
-    } else {
-       console.error("❌ Failed to fetch Google Sheet. Status:", response.status);
     }
   } catch (error) {
-    console.error('❌ Error during Google Sheet fetch/parse:', error.message);
+    console.error('Error during Google Sheet fetch/parse:', error.message);
   }
-
-  console.log("Final TreeCard stats passed to props:", finalStats);
 
   // Fetch About Page data from Strapi
   let pageData = null;
@@ -132,37 +87,79 @@ export async function getStaticProps() {
 
 const About = ({ treeCardStats, pageData }) => {
   
+  // --- 1. Extract Background Logic ---
+  const heroType = pageData?.heroBackgroundType || 'Image';
+  const heroVideoUrl = pageData?.heroBackgroundVideo?.url 
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundVideo.url}` 
+    : null;
+  const heroImageUrl = pageData?.heroBackgroundImage?.url 
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundImage.url}` 
+    : null;
 
-  // Fallback data if Strapi fetch fails
+  // Determine if we have media (to toggle white text)
+  const hasMedia = (heroType === 'Video' && heroVideoUrl) || heroImageUrl;
+
+  // Fallback data for other sections
   const whoWeAreImageUrl = pageData?.whoWeAreImage?.url
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whoWeAreImage.url}`
     : 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80';
 
   return (
     <>
-      <Header />
+      {/* --- Header: Dynamic Color based on Hero Media --- */}
+      <Header menuTextColor={hasMedia ? "white" : "dark"} />
 
-      <Hero isHomePage={false}>
-        <div
-          className="title-style-fourteen text-center mt-50 mb-50 lg-mb-70"
-          data-aos="fade-up"
-        >
-          <h2 className="main-title font-recoleta fw-normal tx-dark" style={{ color: 'white', marginTop: '10px' }}>
-            {pageData?.heroTitle || 'About Adaptive Intelligence'}
-            <span className="position-relative">
-              <Image
-                width={302}
-                height={9}
-                src="/images/shape/shape_186.svg"
-                alt="shape"
-              />
-            </span>
-          </h2>
-          <p className="text-lg tx-dark text-center lh-lg mt-25 md-mt-20" data-aos="fade-up" style={{ color: 'white' }}>
-            {pageData?.heroDescription || "We're in the business of growing your business. At Adaptive Intelligence, we believe creativity is the world's most valuable asset."}
-          </p>
+      {/* --- Hero Section: Custom Structure for Video/Centering --- */}
+      <div className="about-hero-section">
+        
+        {/* Background Layer */}
+        <div className="hero-bg-wrapper">
+            {heroType === 'Video' && heroVideoUrl ? (
+                <video autoPlay loop muted playsInline className="hero-bg-media">
+                    <source src={heroVideoUrl} type="video/mp4" />
+                </video>
+            ) : heroImageUrl ? (
+                <Image 
+                    src={heroImageUrl}
+                    alt="Hero Background"
+                    fill
+                    className="hero-bg-media"
+                    style={{ objectFit: 'cover' }}
+                    priority
+                />
+            ) : (
+                // Fallback Gradient
+                <div className="hero-bg-fallback" />
+            )}
+            {/* Overlay to ensure text readability */}
+            <div className="hero-overlay" />
         </div>
-      </Hero>
+
+        {/* Content Layer */}
+        <div className="container position-relative z-2">
+            <div className="row">
+                <div className="col-xl-10 m-auto text-center">
+                    <div className="title-style-fourteen" data-aos="fade-up">
+                        <h2 className="main-title font-recoleta fw-normal text-white">
+                            {pageData?.heroTitle || 'About Adaptive Intelligence'}
+                            <span className="position-relative ms-2">
+                                <Image
+                                    width={302}
+                                    height={9}
+                                    src="/images/shape/shape_186.svg"
+                                    alt="shape"
+                                    style={{ filter: 'brightness(0) invert(1)' }} // Make shape white
+                                />
+                            </span>
+                        </h2>
+                        <p className="text-lg text-white text-center lh-lg mt-25 md-mt-20" data-aos="fade-up">
+                            {pageData?.heroDescription || "We're in the business of growing your business. At Adaptive Intelligence, we believe creativity is the world's most valuable asset."}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
 
       {/* Counter Section */}
       <div className="wrapper mt-90 lg-mt-30">
@@ -271,7 +268,7 @@ const About = ({ treeCardStats, pageData }) => {
                   <div className="card-style-twentySix text-center mt-25">
                     <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
                       <Image
-                        width={31} height={30} // Already present
+                        width={31} height={30} 
                         src={pageData.whatWeDoCard1_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard1_Icon.url}` : '/images/icon/icon_175.svg'}
                         alt={pageData.whatWeDoCard1_Title || 'Icon'} className="lazy-img"
                       />
@@ -283,37 +280,35 @@ const About = ({ treeCardStats, pageData }) => {
               )}
               {/* Card 2 */}
               {pageData?.whatWeDoCard2_Title && (
-                 <div className="col-lg-4 col-sm-6" data-aos="fade-up" data-aos-delay="100">
-                   <div className="card-style-twentySix text-center mt-25">
-                    <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
-                       {/* --- ADDED width, height, alt, className --- */}
-                       <Image
-                         width={31} height={30}
-                         src={pageData.whatWeDoCard2_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard2_Icon.url}` : '/images/icon/icon_175.svg'}
-                         alt={pageData.whatWeDoCard2_Title || 'Icon'} className="lazy-img"
-                       />
+                  <div className="col-lg-4 col-sm-6" data-aos="fade-up" data-aos-delay="100">
+                    <div className="card-style-twentySix text-center mt-25">
+                     <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
+                        <Image
+                          width={31} height={30}
+                          src={pageData.whatWeDoCard2_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard2_Icon.url}` : '/images/icon/icon_175.svg'}
+                          alt={pageData.whatWeDoCard2_Title || 'Icon'} className="lazy-img"
+                        />
+                     </div>
+                     <h5 className="tx-dark mt-40 lg-mt-30 mb-5">{pageData.whatWeDoCard2_Title}</h5>
+                     <p className="fs-18">{pageData.whatWeDoCard2_Description}</p>
                     </div>
-                    <h5 className="tx-dark mt-40 lg-mt-30 mb-5">{pageData.whatWeDoCard2_Title}</h5>
-                    <p className="fs-18">{pageData.whatWeDoCard2_Description}</p>
-                   </div>
-                 </div>
+                  </div>
               )}
                {/* Card 3 */}
               {pageData?.whatWeDoCard3_Title && (
-                 <div className="col-lg-4 col-sm-6" data-aos="fade-up" data-aos-delay="200">
-                   <div className="card-style-twentySix text-center mt-25">
-                     <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
-                       {/* --- ADDED width, height, alt, className --- */}
-                       <Image
-                         width={31} height={30}
-                         src={pageData.whatWeDoCard3_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard3_Icon.url}` : '/images/icon/icon_175.svg'}
-                         alt={pageData.whatWeDoCard3_Title || 'Icon'} className="lazy-img"
-                       />
+                  <div className="col-lg-4 col-sm-6" data-aos="fade-up" data-aos-delay="200">
+                    <div className="card-style-twentySix text-center mt-25">
+                      <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
+                        <Image
+                          width={31} height={30}
+                          src={pageData.whatWeDoCard3_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard3_Icon.url}` : '/images/icon/icon_175.svg'}
+                          alt={pageData.whatWeDoCard3_Title || 'Icon'} className="lazy-img"
+                        />
+                     </div>
+                     <h5 className="tx-dark mt-40 lg-mt-30 mb-5">{pageData.whatWeDoCard3_Title}</h5>
+                     <p className="fs-18">{pageData.whatWeDoCard3_Description}</p>
                     </div>
-                    <h5 className="tx-dark mt-40 lg-mt-30 mb-5">{pageData.whatWeDoCard3_Title}</h5>
-                    <p className="fs-18">{pageData.whatWeDoCard3_Description}</p>
-                   </div>
-                 </div>
+                  </div>
               )}
             </div>
           </div>
@@ -331,46 +326,42 @@ const About = ({ treeCardStats, pageData }) => {
       <section className="values-section fancy-feature-thirtyTwo mt-140 lg-mt-120" id="vision">
         <div className="container">
          <div className="title-style-ten text-center" data-aos="fade-up">
-            <div className="sc-title">{pageData?.valuesTagline || 'OUR VISION'}</div>
-            <h2 className="main-title font-recoleta fw-normal tx-dark">
-              {pageData?.valuesTitle || 'The Principles That Guide Us'}
-              <span className="position-relative">
-                <Image width={219} height={7} src="/images/shape/shape_132.svg" alt="shape"/>
-              </span>
-            </h2>
-            {/* --- MOVED Description Paragraph INSIDE title block --- */}
-            {pageData?.valuesDescription && ( // Conditionally render
-               <p className="text-lg tx-dark lh-lg mt-25 md-mt-20" data-aos="fade-up" data-aos-delay="100"> {/* Added delay */}
+           <div className="sc-title">{pageData?.valuesTagline || 'OUR VISION'}</div>
+           <h2 className="main-title font-recoleta fw-normal tx-dark">
+             {pageData?.valuesTitle || 'The Principles That Guide Us'}
+             <span className="position-relative">
+               <Image width={219} height={7} src="/images/shape/shape_132.svg" alt="shape"/>
+             </span>
+           </h2>
+           {pageData?.valuesDescription && (
+               <p className="text-lg tx-dark lh-lg mt-25 md-mt-20" data-aos="fade-up" data-aos-delay="100"> 
                  {pageData.valuesDescription}
                </p>
             )}
-            {/* --- END Description Paragraph --- */}
-          </div>
-          <div className="row gx-xxl-5 mt-60 lg-mt-40">
-            {/* Value 1 */}
-            {pageData?.value1_Title && (
-              <div className="col-md-6 col-lg-3 d-flex" data-aos="fade-up" data-aos-delay="0">
-                <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column">
-                  <div className="icon m-auto tran3s"> {/* Keep class 'icon' for styling */}
-                    <Image
-                      // --- CORRECTED: Access _Image field ---
-                      src={pageData.value1_Image?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.value1_Image.url}` : '/images/icon/icon_175.svg'}
-                      alt={pageData.value1_Title || 'Value icon'}
-                      className="lazy-img" width={32} height={32}
-                    />
-                  </div>
-                  <h4 className="fw-bold tx-dark mt-35 mb-20">{pageData.value1_Title}</h4>
-                  <p className="flex-grow-1">{pageData.value1_Description}</p>
-                </div>
-              </div>
-            )}
-            {/* Value 2 */}
-            {pageData?.value2_Title && (
-              <div className="col-md-6 col-lg-3 d-flex" data-aos="fade-up" data-aos-delay="100">
-                <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column">
+         </div>
+         <div className="row gx-xxl-5 mt-60 lg-mt-40">
+           {/* Value 1 */}
+           {pageData?.value1_Title && (
+             <div className="col-md-6 col-lg-3 d-flex" data-aos="fade-up" data-aos-delay="0">
+               <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column">
+                 <div className="icon m-auto tran3s"> 
+                   <Image
+                     src={pageData.value1_Image?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.value1_Image.url}` : '/images/icon/icon_175.svg'}
+                     alt={pageData.value1_Title || 'Value icon'}
+                     className="lazy-img" width={32} height={32}
+                   />
+                 </div>
+                 <h4 className="fw-bold tx-dark mt-35 mb-20">{pageData.value1_Title}</h4>
+                 <p className="flex-grow-1">{pageData.value1_Description}</p>
+               </div>
+             </div>
+           )}
+           {/* Value 2 */}
+           {pageData?.value2_Title && (
+             <div className="col-md-6 col-lg-3 d-flex" data-aos="fade-up" data-aos-delay="100">
+               <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column">
                    <div className="icon m-auto tran3s">
                      <Image
-                       // --- CORRECTED: Access _Image field ---
                        src={pageData.value2_Image?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.value2_Image.url}` : '/images/icon/icon_175.svg'}
                        alt={pageData.value2_Title || 'Value icon'}
                        className="lazy-img" width={32} height={32}
@@ -379,15 +370,14 @@ const About = ({ treeCardStats, pageData }) => {
                    <h4 className="fw-bold tx-dark mt-35 mb-20">{pageData.value2_Title}</h4>
                    <p className="flex-grow-1">{pageData.value2_Description}</p>
                 </div>
-              </div>
-            )}
-            {/* Value 3 */}
-            {pageData?.value3_Title && (
-              <div className="col-md-6 col-lg-3 d-flex" data-aos="fade-up" data-aos-delay="200">
-                <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column">
+             </div>
+           )}
+           {/* Value 3 */}
+           {pageData?.value3_Title && (
+             <div className="col-md-6 col-lg-3 d-flex" data-aos="fade-up" data-aos-delay="200">
+               <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column">
                    <div className="icon m-auto tran3s">
                      <Image
-                       // --- CORRECTED: Access _Image field ---
                        src={pageData.value3_Image?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.value3_Image.url}` : '/images/icon/icon_175.svg'}
                        alt={pageData.value3_Title || 'Value icon'}
                        className="lazy-img" width={32} height={32}
@@ -396,15 +386,14 @@ const About = ({ treeCardStats, pageData }) => {
                    <h4 className="fw-bold tx-dark mt-35 mb-20">{pageData.value3_Title}</h4>
                    <p className="flex-grow-1">{pageData.value3_Description}</p>
                 </div>
-              </div>
-            )}
-            {/* Value 4 */}
-            {pageData?.value4_Title && (
-              <div className="col-md-6 col-lg-3 d-flex" data-aos="fade-up" data-aos-delay="300">
-                <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column">
+             </div>
+           )}
+           {/* Value 4 */}
+           {pageData?.value4_Title && (
+             <div className="col-md-6 col-lg-3 d-flex" data-aos="fade-up" data-aos-delay="300">
+               <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column">
                    <div className="icon m-auto tran3s">
                      <Image
-                       // --- CORRECTED: Access _Image field ---
                        src={pageData.value4_Image?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.value4_Image.url}` : '/images/icon/icon_175.svg'}
                        alt={pageData.value4_Title || 'Value icon'}
                        className="lazy-img" width={32} height={32}
@@ -413,9 +402,9 @@ const About = ({ treeCardStats, pageData }) => {
                    <h4 className="fw-bold tx-dark mt-35 mb-20">{pageData.value4_Title}</h4>
                    <p className="flex-grow-1">{pageData.value4_Description}</p>
                 </div>
-              </div>
-            )}
-          </div>
+             </div>
+           )}
+         </div>
         </div>
       </section>
 
@@ -470,8 +459,6 @@ const About = ({ treeCardStats, pageData }) => {
         </div>
       </section>
       
-    
-
       {/* FAQ Section */}
       <div className="fancy-feature-thirtyThree mt-180 lg-mt-120">
         <div className="container">
@@ -521,73 +508,73 @@ const About = ({ treeCardStats, pageData }) => {
       <FooterWithSettings />
 
       <style jsx>{`
+        /* White Header Fix */
+        :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-link) { color: white !important; }
+        :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-item:hover .nav-link),
+        :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-item.active .nav-link),
+        :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-item.current-menu-item .nav-link) { color: #FF1292 !important; }
+        :global(body .theme-main-menu:not(.fixed) .lets-talk-btn) { color: white !important; border-color: white !important; background: transparent !important; }
+        :global(body .theme-main-menu:not(.fixed) .lets-talk-btn:hover) { color: black !important; background: white !important; }
+
+        /* --- HERO STYLES --- */
+        .about-hero-section { 
+            position: relative; 
+            overflow: hidden; 
+            height: 80vh; 
+            min-height: 600px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            color: white; 
+            text-align: center; 
+        }
+        .hero-bg-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .hero-bg-media { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+        .hero-bg-fallback { width: 100%; height: 100%; background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); position: absolute; top: 0; left: 0; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1; }
+        .z-2 { z-index: 2; }
+
+
+        /* --- VALUES SECTION --- */
         .values-section .card-style-fifteen {
-      background: #F8F9FA;
-      border-radius: 20px;
-      padding: 35px;
-      border: 1px solid #E5E5E5;
-      transition: all 0.3s ease;
-  }
+            background: #F8F9FA;
+            border-radius: 20px;
+            padding: 35px;
+            border: 1px solid #E5E5E5;
+            transition: all 0.3s ease;
+        }
         .values-section .card-style-fifteen:hover {
-          border-color: #FF1292;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+            border-color: #FF1292;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.07);
         }
         .values-section .icon {
-      width: 60px; /* Fixed size */
-      height: 60px; /* Fixed size */
-      border-radius: 50%;
-      display: flex; /* Centers the image inside the icon circle */
-      justify-content: center;
-      align-items: center;
-      background: #FF1292;
-      transition: background 0.3s ease;
-  }
+            width: 60px; 
+            height: 60px; 
+            border-radius: 50%;
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            background: #FF1292;
+            transition: background 0.3s ease;
+        }
         .values-section .icon img {
-          filter: brightness(0) invert(1);
-          transition: filter 0.3s ease;
+            filter: brightness(0) invert(1);
+            transition: filter 0.3s ease;
         }
         .values-section .card-style-fifteen:hover .icon {
-          background: #FF1292; 
+            background: #FF1292; 
         }
         .values-section .card-style-fifteen:hover .icon img {
-          filter: brightness(0) invert(1);
+            filter: brightness(0) invert(1);
         }
 
         .sustainability-section .counter-block-three .main-count {
-          font-size: 3rem;
-          color: #FF1292;
+            font-size: 3rem;
+            color: #FF1292;
         }
         .sustainability-section .counter-block-three p {
-          font-size: 1.1rem;
-          color: #151937;
-        }
-        
-        .why-choose-us-section .client-logos-wrapper {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 50px;
-          align-items: center;
-        }
-        .why-choose-us-section .logo-item {
-          text-align: center;
-          opacity: 0.6;
-          transition: opacity 0.3s ease;
-        }
-        .why-choose-us-section .logo-item:hover {
-          opacity: 1;
-        }
-        .why-choose-us-section .list-item li {
-          position: relative;
-          padding-left: 30px;
-          margin-bottom: 15px;
-        }
-        .why-choose-us-section .list-item li::before {
-          content: '✓';
-          color: #FF1292;
-          position: absolute;
-          left: 0;
-          top: 0;
-          font-weight: bold;
+            font-size: 1.1rem;
+            color: #151937;
         }
       `}</style>
     </>

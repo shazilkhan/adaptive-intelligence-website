@@ -51,6 +51,60 @@
       "type": "component",
       "component": "case-studies-page.faq-item",
       "repeatable": true
+    },
+    "heroTagline": {
+      "type": "string"
+    },
+    "heroTitle": {
+      "type": "string"
+    },
+    "heroDescription": {
+      "type": "text"
+    },
+    "heroBackgroundType": {
+      "type": "enumeration",
+      "enum": [
+        "heroBackgroundImage",
+        "heroBackgroundVideo"
+      ]
+    },
+    "featuredTagline": {
+      "type": "string"
+    },
+    "featuredTitle": {
+      "type": "string"
+    },
+    "ctaTitle": {
+      "type": "string"
+    },
+    "ctaDescription": {
+      "type": "text"
+    },
+    "ctaButtonText": {
+      "type": "string"
+    },
+    "ctaButtonUrl": {
+      "type": "string"
+    },
+    "heroBackgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "heroBackgroundVideo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

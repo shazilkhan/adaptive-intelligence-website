@@ -284,6 +284,34 @@
     },
     "missionCustomerLabel": {
       "type": "string"
+    },
+    "heroBackgroundType": {
+      "type": "enumeration",
+      "enum": [
+        "Shapes",
+        "Image",
+        "Video"
+      ]
+    },
+    "heroBackgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "heroBackgroundVideo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

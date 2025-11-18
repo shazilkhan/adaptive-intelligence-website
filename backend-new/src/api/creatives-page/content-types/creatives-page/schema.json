@@ -94,6 +94,33 @@
     },
     "hrEmail": {
       "type": "email"
+    },
+    "heroBackgroundType": {
+      "type": "enumeration",
+      "enum": [
+        "Image",
+        "Video"
+      ]
+    },
+    "heroBackgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "heroBackgroundVideo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

@@ -1,55 +1,76 @@
 import React, { useState } from 'react';
-
 import Image from 'next/image';
-
 import Link from 'next/link';
-
 import Header from '@/components/header/Header';
-
-import FooterContent from '@/components/footer/FooterContent';
-
-import Subscribe from '@/components/footer/Subscribe';
-
-import CopyrightFooter from '@/components/footer/CopyrightFooter';
-
 import LetsTalkButton from '@/components/LetsTalkButton';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 
-const CaseStudies = ({ allCaseStudies }) => {
+const CaseStudies = ({ allCaseStudies, pageData }) => {
   const [activeFilter, setActiveFilter] = useState('All');
 
-  const categories = ['All', ...new Set(allCaseStudies.map(study => study.category).filter(Boolean))];
- 
-  const filteredCaseStudies = activeFilter === 'All'
-    ? allCaseStudies
-    : allCaseStudies.filter(study => study.category === activeFilter);
+  // Fallback data if Strapi Single Type is empty
+  const data = pageData || {};
+
+  // --- Hero Background Logic ---
+  const heroType = data.heroBackgroundType || 'Image';
+  const heroVideoUrl = data.heroBackgroundVideo?.url 
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data.heroBackgroundVideo.url}` 
+    : null;
+  const heroImageUrl = data.heroBackgroundImage?.url 
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data.heroBackgroundImage.url}` 
+    : null; 
 
   return (
     <>
       <Header menuTextColor="white" />
-     
-      <div className="case-studies-hero pt-200 pb-100 lg-pt-150 lg-pb-80" style={{ background: 'linear-gradient(135deg, #000 0%, #1a1a1a 100%)' }}>
-        <div className="container">
+      
+      {/* --- HERO SECTION (Large Eco-Style) --- */}
+      {/* Removed padding classes (pt-200...) to rely on flex/height styling below */}
+      <div className="case-studies-hero">
+        
+        {/* Dynamic Background Layer */}
+        <div className="hero-bg-wrapper">
+            {heroType === 'Video' && heroVideoUrl ? (
+                <video autoPlay loop muted playsInline className="hero-bg-media">
+                    <source src={heroVideoUrl} type="video/mp4" />
+                </video>
+            ) : heroImageUrl ? (
+                <Image 
+                    src={heroImageUrl}
+                    alt="Hero Background"
+                    fill
+                    className="hero-bg-media"
+                    style={{ objectFit: 'cover' }}
+                    priority
+                />
+            ) : (
+                // Fallback Gradient
+                <div className="hero-bg-fallback" />
+            )}
+            <div className="hero-overlay" />
+        </div>
+
+        <div className="container position-relative">
           <div className="row">
             <div className="col-xl-8 col-lg-9 m-auto">
               <div className="title-style-ten text-center">
-                <div className="sc-title">Our Work</div>
+                <div className="sc-title" style={{ color: '#FF1292' }}>
+                    {data.heroTagline || 'Our Work'}
+                </div>
                 <h1 className="main-title font-recoleta fw-normal">
-                  Case
-                  <span className="position-relative">
-                    {" "}
-                    Studies
+                  {data.heroTitle || 'Case Studies'}
+                  <span className="position-relative d-inline-block ms-2">
                     <Image
                       src="/images/shape/shape_122.svg"
-                      alt="icon shape"
+                      alt="underline"
                       width={220}
                       height={5}
-                      style={{ filter: 'invert(1)' }}
+                      className="shape-underline"
                     />
                   </span>
                 </h1>
                 <p className="hero-description">
-                  Explore how we've helped leading brands transform their digital presence and achieve exceptional results.
+                  {data.heroDescription || "Explore how we've helped leading brands transform their digital presence and achieve exceptional results."}
                 </p>
               </div>
             </div>
@@ -57,22 +78,22 @@ const CaseStudies = ({ allCaseStudies }) => {
         </div>
       </div>
 
+      {/* --- FEATURED CASES GRID --- */}
       <div className="featured-cases pt-180 pb-150 lg-pt-120 lg-pb-120" style={{ background: 'white' }}>
         <div className="container">
           <div className="row">
             <div className="col-12">
               <div className="title-style-ten text-center mb-5">
-                <div className="sc-title">Our Work</div>
+                <div className="sc-title">{data.featuredTagline || 'Our Work'}</div>
                 <h2 className="main-title alt_main_title font-recoleta fw-normal tx-dark">
-                  Success
-                  <span className="position-relative">
-                    {" "}
-                    Stories
+                  {data.featuredTitle || 'Success Stories'}
+                  <span className="position-relative d-inline-block ms-2">
                     <Image
                       src="/images/shape/shape_122.svg"
                       alt="icon shape"
                       width={180}
                       height={5}
+                      style={{ position: 'absolute', bottom: 0, left: 0, filter: 'invert(0)' }}
                     />
                   </span>
                 </h2>
@@ -82,7 +103,7 @@ const CaseStudies = ({ allCaseStudies }) => {
 
           <div className="row g-4">
             {allCaseStudies.map((study) => {
-              const heroImageUrl = study.heroImage?.url
+              const studyHeroUrl = study.heroImage?.url
                 ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${study.heroImage.url}`
                 : '/images/placeholder.png';
 
@@ -91,7 +112,7 @@ const CaseStudies = ({ allCaseStudies }) => {
                   <div className="featured-case-card">
                     <div className="case-image">
                       <Image
-                        src={heroImageUrl}
+                        src={studyHeroUrl}
                         alt={study.title}
                         width={600}
                         height={400}
@@ -120,8 +141,8 @@ const CaseStudies = ({ allCaseStudies }) => {
                       <h3 className="case-title">{study.title}</h3>
                       <p className="case-description">{study.description}</p>
                       <div className="case-tags">
-                        {study.tags?.map(tag => (
-                          <span key={tag.id} className="tag">{tag.text}</span>
+                        {study.tags?.map((tag, i) => (
+                          <span key={tag.id || i} className="tag">{tag.text}</span>
                         ))}
                       </div>
                       <div className="case-results">
@@ -145,204 +166,140 @@ const CaseStudies = ({ allCaseStudies }) => {
         </div>
       </div>
 
-
+      {/* --- CTA SECTION --- */}
       <div className="cta-section pt-150 pb-150 lg-pt-120 lg-pb-120" style={{ background: 'linear-gradient(135deg, #FF1292 0%, #e60d82 100%)' }}>
-
         <div className="container">
-
           <div className="row">
-
             <div className="col-xl-8 m-auto text-center">
-
               <h2 className="cta-title">
-
-                Ready to Create Your Success Story?
-
+                {data.ctaTitle || 'Ready to Create Your Success Story?'}
               </h2>
-
               <p className="cta-description">
-
-                Let's discuss how we can help transform your brand and achieve exceptional results.
-
+                {data.ctaDescription || "Let's discuss how we can help transform your brand and achieve exceptional results."}
               </p>
-
               <LetsTalkButton
-
-                buttonText="Start Your Project"
-
-                href="/contact"
-
+                buttonText={data.ctaButtonText || "Start Your Project"}
+                href={data.ctaButtonUrl || "/contact"}
               />
-
             </div>
-
           </div>
-
         </div>
-
       </div>
 
-
- <FooterWithSettings />
-
-
+      <FooterWithSettings />
 
       <style jsx>{`
-
         /* White Header Fix */
-
-        :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-link) {
-
-          color: white !important;
-
-        }
-
+        :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-link) { color: white !important; }
         :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-item:hover .nav-link),
-
         :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-item.active .nav-link),
+        :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-item.current-menu-item .nav-link) { color: #FF1292 !important; }
+        :global(body .theme-main-menu:not(.fixed) .lets-talk-btn) { color: white !important; border-color: white !important; background: transparent !important; }
+        :global(body .theme-main-menu:not(.fixed) .lets-talk-btn:hover) { color: black !important; background: white !important; }
 
-        :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-item.current-menu-item .nav-link) {
-
-          color: #FF1292 !important;
-
+        /* --- LARGE HERO STYLES (Eco Match) --- */
+        .case-studies-hero { 
+            position: relative; 
+            overflow: hidden; 
+            height: 80vh;          /* Forces large height */
+            min-height: 600px;     /* Minimum height for mobile */
+            display: flex;         /* Flexbox for centering */
+            align-items: center;   /* Vertical center */
+            justify-content: center; 
         }
 
-        :global(body .theme-main-menu:not(.fixed) .lets-talk-btn) {
-
-          color: white !important;
-
-          border-color: white !important;
-
-          background: transparent !important;
-
-        }
-
-        :global(body .theme-main-menu:not(.fixed) .lets-talk-btn:hover) {
-
-          color: black !important;
-
-          background: white !important;
-
-        }
-
-
-        /* All other existing styles for this page */
-
-        .case-studies-hero { position: relative; overflow: hidden; }
+        .hero-bg-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .hero-bg-media { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+        .hero-bg-fallback { width: 100%; height: 100%; background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); position: absolute; top: 0; left: 0; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1; }
+        .position-relative { position: relative; z-index: 2; }
 
         .sc-title { color: #FF1292; text-transform: uppercase; letter-spacing: 2px; font-size: 14px; font-weight: 600; margin-bottom: 20px; }
-
         .main-title { color: white; margin-bottom: 20px; font-size: 3.5rem; line-height: 1.2; }
-
         .alt_main_title { color: black; }
-
         .hero-description { color: rgba(255, 255, 255, 0.7); font-size: 1.2rem; max-width: 600px; margin: 20px auto 0; line-height: 1.6; }
+        
+        /* Shape Underline logic */
+        .main-title .shape-underline { 
+            filter: invert(1); 
+            position: absolute; 
+            bottom: -10px; 
+            left: 0; 
+            width: 100%; 
+            height: auto; 
+        }
 
+        /* Card Styles */
         .featured-case-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column; }
-
         .featured-case-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); }
-
         .case-image { position: relative; height: 350px; overflow: hidden; }
-
         .case-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
-
         .featured-case-card:hover .case-img { transform: scale(1.05); }
-
         .case-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 50%, rgba(0,0,0,0.9) 100%); display: flex; flex-direction: column; justify-content: space-between; padding: 25px; opacity: 0; transition: opacity 0.3s ease; }
-
         .featured-case-card:hover .case-overlay { opacity: 1; }
-
         .case-category { background: rgba(255, 18, 146, 0.9); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; width: fit-content; }
-
         .case-metrics { display: flex; gap: 25px; align-self: flex-end; }
-
         .metric-item { display: flex; flex-direction: column; align-items: center; text-align: center; }
-
         .metric-value { color: white; font-weight: 600; font-size: 1.2rem; margin-bottom: 4px; }
-
         .metric-label { color: rgba(255, 255, 255, 0.8); font-size: 0.75rem; text-transform: capitalize; }
-
         .case-content { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; }
-
         .case-meta { display: flex; justify-content: space-between; margin-bottom: 15px; }
-
         .client-name { color: #FF1292; font-weight: 600; font-size: 0.95rem; }
-
         .industry { color: #666; font-size: 0.85rem; }
-
         .case-title { font-size: 1.4rem; color: #151937; margin-bottom: 15px; font-family: 'Recoleta', serif; font-weight: 600; line-height: 1.3; }
-
         .case-description { color: #666; line-height: 1.6; margin-bottom: 20px; flex-grow: 1; }
-
         .case-tags { display: flex; gap: 8px; margin-bottom: 25px; flex-wrap: wrap; }
-
         .tag { background: #f8f9fa; color: #151937; padding: 6px 12px; border-radius: 15px; font-size: 0.75rem; font-weight: 500; }
-
         .case-results { display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid #f0f0f0; }
-
         .result-highlight { display: flex; flex-direction: column; }
-
         .result-number { color: #FF1292; font-size: 1.1rem; font-weight: 600; line-height: 1; }
-
         .result-label { color: #666; font-size: 0.8rem; margin-top: 4px; }
-
         .case-link { display: flex; align-items: center; gap: 8px; color: #151937; text-decoration: none; font-weight: 500; transition: all 0.3s ease; }
-
         .case-link:hover { color: #FF1292; transform: translateX(5px); }
-
         .cta-title { color: white; font-size: 2.5rem; margin-bottom: 20px; font-family: 'Recoleta', serif; font-weight: 400; }
-
         .cta-description { color: rgba(255, 255, 255, 0.9); font-size: 1.2rem; margin-bottom: 40px; line-height: 1.6; }
 
         @media (max-width: 768px) {
-
+          .case-studies-hero { height: 70vh; } /* Adjust slightly for mobile */
           .main-title { font-size: 2.5rem; }
-
           .hero-description { font-size: 1rem; }
-
           .case-image { height: 280px; }
-
           .case-title { font-size: 1.2rem; }
-
           .case-metrics { gap: 15px; }
-
           .case-results { flex-direction: column; gap: 15px; align-items: flex-start; }
-
           .metric-value { font-size: 1rem; }
-
           .cta-title { font-size: 2rem; }
-
           .cta-description { font-size: 1rem; }
-
         }
-
       `}</style>
-
     </>
-
   );
-
 };
 
 export async function getStaticProps() {
-  const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies?populate=*`;
-  
   try {
-    const res = await fetch(apiUrl);
-    if (!res.ok) {
-      return { props: { allCaseStudies: [] } };
-    }
-    
-    const json = await res.json();
-    const allCaseStudies = json.data || [];
-    
+    const [casesRes, pageRes] = await Promise.all([
+        fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies?populate=*`),
+        fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies-page?populate=*`)
+    ]);
+
+    const casesJson = casesRes.ok ? await casesRes.json() : { data: [] };
+    const allCaseStudies = casesJson.data || [];
+
+    const pageJson = pageRes.ok ? await pageRes.json() : { data: null };
+    const pageData = pageJson.data || null;
+
     return { 
-      props: { allCaseStudies }, 
+      props: { 
+        allCaseStudies,
+        pageData 
+      },
+      revalidate: 10,
     };
   } catch (error) {
-    console.error("Error fetching case studies:", error);
-    return { props: { allCaseStudies: [] } };
+    console.error("Error fetching data:", error);
+    return { props: { allCaseStudies: [], pageData: null } };
   }
 }
 
-export default CaseStudies; 
+export default CaseStudies;

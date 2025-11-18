@@ -1,66 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import Header from '@/components/header/Header';
-import FooterContent from '@/components/footer/FooterContent';
-import Subscribe from '@/components/footer/Subscribe';
-import CopyrightFooter from '@/components/footer/CopyrightFooter';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
-// Icon mapping function
-const getIconByType = (iconType) => {
-  const icons = {
-    remote: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 5L25 15H35L27.5 22.5L30 32.5L20 25L10 32.5L12.5 22.5L5 15H15L20 5Z" stroke="#FF1292" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <circle cx="20" cy="20" r="18" stroke="#FF1292" strokeWidth="1.5" strokeDasharray="3 3"/>
-      </svg>
-    ),
-    growth: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 5V35M20 5L10 15M20 5L30 15" stroke="#FF1292" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M8 25L20 35L32 25" stroke="#FF1292" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <circle cx="20" cy="10" r="3" fill="#FF1292"/>
-      </svg>
-    ),
-    innovation: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 8L12 12V20C12 26 16 30 20 32C24 30 28 26 28 20V12L20 8Z" stroke="#FF1292" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M20 16L16 20L18 22L20 20L24 16L22 14L20 16Z" fill="#FF1292"/>
-        <circle cx="20" cy="20" r="1" fill="#FF1292"/>
-      </svg>
-    ),
-    sustainability: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="20" cy="20" r="12" stroke="#FF1292" strokeWidth="2"/>
-        <path d="M20 8C14.5 8 10 12.5 10 18C10 23.5 14.5 28 20 28" stroke="#FF1292" strokeWidth="2" strokeLinecap="round"/>
-        <path d="M28 15L32 20L28 25" stroke="#FF1292" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M15 12L12 15L15 18" stroke="#FF1292" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-    results: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="8" y="12" width="24" height="20" rx="2" stroke="#FF1292" strokeWidth="2"/>
-        <path d="M14 12V8C14 6.9 14.9 6 16 6H24C25.1 6 26 6.9 26 8V12" stroke="#FF1292" strokeWidth="2" strokeLinecap="round"/>
-        <path d="M12 20H28M20 16V24" stroke="#FF1292" strokeWidth="2" strokeLinecap="round"/>
-        <circle cx="20" cy="26" r="2" fill="#FF1292"/>
-      </svg>
-    ),
-    collaborative: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="14" cy="14" r="6" stroke="#FF1292" strokeWidth="2"/>
-        <circle cx="26" cy="14" r="6" stroke="#FF1292" strokeWidth="2"/>
-        <circle cx="20" cy="26" r="6" stroke="#FF1292" strokeWidth="2"/>
-        <path d="M18 20L14 18M22 20L26 18" stroke="#FF1292" strokeWidth="2" strokeLinecap="round"/>
-        <path d="M17 15L19 17L23 13" stroke="#FF1292" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    )
-  };
-  
-  return icons[iconType] || icons.remote;
-};
 
 const Creatives = ({ pageData }) => {
-  const [hoveredBenefit, setHoveredBenefit] = useState(null);
 
   if (!pageData) {
     return (
@@ -73,6 +16,16 @@ const Creatives = ({ pageData }) => {
     );
   }
 
+  // --- Background Logic (Video vs Image) ---
+  const heroType = pageData.heroBackgroundType || 'Image';
+  const heroVideoUrl = pageData.heroBackgroundVideo?.url 
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundVideo.url}` 
+    : null;
+  const heroImageUrl = pageData.heroBackgroundImage?.url 
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundImage.url}` 
+    : null;
+
+  // Fallback images
   const missionImageUrl = pageData.missionImage?.url
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.missionImage.url}`
     : '/images/media/img_133.jpg';
@@ -80,36 +33,47 @@ const Creatives = ({ pageData }) => {
   return (
     <>
       <Header menuTextColor="white" />
-      
-      {/* Hero Section */}
-      <div className="careers-hero pt-200 pb-100 lg-pt-150 lg-pb-80">
+
+      {/* --- HERO SECTION (Eco Style - Large & Cinematic) --- */}
+      <section className="eco-hero">
+        <div className="hero-background">
+            {heroType === 'Video' && heroVideoUrl ? (
+                <video autoPlay loop muted playsInline className="hero-video-bg">
+                    <source src={heroVideoUrl} type="video/mp4" />
+                </video>
+            ) : heroImageUrl ? (
+                <Image
+                    src={heroImageUrl}
+                    alt="Hero Background"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    priority
+                />
+            ) : (
+                <div style={{ width: '100%', height: '100%', background: '#151937' }}></div>
+            )}
+            {/* Dark Overlay for text readability */}
+            <div className="hero-overlay" />
+        </div>
+
         <div className="container">
           <div className="row">
-            <div className="col-xl-10 col-lg-11 m-auto">
-              <div className="title-style-ten text-center">
-                <div className="sc-title">{pageData.heroTagline || 'Join Our Team'}</div>
-                <h1 className="main-title font-recoleta fw-normal">
-                  {pageData.heroTitle || 'Shape the Future of Digital Marketing'}
-                  <span className="position-relative">
-                    <Image
-                      src="/images/shape/shape_122.svg"
-                      alt="icon shape"
-                      width={280}
-                      height={5}
-                      style={{ filter: 'invert(1)' }}
-                    />
-                  </span>
-                </h1>
-                <p className="hero-description">
-                  {pageData.heroDescription}
-                </p>
+            <div className="col-lg-9 mx-auto text-center">
+              <div className="sc-title" style={{ color: '#FF1292', marginBottom: '20px' }}>
+                {pageData.heroTagline || 'Join Our Team'}
               </div>
+              <h1 className="main-title">
+                {pageData.heroTitle || 'Shape the Future'}
+              </h1>
+              <p className="hero-subtitle">
+                {pageData.heroDescription}
+              </p>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Mission Section */}
+      {/* --- MISSION SECTION (Original Design) --- */}
       <div className="mission-section pt-150 pb-150 lg-pt-120 lg-pb-120" style={{ background: 'white' }}>
         <div className="container">
           <div className="row align-items-center">
@@ -135,7 +99,7 @@ const Creatives = ({ pageData }) => {
         </div>
       </div>
 
-{/* --- REVISED Values Section (Image Left) --- */}
+      {/* --- VALUES SECTION (Original Design - Image Left) --- */}
       <div className="values-section pt-150 pb-150 lg-pt-120 lg-pb-120" style={{ background: '#f8f9fa' }}>
         <div className="container">
           <div className="row align-items-center">
@@ -145,7 +109,7 @@ const Creatives = ({ pageData }) => {
                   src={
                     pageData.valuesImage?.url
                       ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.valuesImage.url}`
-                      : '/images/media/img_133.jpg' // Fallback
+                      : '/images/media/img_133.jpg'
                   }
                   alt={pageData.valuesTitle || 'Our Values'}
                   width={600}
@@ -167,7 +131,7 @@ const Creatives = ({ pageData }) => {
         </div>
       </div>
 
-{/* --- REVISED Benefits Section (Image Right) --- */}
+      {/* --- BENEFITS SECTION (Original Design - Image Right) --- */}
       <div className="benefits-section pt-150 pb-150 lg-pt-120 lg-pb-120" style={{ background: 'white' }}>
         <div className="container">
           <div className="row align-items-center">
@@ -177,7 +141,7 @@ const Creatives = ({ pageData }) => {
                   src={
                     pageData.benefitsImage?.url
                       ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.benefitsImage.url}`
-                      : '/images/media/img_133.jpg' // Fallback
+                      : '/images/media/img_133.jpg'
                   }
                   alt={pageData.benefitsTitle || 'Benefits & Perks'}
                   width={600}
@@ -199,7 +163,7 @@ const Creatives = ({ pageData }) => {
         </div>
       </div>
 
-      {/* CTA Section */}
+      {/* --- CTA SECTION (Original Pink Gradient Design) --- */}
       <div className="cta-section pt-150 pb-150 lg-pt-120 lg-pb-120" style={{ background: 'linear-gradient(135deg, #FF1292 0%, #e60d82 100%)' }}>
         <div className="container">
           <div className="row">
@@ -233,34 +197,36 @@ const Creatives = ({ pageData }) => {
         </div>
       </div>
 
-     <FooterWithSettings />
+      <FooterWithSettings />
 
       <style jsx>{`
-        /* White Header Fix */
-        :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-link) {
-          color: white !important;
-        }
+        /* --- Header Fixes --- */
+        :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-link) { color: white !important; }
         :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-item:hover .nav-link),
         :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-item.active .nav-link),
-        :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-item.current-menu-item .nav-link) {
-          color: #FF1292 !important;
-        }
-        :global(body .theme-main-menu:not(.fixed) .lets-talk-btn) {
-          color: white !important;
-          border-color: white !important;
-          background: transparent !important;
-        }
-        :global(body .theme-main-menu:not(.fixed) .lets-talk-btn:hover) {
-          color: black !important;
-          background: white !important;
-        }
+        :global(body .theme-main-menu.white-vr:not(.fixed) .navbar .navbar-nav .nav-item.current-menu-item .nav-link) { color: #FF1292 !important; }
+        :global(body .theme-main-menu:not(.fixed) .lets-talk-btn) { color: white !important; border-color: white !important; background: transparent !important; }
+        :global(body .theme-main-menu:not(.fixed) .lets-talk-btn:hover) { color: black !important; background: white !important; }
 
-        /* Hero Section */
-        .careers-hero {
-          background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
-          position: relative;
-          overflow: hidden;
+        /* --- HERO STYLES (Eco / Large Style) --- */
+        .eco-hero { 
+            position: relative; 
+            height: 80vh; 
+            min-height: 600px; 
+            display: flex; 
+            align-items: center; 
+            color: white; 
+            text-align: center; 
         }
+        .hero-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1; }
+        .hero-video-bg { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+        
+        .main-title { font-family: 'Recoleta', serif; font-size: 4rem; font-weight: 400; color: white; line-height: 1.2; margin-bottom: 20px; }
+        .hero-subtitle { font-size: 1.25rem; color: rgba(255, 255, 255, 0.85); max-width: 800px; margin: 0 auto; line-height: 1.6; }
+        .shape-underline { position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); }
+
+        /* --- ORIGINAL BODY STYLES --- */
         .sc-title {
           color: #FF1292;
           text-transform: uppercase;
@@ -269,21 +235,6 @@ const Creatives = ({ pageData }) => {
           font-weight: 600;
           margin-bottom: 20px;
         }
-        .main-title {
-          color: white;
-          margin-bottom: 30px;
-          font-size: 3.5rem;
-          line-height: 1.2;
-        }
-        .hero-description {
-          color: rgba(255, 255, 255, 0.85);
-          font-size: 1.2rem;
-          max-width: 800px;
-          margin: 0 auto;
-          line-height: 1.7;
-        }
-
-        /* Mission Section */
         .section-title {
           font-size: 2.5rem;
           color: #151937;
@@ -303,84 +254,7 @@ const Creatives = ({ pageData }) => {
           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
 
-        /* Values Section */
-        .value-card {
-          background: white;
-          padding: 40px;
-          border-radius: 12px;
-          height: 100%;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-          transition: all 0.3s ease;
-          border-left: 4px solid #FF1292;
-        }
-        .value-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-        }
-        .value-number {
-          font-size: 3rem;
-          font-weight: 700;
-          font-family: 'Recoleta', serif;
-          margin-bottom: 15px;
-          line-height: 1;
-        }
-        .value-title {
-          font-size: 1.5rem;
-          color: #151937;
-          margin-bottom: 15px;
-          font-family: 'Recoleta', serif;
-          font-weight: 600;
-        }
-        .value-description {
-          color: #666;
-          line-height: 1.6;
-          margin: 0;
-        }
-
-        /* Benefits Section */
-        .benefit-card {
-          background: #f8f9fa;
-          padding: 40px 30px;
-          border-radius: 12px;
-          text-align: center;
-          height: 100%;
-          transition: all 0.3s ease;
-        }
-        .benefit-card:hover {
-          background: white;
-          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-          transform: translateY(-5px);
-        }
-        .benefit-icon {
-          width: 70px;
-          height: 70px;
-          background: white;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 0 auto 25px;
-          border: 2px solid #FF1292;
-          box-shadow: 0 5px 15px rgba(255, 18, 146, 0.2);
-          transition: all 0.3s ease;
-        }
-        .benefit-card:hover .benefit-icon {
-          transform: scale(1.1);
-          box-shadow: 0 8px 20px rgba(255, 18, 146, 0.3);
-        }
-        .benefit-title {
-          font-size: 1.3rem;
-          color: #151937;
-          margin-bottom: 15px;
-          font-weight: 600;
-        }
-        .benefit-description {
-          color: #666;
-          line-height: 1.6;
-          margin: 0;
-        }
-
-        /* CTA Section */
+        /* --- ORIGINAL CTA STYLES --- */
         .cta-title {
           color: white;
           font-size: 2.8rem;
@@ -449,16 +323,15 @@ const Creatives = ({ pageData }) => {
           color: #151937;
         }
 
+        @media (max-width: 991px) {
+            .main-title { font-size: 3rem; }
+            .shape-underline { width: 200px; }
+        }
         @media (max-width: 768px) {
-          .main-title {
-            font-size: 2.5rem;
-          }
-          .section-title {
-            font-size: 2rem;
-          }
-          .cta-title {
-            font-size: 2rem;
-          }
+          .eco-hero { height: 70vh; }
+          .main-title { font-size: 2.5rem; }
+          .section-title { font-size: 2rem; }
+          .cta-title { font-size: 2rem; }
           .cta-buttons {
             flex-direction: column;
             align-items: center;
@@ -482,6 +355,7 @@ export async function getStaticProps() {
     
     return { 
       props: { pageData },
+      revalidate: 10, 
     };
   } catch (error) {
     console.error("Error fetching creatives page data:", error);

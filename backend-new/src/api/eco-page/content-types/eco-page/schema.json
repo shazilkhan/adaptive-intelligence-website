@@ -17,16 +17,6 @@
     "heroDescription": {
       "type": "text"
     },
-    "heroBackgroundImage": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
     "commitmentTagline": {
       "type": "string"
     },
@@ -99,6 +89,14 @@
     },
     "communityEmail": {
       "type": "email"
+    },
+    "heroBackgroundType": {
+      "type": "enumeration",
+      "default": "Image",
+      "enum": [
+        "Image",
+        "Video"
+      ]
     }
   }
 }

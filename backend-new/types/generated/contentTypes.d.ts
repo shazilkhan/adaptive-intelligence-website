@@ -445,6 +445,15 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    heroBackgroundImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    heroBackgroundType: Schema.Attribute.Enumeration<
+      ['Shapes', 'Image', 'Video']
+    >;
+    heroBackgroundVideo: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
     heroDescription: Schema.Attribute.Text;
     heroTitle: Schema.Attribute.String;
     letsTalkButtonText: Schema.Attribute.String;
@@ -558,6 +567,9 @@ export interface ApiCaseStudiesPageCaseStudiesPage
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    ctaButtonText: Schema.Attribute.String;
+    ctaButtonUrl: Schema.Attribute.String;
+    ctaDescription: Schema.Attribute.Text;
     ctaLeftButtonText: Schema.Attribute.String;
     ctaLeftButtonUrl: Schema.Attribute.String;
     ctaLeftDescription: Schema.Attribute.String;
@@ -566,7 +578,22 @@ export interface ApiCaseStudiesPageCaseStudiesPage
     ctaRightButtonUrl: Schema.Attribute.String;
     ctaRightDescription: Schema.Attribute.String;
     ctaRightTitle: Schema.Attribute.String;
+    ctaTitle: Schema.Attribute.String;
     faqs: Schema.Attribute.Component<'case-studies-page.faq-item', true>;
+    featuredTagline: Schema.Attribute.String;
+    featuredTitle: Schema.Attribute.String;
+    heroBackgroundImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    heroBackgroundType: Schema.Attribute.Enumeration<
+      ['heroBackgroundImage', 'heroBackgroundVideo']
+    >;
+    heroBackgroundVideo: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    heroDescription: Schema.Attribute.Text;
+    heroTagline: Schema.Attribute.String;
+    heroTitle: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -721,6 +748,13 @@ export interface ApiCreativesPageCreativesPage extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     ctaDescription: Schema.Attribute.Text;
     ctaTitle: Schema.Attribute.String;
+    heroBackgroundImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    heroBackgroundType: Schema.Attribute.Enumeration<['Image', 'Video']>;
+    heroBackgroundVideo: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
     heroDescription: Schema.Attribute.Text;
     heroTagline: Schema.Attribute.String;
     heroTitle: Schema.Attribute.String;
@@ -771,9 +805,8 @@ export interface ApiEcoPageEcoPage extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    heroBackgroundImage: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
-    >;
+    heroBackgroundType: Schema.Attribute.Enumeration<['Image', 'Video']> &
+      Schema.Attribute.DefaultTo<'Image'>;
     heroDescription: Schema.Attribute.Text;
     heroTitle: Schema.Attribute.String;
     hubCards: Schema.Attribute.Component<'eco.hub-card', true>;
