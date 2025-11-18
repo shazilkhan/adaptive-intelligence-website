@@ -10,14 +10,12 @@ export async function getStaticProps() {
   let pageData = null;
 
   try {
-    // 1. Fetch Team Members
     const membersRes = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/team-members?populate[0]=headshot`);
     if (membersRes.ok) {
       const json = await membersRes.json();
       teamMembers = json.data || [];
     }
 
-    // 2. Fetch Team Page Settings
     try {
         const pageRes = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/team-page?populate=*`);
         if (pageRes.ok) {
@@ -41,49 +39,54 @@ export async function getStaticProps() {
   };
 }
 
-// --- Card Component ---
+// --- REDESIGNED PREMIUM CARD ---
 const TeamMemberCard = ({ member }) => {
   const imageUrl = member.headshot?.url
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${member.headshot.url}`
     : '/images/placeholder-headshot.png'; 
 
-  // --- FIX: SHOW FULL BIO ---
-  // We prioritize bio_short. If missing, we use the full bio_long (cleaned of HTML tags).
   let displayBio = member.bio_short || '';
   if (!displayBio && member.bio_long) {
-      // Simple regex to strip HTML tags if bio_long is Rich Text
       displayBio = member.bio_long.replace(/<[^>]*>?/gm, ''); 
   }
 
   return (
-    <div className="team-card h-100 d-flex flex-column">
-      <div className="team-headshot-wrapper">
-        {/* --- FIX: IMAGE QUALITY --- */}
-        <Image
-          src={imageUrl}
-          alt={`Headshot of ${member.name}`}
-          width={500} // Increased resolution
-          height={500} 
-          className="team-headshot-img"
-          style={{ objectFit: 'cover', width: '100%', height: '100%' }} // Ensure it fills container
-          unoptimized={true} // Optional: disables Next.js optimization if it's causing blur on Strapi images
-        />
-        {/* Optional Overlay */}
-        <div className="headshot-overlay"></div>
-      </div>
-      <div className="team-info d-flex flex-column flex-grow-1">
-        <h3 className="team-name font-recoleta">{member.name}</h3>
-        <p className="team-title">{member.title}</p>
+    <div className="team-card-premium h-100">
+      {/* Decorative Top Highlight */}
+      <div className="card-accent-line"></div>
+
+      <div className="card-content">
+        {/* Image Wrapper: Styled Circle */}
+        <div className="headshot-frame mx-auto">
+            <Image
+            src={imageUrl}
+            alt={`Headshot of ${member.name}`}
+            width={180} 
+            height={180} 
+            className="headshot-img"
+            unoptimized={true} 
+            />
+        </div>
         
-        {/* Display Full Bio */}
-        <p className="team-bio-text flex-grow-1">{displayBio}</p>
-        
-        {member.linkedin_url && (
-          <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer" className="linkedin-button mt-auto">
-            <span>Connect</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
-          </a>
-        )}
+        {/* Text Content */}
+        <div className="text-center mt-4 d-flex flex-column flex-grow-1">
+            <h3 className="member-name">{member.name}</h3>
+            <div className="member-title-wrapper">
+                <span className="member-title">{member.title}</span>
+            </div>
+            
+            <div className="member-bio">
+                <p>{displayBio}</p>
+            </div>
+            
+            {member.linkedin_url && (
+            <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer" className="connect-link mt-auto">
+                {/* UPDATED TEXT HERE */}
+                <span>LinkedIn</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+            </a>
+            )}
+        </div>
       </div>
     </div>
   );
@@ -104,7 +107,7 @@ const TeamPage = ({ teamMembers, pageData }) => {
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundImage.url}` 
     : null;
 
-  const hasMediaBackground = (heroType === 'Video' || heroType === 'Image');
+  const hasMediaBackground = (heroType === 'Video') || (heroType === 'Image');
 
   return (
     <>
@@ -154,15 +157,19 @@ const TeamPage = ({ teamMembers, pageData }) => {
       </div>
 
       {/* --- TEAM GRIDS --- */}
-      <section className="team-grid-section pb-150 lg-pb-120 pt-150 lg-pt-120">
+      <section className="team-grid-section pb-150 lg-pb-120 pt-150 lg-pt-120" style={{ background: '#fcfcfc' }}>
         <div className="container">
+          
           {/* Executive Team */}
           {executives.length > 0 && (
-            <div className="team-group mb-100 lg-mb-80">
-              <h2 className="group-title text-center font-recoleta">Executive Team</h2>
-              <div className="row g-4 justify-content-center mt-40">
+            <div className="team-group mb-120 lg-mb-80">
+              <div className="text-center mb-60">
+                <div className="sc-title-pink">LEADERSHIP</div>
+                <h2 className="group-title font-recoleta">Executive Team</h2>
+              </div>
+              <div className="row g-4 justify-content-center">
                 {executives.map(member => (
-                  <div key={member.id} className="col-xl-3 col-lg-4 col-md-6 col-sm-6 d-flex"> 
+                  <div key={member.id} className="col-lg-4 col-md-6 d-flex"> 
                     <TeamMemberCard member={member} />
                   </div>
                 ))}
@@ -173,10 +180,13 @@ const TeamPage = ({ teamMembers, pageData }) => {
           {/* Creative & Strategy Team */}
           {creatives.length > 0 && (
             <div className="team-group">
-              <h2 className="group-title text-center font-recoleta">Creative & Strategy</h2>
-              <div className="row g-4 justify-content-center mt-40">
+              <div className="text-center mb-60">
+                 <div className="sc-title-pink">EXPERTS</div>
+                 <h2 className="group-title font-recoleta">Creative & Strategy</h2>
+              </div>
+              <div className="row g-4 justify-content-center">
                 {creatives.map(member => (
-                  <div key={member.id} className="col-xl-3 col-lg-4 col-md-6 col-sm-6 d-flex">
+                  <div key={member.id} className="col-lg-4 col-md-6 d-flex">
                     <TeamMemberCard member={member} />
                   </div>
                 ))}
@@ -218,50 +228,138 @@ const TeamPage = ({ teamMembers, pageData }) => {
         }
         .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1; }
         .z-2 { z-index: 2; }
-        .group-title { margin-bottom: 20px; font-size: 2.5rem; color: #151937; }
 
-        /* Team Card Styles */
-        .team-headshot-wrapper {
-            width: 100%;
-            aspect-ratio: 1 / 1; /* Forces square aspect ratio */
+        /* --- PREMIUM CARD STYLES --- */
+        .sc-title-pink {
+            color: #FF1292;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .group-title { margin-bottom: 20px; font-size: 3rem; color: #151937; }
+
+        .team-card-premium {
+            background: white;
+            border-radius: 24px;
             position: relative;
             overflow: hidden;
-            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05);
+        }
+        
+        .team-card-premium:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px -15px rgba(255, 18, 146, 0.15);
+            border-color: rgba(255, 18, 146, 0.2);
+        }
+
+        .card-accent-line {
+            height: 6px;
+            width: 100%;
+            background: linear-gradient(90deg, #FF1292, #151937);
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .team-card-premium:hover .card-accent-line {
+            opacity: 1;
+        }
+
+        .card-content {
+            padding: 50px 35px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .headshot-frame {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            padding: 8px;
+            background: white;
+            border: 1px solid #eee;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .team-card-premium:hover .headshot-frame {
+            border-color: #FF1292;
+            transform: scale(1.02);
+        }
+
+        .headshot-img {
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .member-name {
+            font-family: 'Recoleta', serif;
+            font-size: 1.8rem;
+            color: #151937;
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .member-title-wrapper {
             margin-bottom: 20px;
         }
-        .team-bio-text {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #666;
-            margin-bottom: 20px;
+
+        .member-title {
+            display: inline-block;
+            font-size: 0.9rem;
+            color: #FF1292;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(255, 18, 146, 0.05);
+            padding: 6px 14px;
+            border-radius: 30px;
+        }
+
+        .member-bio p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #555;
+            font-weight: 400;
+        }
+
+        .connect-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 30px;
+            font-weight: 600;
+            color: #151937;
+            text-decoration: none;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 4px;
+            transition: all 0.3s ease;
+            align-self: center;
+        }
+
+        .connect-link:hover {
+            color: #FF1292;
+            border-color: #FF1292;
         }
 
         /* Conditional Header Colors */
         ${hasMediaBackground ? `
-            /* Force White Menu Links (When NOT fixed) */
-            body .theme-main-menu:not(.fixed) .navbar-nav .nav-link {
-                color: white !important;
-            }
-
-            /* Force Pink Active/Hover Links (Overrides White) */
+            body .theme-main-menu:not(.fixed) .navbar-nav .nav-link { color: white !important; }
             body .theme-main-menu:not(.fixed) .navbar-nav .nav-item.active .nav-link,
             body .theme-main-menu:not(.fixed) .navbar-nav .nav-item.current-menu-item .nav-link,
-            body .theme-main-menu:not(.fixed) .navbar-nav .nav-item:hover .nav-link {
-                color: #FF1292 !important;
-            }
-
-            /* "Let's Talk" Button: White Border/Text */
-            body .theme-main-menu:not(.fixed) .lets-talk-btn {
-                color: white !important;
-                border-color: white !important;
-                background: transparent !important;
-            }
-
-            /* "Let's Talk" Button Hover: Black Text, White Bg */
-            body .theme-main-menu:not(.fixed) .lets-talk-btn:hover {
-                color: black !important;
-                background: white !important;
-            }
+            body .theme-main-menu:not(.fixed) .navbar-nav .nav-item:hover .nav-link { color: #FF1292 !important; }
+            body .theme-main-menu:not(.fixed) .lets-talk-btn { color: white !important; border-color: white !important; background: transparent !important; }
+            body .theme-main-menu:not(.fixed) .lets-talk-btn:hover { color: black !important; background: white !important; }
         ` : ''}
       `}</style>
     </>
