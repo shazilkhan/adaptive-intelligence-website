@@ -47,28 +47,37 @@ const TeamMemberCard = ({ member }) => {
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${member.headshot.url}`
     : '/images/placeholder-headshot.png'; 
 
-  let shortBio = member.bio_short || '';
-  if (!shortBio && member.bio_long) {
-      const plainTextBio = member.bio_long.replace(/<[^>]*>?/gm, ''); 
-      shortBio = plainTextBio.substring(0, 160) + '...';
+  // --- FIX: SHOW FULL BIO ---
+  // We prioritize bio_short. If missing, we use the full bio_long (cleaned of HTML tags).
+  let displayBio = member.bio_short || '';
+  if (!displayBio && member.bio_long) {
+      // Simple regex to strip HTML tags if bio_long is Rich Text
+      displayBio = member.bio_long.replace(/<[^>]*>?/gm, ''); 
   }
 
   return (
     <div className="team-card h-100 d-flex flex-column">
       <div className="team-headshot-wrapper">
+        {/* --- FIX: IMAGE QUALITY --- */}
         <Image
           src={imageUrl}
           alt={`Headshot of ${member.name}`}
-          width={400} 
-          height={400} 
-          className="team-headshot-img" 
+          width={500} // Increased resolution
+          height={500} 
+          className="team-headshot-img"
+          style={{ objectFit: 'cover', width: '100%', height: '100%' }} // Ensure it fills container
+          unoptimized={true} // Optional: disables Next.js optimization if it's causing blur on Strapi images
         />
-        <div className="headshot-overlay d-flex align-items-center justify-content-center"></div>
+        {/* Optional Overlay */}
+        <div className="headshot-overlay"></div>
       </div>
       <div className="team-info d-flex flex-column flex-grow-1">
         <h3 className="team-name font-recoleta">{member.name}</h3>
         <p className="team-title">{member.title}</p>
-        <p className="team-bio-short flex-grow-1">{shortBio}</p>
+        
+        {/* Display Full Bio */}
+        <p className="team-bio-text flex-grow-1">{displayBio}</p>
+        
         {member.linkedin_url && (
           <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer" className="linkedin-button mt-auto">
             <span>Connect</span>
@@ -95,7 +104,7 @@ const TeamPage = ({ teamMembers, pageData }) => {
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundImage.url}` 
     : null;
 
-  const hasMediaBackground = (heroType === 'Video') || (heroType === 'Image');
+  const hasMediaBackground = (heroType === 'Video' || heroType === 'Image');
 
   return (
     <>
@@ -104,7 +113,6 @@ const TeamPage = ({ teamMembers, pageData }) => {
         <meta name="description" content="Meet the executive team and creatives behind Adaptive Intelligence." />
       </Head>
 
-      {/* Pass white/dark based on background */}
       <Header menuTextColor={hasMediaBackground ? "white" : "dark"} />
 
       {/* --- CINEMATIC HERO --- */}
@@ -184,9 +192,6 @@ const TeamPage = ({ teamMembers, pageData }) => {
 
       <FooterWithSettings />
 
-      {/* FIXED STYLES: 
-         The condition is now INSIDE the style string, not around the tag.
-      */}
       <style jsx global>{`
         /* Base Hero Styles */
         .team-hero-section { 
@@ -214,6 +219,22 @@ const TeamPage = ({ teamMembers, pageData }) => {
         .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1; }
         .z-2 { z-index: 2; }
         .group-title { margin-bottom: 20px; font-size: 2.5rem; color: #151937; }
+
+        /* Team Card Styles */
+        .team-headshot-wrapper {
+            width: 100%;
+            aspect-ratio: 1 / 1; /* Forces square aspect ratio */
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .team-bio-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 20px;
+        }
 
         /* Conditional Header Colors */
         ${hasMediaBackground ? `
