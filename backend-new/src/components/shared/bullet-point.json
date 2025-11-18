@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_shared_bullet_points",
+  "info": {
+    "displayName": "Bullet Point"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

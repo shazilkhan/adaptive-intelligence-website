@@ -82,6 +82,16 @@ export interface HomepageFeatureListItem extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedBulletPoint extends Struct.ComponentSchema {
+  collectionName: 'components_shared_bullet_points';
+  info: {
+    displayName: 'Bullet Point';
+  };
+  attributes: {
+    text: Schema.Attribute.String;
+  };
+}
+
 export interface SharedIndustryItem extends Struct.ComponentSchema {
   collectionName: 'components_shared_industry_items';
   info: {
@@ -134,6 +144,7 @@ declare module '@strapi/strapi' {
       'eco.hub-card': EcoHubCard;
       'homepage.counter-item': HomepageCounterItem;
       'homepage.feature-list-item': HomepageFeatureListItem;
+      'shared.bullet-point': SharedBulletPoint;
       'shared.industry-item': SharedIndustryItem;
       'shared.insight': SharedInsight;
       'shared.key-phase': SharedKeyPhase;

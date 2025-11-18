@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "services",
+  "collectionName": "service_lists",
   "info": {
-    "singularName": "service",
-    "pluralName": "services",
-    "displayName": "Service"
+    "singularName": "service-list",
+    "pluralName": "service-lists",
+    "displayName": "Service List"
   },
   "options": {
     "draftAndPublish": true
@@ -36,17 +36,10 @@
     "buttonUrl": {
       "type": "string"
     },
-    "description_intro": {
-      "type": "text"
-    },
-    "description_bold": {
-      "type": "string"
-    },
-    "description_end": {
-      "type": "text"
-    },
-    "footer_text": {
-      "type": "string"
+    "features": {
+      "type": "component",
+      "component": "shared.bullet-point",
+      "repeatable": true
     }
   }
 }
