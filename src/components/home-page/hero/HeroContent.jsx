@@ -11,8 +11,8 @@ const HeroContent = ({ heroData }) => {
       </h1>
       
       <p className="sub-text mt-20 mb-45 lg-mb-30" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', borderRadius: '10px', padding: '40px 20px', userSelect: 'none' }}>
-        {heroData?.heroSubtitleStart || "Welcome to Adaptive Intelligence International. We"}
-        <b className="text-white"> {heroData?.heroSubtitleBold || "maximize your global exposure"} </b>
+        {heroData?.heroSubtitleStart || ""}
+        <b className="text-white"> {heroData?.heroSubtitleBold || ""} </b>
         {heroData?.heroSubtitleEnd || "through innovative strategies and crafting key messages that resonate clearly with a universal audience."}
       </p>
       
