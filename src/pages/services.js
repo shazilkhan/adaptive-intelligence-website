@@ -7,25 +7,26 @@ import Faq from "@/components/home-page/Faq";
 import ClientCarousel from "@/components/ClientCarousel"; 
 import LatestCaseStudiesSection from '@/components/case-studies/LatestCaseStudiesSection'; 
 import IndustriesGrid from '@/components/IndustriesGrid';
-// --- CHANGED IMPORT ---
 import ServicesGridBullets from "@/components/ServicesGridBullets"; 
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 
 const ServicesPage = ({ servicesPageData }) => {
   
+  // --- 1. Background Logic for Hero ---
   const heroType = servicesPageData?.heroBackgroundType || 'Image';
+  
   const heroVideoUrl = servicesPageData?.heroBackgroundVideo?.url 
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.heroBackgroundVideo.url}` 
     : null;
+    
   const heroImageUrl = servicesPageData?.heroBackgroundImage?.url 
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.heroBackgroundImage.url}` 
     : null;
 
-  const hasMediaBackground = (heroType === 'Video' && heroVideoUrl) || heroImageUrl;
-
   return (
     <>
-      <Header menuTextColor={hasMediaBackground ? "white" : "dark"} />
+      {/* --- Header --- */}
+      <Header menuTextColor="white" />
       
       {/* --- Hero Section --- */}
       <div className="services-hero-section">
@@ -74,7 +75,7 @@ const ServicesPage = ({ servicesPageData }) => {
         </div>
       </div>
 
-      {/* --- UPDATED: Services Grid Section (Using Bullets) --- */}
+      {/* --- Services Grid Section (Dark) --- */}
       <div className="fancy-feature-thirtyOne position-relative zn2 pt-180 pb-140 lg-pt-140 lg-pb-100" style={{ background: 'linear-gradient(135deg, #000 0%, #1a1a1a 100%)' }}>
         <div className="container">
           <div className="row">
@@ -105,69 +106,37 @@ const ServicesPage = ({ servicesPageData }) => {
               </div>
             </div>
           </div>
-          
-          {/* Call the new Component here */}
           <div className="row g-4">
             <ServicesGridBullets />
           </div>
-
         </div>
       </div>
 
-      {/* ... Rest of the sections (Approach, Insights, Industries, etc.) remain unchanged ... */}
-      
-      {/* Approach Section */}
-      <div className="fancy-feature-thirtyOne position-relative zn2 pt-180 pb-180 lg-pt-140 lg-pb-140" style={{ background: 'white' }}>
+      {/* --- Process Image Section --- */}
+      <div className="fancy-feature-thirtyOne position-relative zn2 pt-140 pb-140 lg-pt-100 lg-pb-100" style={{ background: 'white' }}>
         <div className="container">
           <div className="row">
-            <div className="col-lg-10 mx-auto">
-              <div className="approach-content-white text-center">
-                <div className="sc-title" style={{ color: '#FF1292', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '14px', fontWeight: '600', marginBottom: '20px' }}>
-                  {servicesPageData?.approachTagline || "Our Approach"}
-                </div>
-                <h2 className="main-title font-recoleta fw-normal tx-dark">
-                  {servicesPageData?.approachTitle || "Our 5 Key"}
-                  <span className="position-relative">
-                    {" "}
-                    {servicesPageData?.approachTitleHighlight || "Phases"}
-                    <Image
-                      src="/images/shape/shape_122.svg"
-                      alt="icon shape"
-                      width={220}
-                      height={5}
-                      className="mx-auto"
-                    />
-                  </span>
-                </h2>
-
-                <div className="phases-container mt-80 lg-mt-50 text-start">
-                  {servicesPageData?.approachPhases?.map((phase, index) => (
-                    <div key={index} className="phase-item-static">
-                      <div className="phase-number-static">{`0${index + 1}`}</div>
-                      <div className="phase-text-content">
-                        <h4 className="phase-title-static">{phase.title}</h4>
-                        <p className="phase-description-static">{phase.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="col-lg-8 mx-auto">
-                    <p className="approach-text-dark mt-60 lg-mt-40 fs-20">
-                    {servicesPageData?.approachDescription || "This structured process ensures we cover every critical step, from initial understanding to a successful market launch, delivering results that are both measurable and impactful."}
-                    </p>
-                    <LetsTalkButton 
-                      buttonText={servicesPageData?.approachButtonText || "Start Your Project"} 
-                      href={servicesPageData?.approachButtonUrl || "/contact"}
+            <div className="col-12">
+                <div className="process-image-wrapper text-center" data-aos="fade-up">
+                    <Image 
+                        src={
+                            servicesPageData?.processImage?.url
+                            ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.processImage.url}`
+                            : "/images/assets/process_placeholder.jpg" 
+                        }
+                        alt="Our Process"
+                        width={1200}
+                        height={800}
+                        className="img-fluid process-main-image"
+                        style={{ height: 'auto', borderRadius: '12px' }}
                     />
                 </div>
-
-              </div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Marketing Insights Section */}
       <div className="insights-section-wrapper" style={{ background: '#f8f9fa' }}>
         <div className="container">
           <div className="row align-items-center">
@@ -186,14 +155,13 @@ const ServicesPage = ({ servicesPageData }) => {
                 />
               </div>
             </div>
-            
             <div className="col-lg-6">
               <div className="insights-text-content" data-aos="fade-left">
                 <h2 className="main-title font-recoleta fw-normal tx-dark">
                   {servicesPageData?.insightsHeading || "Marketing Insights"}
                 </h2>
                 <p className="body-text fs-20 mt-30 mb-50 lg-mb-30">
-                  {servicesPageData?.insightsBodyText || "Stay ahead of the curve..."}
+                  {servicesPageData?.insightsBodyText || "Stay ahead of the curve with our data-driven analysis and strategic guidance."}
                 </p>
                 <LetsTalkButton 
                   buttonText={servicesPageData?.insightsButtonText || "Market Trend Report"}
@@ -205,6 +173,7 @@ const ServicesPage = ({ servicesPageData }) => {
         </div>
       </div>
 
+      {/* Industries Section */}
       <div className="fancy-feature-thirtyOne position-relative zn2 pt-180 pb-180 lg-pt-140 lg-pb-140" style={{ background: '#151937' }}>
         <div className="container">
           <div className="row">
@@ -247,9 +216,15 @@ const ServicesPage = ({ servicesPageData }) => {
               <div className="capabilities-content ps-lg-5"> 
                 <IndustriesGrid />
                 <div className="mt-50">
+                  {/* Paragraph 1 */}
                   <p className="industries-subtext" style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '1.1rem', marginBottom: '30px' }}>
                     {servicesPageData?.industriesSubtext}
                   </p>
+                  {/* Paragraph 2 (NEW) */}
+                  <p className="industries-subtext" style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '1.1rem', marginBottom: '30px' }}>
+                    {servicesPageData?.industriesSubtext2}
+                  </p>
+                  
                   <LetsTalkButton
                     buttonText={servicesPageData?.industriesButtonText || "Discuss Your Project"}
                     href={servicesPageData?.industriesButtonUrl || "/contact"}
@@ -276,27 +251,109 @@ const ServicesPage = ({ servicesPageData }) => {
         </div>
       </div>
 
+      {/* Testimonials Section */}
       <div className="feedback-section-ten position-relative pt-200 pb-200 lg-pt-150 lg-pb-150" style={{ background: 'linear-gradient(135deg, #000 0%, #1a1a1a 100%)' }}>
         <div className="container">
+          <div className="position-relative">
+            <div className="row">
+              <div className="col-lg-5">
+                <div
+                  className="title-style-ten text-center text-lg-start"
+                  data-aos="fade-right"
+                >
+                  <div className="sc-title" style={{ color: '#FF1292', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '14px', fontWeight: '600', marginBottom: '20px' }}>
+                    {servicesPageData?.testimonialsTagline || "Client Testimonials"}
+                  </div>
+                  <h2 className="main-title font-recoleta fw-normal" style={{ color: 'white', marginTop: '20px' }}>
+                    {servicesPageData?.testimonialsTitle || "Trusted by"}{" "}
+                    <span className="position-relative">
+                      {servicesPageData?.testimonialsTitleHighlight || "Leading"}{" "}
+                      <Image
+                        src="/images/shape/shape_129.svg"
+                        alt=""
+                        width={160}
+                        height={6}
+                      />
+                    </span>
+                    {" "}{servicesPageData?.testimonialsTitleEnd || "Brands"}
+                  </h2>
+                  <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '1.1rem', marginTop: '20px', lineHeight: '1.6' }}>
+                    {servicesPageData?.testimonialsDescription || "Don't just take our word for it. Here's what our clients say about working with us."}
+                  </p>
+                </div>
+              </div>
+            </div>
             <Testimonial />
+          </div>
         </div>
       </div>
 
       <div className="fancy-feature-thirtyThree mt-180 lg-mt-120">
         <div className="container">
+          <div className="title-style-ten text-center" data-aos="fade-up">
+            <div className="sc-title">{servicesPageData?.faqTagline || "FAQs"}</div>
+            <h2 className="main-title font-recoleta fw-normal tx-dark">
+              {servicesPageData?.faqTitle || "Answers to your most &"}{" "}
+              <span className="position-relative">
+                {servicesPageData?.faqTitleHighlight || "frequently"}{" "}
+                <Image
+                  width={219}
+                  height={7}
+                  src="/images/shape/shape_132.svg"
+                  alt=""
+                />
+              </span>
+              {" "}{servicesPageData?.faqTitleEnd || "asked questions."}
+            </h2>
+          </div>
+          <div
+            className="bg-wrapper position-relative mt-80 lg-mt-40"
+            data-aos="fade-up"
+          >
             <Faq />
+          </div>
         </div>
       </div>
 
       <div className="fancy-short-banner-twelve position-relative zn2 pt-160 pb-150 lg-pt-120 lg-pb-120">
         <div className="container">
-            <LetsTalkButton buttonText="Send Message" href="/contact" />
+          <div className="row">
+            <div className="col-xl-8 m-auto text-center">
+              <div className="title-style-ten" data-aos="fade-up">
+                <h2 className="main-title font-recoleta fw-normal tx-dark">
+                  {servicesPageData?.ctaTitle1 || "Have an idea for a project?"} <br />
+                  <span className="position-relative">
+                    {servicesPageData?.ctaTitleHighlight || "Let's Talk"}{" "}
+                    <Image
+                      width={221}
+                      height={7}
+                      src="/images/shape/shape_132.svg"
+                      alt=""
+                    />
+                  </span>
+                  {" "}{servicesPageData?.ctaTitleEnd || "& Grow your Business"}
+                </h2>
+              </div>
+              <p
+                className="text-lg mt-45 mb-55 lg-mb-30 lg-mt-40"
+                data-aos="fade-up"
+                data-aos-delay="200"
+              >
+                {servicesPageData?.ctaDescription || "We're ready to help you. Our experts are here, just send a message."}
+              </p>
+              <LetsTalkButton 
+                buttonText={servicesPageData?.ctaButtonText || "Send Message"} 
+                href={servicesPageData?.ctaButtonUrl || "/contact"} 
+              />
+            </div>
+          </div>
         </div>
         <div className="shapes shape-one" />
       </div>
 
       <FooterWithSettings />
 
+      {/* --- PAGE STYLES --- */}
       <style jsx>{`
         .services-hero-section { 
             position: relative; 
@@ -315,13 +372,17 @@ const ServicesPage = ({ servicesPageData }) => {
         .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1; }
         .z-2 { z-index: 2; }
 
-        .phases-container { max-width: 800px; margin: 0 auto; }
-        .phase-item-static { display: flex; align-items: flex-start; gap: 25px; padding: 30px 0; border-bottom: 1px solid #e9ecef; }
-        .phase-item-static:last-child { border-bottom: none; }
-        .phase-number-static { font-size: 1.5rem; font-weight: 700; color: #FF1292; font-family: 'Recoleta', serif; line-height: 1.2; }
-        .phase-text-content { flex: 1; }
-        .phase-title-static { font-size: 1.6rem; font-weight: 600; color: #151937; font-family: 'Recoleta', serif; margin: 0 0 10px; }
-        .phase-description-static { color: #666; line-height: 1.7; font-size: 1.1rem; margin: 0; }
+        .process-image-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .process-main-image {
+            width: 100%;
+            height: auto;
+            object-fit: contain; 
+        }
 
         .insights-section-wrapper { padding: 120px 0; }
         .insights-image-container { position: relative; }
@@ -346,10 +407,32 @@ const ServicesPage = ({ servicesPageData }) => {
         }
         @media (max-width: 768px) {
             .services-hero-section { height: 70vh; } 
-            .phase-item-static { padding: 25px 0; gap: 15px; }
-            .phase-title-static { font-size: 1.3rem; }
-            .phase-description-static { font-size: 1rem; }
             .capabilities-main-image { height: 250px; }
+        }
+      `}</style>
+
+      {/* --- FORCE WHITE MENU STYLES --- */}
+      <style jsx global>{`
+        /* Force Menu Links to White */
+        body .theme-main-menu:not(.fixed) .navbar-nav .nav-link {
+            color: white !important;
+        }
+        /* Keep Active/Hover Pink */
+        body .theme-main-menu:not(.fixed) .navbar-nav .nav-item.active .nav-link,
+        body .theme-main-menu:not(.fixed) .navbar-nav .nav-item.current-menu-item .nav-link,
+        body .theme-main-menu:not(.fixed) .navbar-nav .nav-item:hover .nav-link {
+            color: #FF1292 !important;
+        }
+        /* White Button Outline */
+        body .theme-main-menu:not(.fixed) .lets-talk-btn {
+            color: white !important;
+            border-color: white !important;
+            background: transparent !important;
+        }
+        /* Button Hover */
+        body .theme-main-menu:not(.fixed) .lets-talk-btn:hover {
+            color: black !important;
+            background: white !important;
         }
       `}</style>
     </>

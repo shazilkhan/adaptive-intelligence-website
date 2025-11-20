@@ -44,7 +44,7 @@ const HomePage = ({ homepageData }) => {
 
       <Feedback feedbackData={homepageData} />
 
-      <Feature featureData={homepageData} />
+  <Feature featureData={homepageData} />
 
       {/* Services Section */}
       <div className="fancy-feature-thirtyOne position-relative zn2 pt-140 pb-140 lg-pt-100 lg-pb-70">

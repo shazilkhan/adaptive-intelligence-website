@@ -1208,6 +1208,9 @@ export interface ApiServicesPageServicesPage extends Struct.SingleTypeSchema {
       'api::services-page.services-page'
     > &
       Schema.Attribute.Private;
+    processImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
     publishedAt: Schema.Attribute.DateTime;
     services: Schema.Attribute.Relation<'oneToMany', 'api::service.service'>;
     servicesHeroDescription: Schema.Attribute.Text;

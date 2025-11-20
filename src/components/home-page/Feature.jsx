@@ -2,14 +2,14 @@ import Link from "next/link";
 import Image from "next/image";
 
 const Feature = ({ featureData }) => {
-  // CORRECTED: The image URL and alt text paths are now simpler
+  // Image Logic
   const imageUrl = featureData?.featureImage?.url
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${featureData.featureImage.url}`
     : "/images/assets/mathias-reding-YyIgIirt5A0-unsplash.jpg";
   
   const imageAlt = featureData?.featureImage?.alternativeText || "media";
 
-  // The rest of your helper variables
+  // Helper variables
   const tagline = featureData?.featureTagline || "Creative is Power.";
   const title = featureData?.featureTitle || "We’re in the business of growing your";
   const titleHighlight = featureData?.featureTitleHighlight || "Business.";
@@ -27,11 +27,29 @@ const Feature = ({ featureData }) => {
     <div className="fancy-feature-thirty position-relative mt-190 pb-140 lg-mt-100 lg-pb-120 md-p0">
       <div className="container">
         <div className="row align-items-center">
-          <div className="col-lg-6 ms-auto">
-            <div
-              className="block-style-four ps-xxl-5 ms-xxl-4"
-              data-aos="fade-left"
-            >
+          
+          {/* --- LEFT COLUMN: IMAGE --- */}
+          {/*  */}
+          <div className="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right">
+            <div className="image-wrapper position-relative">
+                <Image
+                  src={imageUrl}
+                  alt={imageAlt}
+                  width={800}
+                  height={600}
+                  style={{ 
+                    width: '100%', 
+                    height: 'auto', // Prevents stretching
+                    objectFit: 'cover'
+                  }}
+                  priority
+                />
+            </div>
+          </div>
+
+          {/* --- RIGHT COLUMN: TEXT --- */}
+          <div className="col-lg-6 ms-auto" data-aos="fade-left">
+            <div className="block-style-four ps-xxl-5 ms-xxl-4">
               <div className="title-style-ten">
                 <div className="sc-title">{tagline}</div>
                 <h2 className="main-title font-recoleta fw-normal tx-dark">
@@ -63,17 +81,8 @@ const Feature = ({ featureData }) => {
               </div>
             </div>
           </div>
+
         </div>
-      </div>
-      <div className="illustration-holder" data-aos="fade-right">
-        <Image
-          src={imageUrl}
-          alt={imageAlt}
-          className="lazy-img main-img"
-          width={900}
-          height={706}
-          style={{ objectFit: 'cover' }}
-        />
       </div>
     </div>
   );
