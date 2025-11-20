@@ -405,7 +405,7 @@ const About = ({ treeCardStats, pageData }) => {
                    <Image
                      src={pageData.value1_Image?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.value1_Image.url}` : '/images/icon/icon_175.svg'}
                      alt={pageData.value1_Title || 'Value icon'}
-                     className="lazy-img" width={42} height={42}
+                     className="lazy-img" width={32} height={32}
                    />
                  </div>
                  <h4 className="fw-bold tx-dark mt-35 mb-20">{pageData.value1_Title}</h4>
@@ -421,7 +421,7 @@ const About = ({ treeCardStats, pageData }) => {
                      <Image
                        src={pageData.value2_Image?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.value2_Image.url}` : '/images/icon/icon_175.svg'}
                        alt={pageData.value2_Title || 'Value icon'}
-                       className="lazy-img" width={42} height={42}
+                       className="lazy-img" width={32} height={32}
                      />
                    </div>
                    <h4 className="fw-bold tx-dark mt-35 mb-20">{pageData.value2_Title}</h4>
@@ -437,7 +437,7 @@ const About = ({ treeCardStats, pageData }) => {
                      <Image
                        src={pageData.value3_Image?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.value3_Image.url}` : '/images/icon/icon_175.svg'}
                        alt={pageData.value3_Title || 'Value icon'}
-                       className="lazy-img" width={42} height={42}
+                       className="lazy-img" width={32} height={32}
                      />
                    </div>
                    <h4 className="fw-bold tx-dark mt-35 mb-20">{pageData.value3_Title}</h4>
@@ -453,7 +453,7 @@ const About = ({ treeCardStats, pageData }) => {
                      <Image
                        src={pageData.value4_Image?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.value4_Image.url}` : '/images/icon/icon_175.svg'}
                        alt={pageData.value4_Title || 'Value icon'}
-                       className="lazy-img" width={42} height={42}
+                       className="lazy-img" width={32} height={32}
                      />
                    </div>
                    <h4 className="fw-bold tx-dark mt-35 mb-20">{pageData.value4_Title}</h4>
