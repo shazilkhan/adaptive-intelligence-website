@@ -9,6 +9,7 @@ import LatestCaseStudiesSection from '@/components/case-studies/LatestCaseStudie
 import IndustriesGrid from '@/components/IndustriesGrid';
 import ServicesGridBullets from "@/components/ServicesGridBullets"; 
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
+import Link from "next/link";
 
 const ServicesPage = ({ servicesPageData }) => {
   
@@ -341,14 +342,57 @@ const ServicesPage = ({ servicesPageData }) => {
               >
                 {servicesPageData?.ctaDescription || "We're ready to help you. Our experts are here, just send a message."}
               </p>
-              <LetsTalkButton 
-                buttonText={servicesPageData?.ctaButtonText || "Send Message"} 
-                href={servicesPageData?.ctaButtonUrl || "/contact"} 
-              />
+              
+              {/* Button Group */}
+              <div 
+                className="d-sm-flex align-items-center justify-content-center gap-3"
+                data-aos="fade-up" 
+                data-aos-delay="300"
+              >
+                {/* Button 1: Existing */}
+                <LetsTalkButton 
+                  buttonText={servicesPageData?.ctaButtonText || "Send Message"} 
+                  href={servicesPageData?.ctaButtonUrl || "/contact"} 
+                />
+
+                {/* Button 2: New (Pink) */}
+                {servicesPageData?.ctaButtonText2 && (
+                  <Link
+                    href={servicesPageData?.ctaButtonUrl2 || "/services"}
+                    className="btn-pink-custom fw-500 tran3s d-inline-flex align-items-center justify-content-center"
+                    style={{ minWidth: "180px" }}
+                  >
+                    {servicesPageData?.ctaButtonText2}
+                  </Link>
+                )}
+              </div>
+
             </div>
           </div>
         </div>
         <div className="shapes shape-one" />
+
+        {/* Styles for 0.9rem padding & Pink Theme */}
+        <style dangerouslySetInnerHTML={{__html: `
+          /* Force padding on the existing button class */
+          .btn-twentyOne {
+            padding-top: 0.9rem !important;
+            padding-bottom: 0.9rem !important;
+          }
+          /* Styling for the new Pink Button */
+          .btn-pink-custom {
+            background-color: #FF1292;
+            border: 2px solid #FF1292;
+            color: white !important;
+            padding-top: 0.9rem !important;
+            padding-bottom: 0.9rem !important;
+          }
+          /* Hover effect for Pink Button */
+          .btn-pink-custom:hover {
+            background-color: transparent !important;
+            color: #FF1292 !important;
+          }
+        `}} />
       </div>
 
       <FooterWithSettings />

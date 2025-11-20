@@ -13,6 +13,7 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
 
   // --- Hero Background Logic ---
   const heroType = data.heroBackgroundType || 'Image';
+  
   const heroVideoUrl = data.heroBackgroundVideo?.url 
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data.heroBackgroundVideo.url}` 
     : null;
@@ -20,18 +21,28 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data.heroBackgroundImage.url}` 
     : null; 
 
+  // Helper to check if the type is ANY kind of video string
+  // Strapi might send 'Video', 'video', or 'heroBackgroundVideo' depending on how the enum was set up.
+  const isVideo = heroType === 'Video' || heroType === 'video' || heroType === 'heroBackgroundVideo';
+
   return (
     <>
       <Header menuTextColor="white" />
       
       {/* --- HERO SECTION (Large Eco-Style) --- */}
-      {/* Removed padding classes (pt-200...) to rely on flex/height styling below */}
       <div className="case-studies-hero">
         
         {/* Dynamic Background Layer */}
         <div className="hero-bg-wrapper">
-            {heroType === 'Video' && heroVideoUrl ? (
-                <video autoPlay loop muted playsInline className="hero-bg-media">
+            {/* FIX: Updated condition to use 'isVideo' which includes 'heroBackgroundVideo' */}
+            {isVideo && heroVideoUrl ? (
+                <video 
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline 
+                  className="hero-bg-media"
+                >
                     <source src={heroVideoUrl} type="video/mp4" />
                 </video>
             ) : heroImageUrl ? (

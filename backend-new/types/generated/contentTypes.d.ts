@@ -457,6 +457,8 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
     heroDescription: Schema.Attribute.Text;
     heroTitle: Schema.Attribute.String;
     letsTalkButtonText: Schema.Attribute.String;
+    letsTalkButtonText2: Schema.Attribute.String;
+    letsTalkButtonUrl2: Schema.Attribute.String;
     letsTalkParagraph1: Schema.Attribute.Text;
     letsTalkParagraph2: Schema.Attribute.Text;
     letsTalkTitle: Schema.Attribute.String;
@@ -533,6 +535,21 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
       'images' | 'files' | 'videos' | 'audios'
     >;
     whatWeDoCard3_Title: Schema.Attribute.String;
+    whatWeDoCard4_Description: Schema.Attribute.Text;
+    whatWeDoCard4_Icon: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    whatWeDoCard4_Title: Schema.Attribute.String;
+    whatWeDoCard5_Description: Schema.Attribute.Text;
+    whatWeDoCard5_Icon: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    whatWeDoCard5_Title: Schema.Attribute.String;
+    whatWeDoCard6_Description: Schema.Attribute.Text;
+    whatWeDoCard6_Icon: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    whatWeDoCard6_Title: Schema.Attribute.String;
     whatWeDoDescription: Schema.Attribute.Text;
     whatWeDoTitle: Schema.Attribute.String;
     whoWeAreBadgeNumber: Schema.Attribute.String;
@@ -881,7 +898,9 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     ctaButtonText: Schema.Attribute.String;
+    ctaButtonText2: Schema.Attribute.String;
     ctaButtonUrl: Schema.Attribute.String;
+    ctaButtonUrl2: Schema.Attribute.String;
     ctaDescription: Schema.Attribute.Text;
     ctaTitle: Schema.Attribute.Text;
     ctaTitleEnd: Schema.Attribute.String;
@@ -1164,7 +1183,9 @@ export interface ApiServicesPageServicesPage extends Struct.SingleTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     ctaButtonText: Schema.Attribute.String;
+    ctaButtonText2: Schema.Attribute.String;
     ctaButtonUrl: Schema.Attribute.String;
+    ctaButtonUrl2: Schema.Attribute.String;
     ctaDescription: Schema.Attribute.Text;
     ctaTitle1: Schema.Attribute.String;
     ctaTitleEnd: Schema.Attribute.String;

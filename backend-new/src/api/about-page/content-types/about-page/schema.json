@@ -312,6 +312,60 @@
         "videos",
         "audios"
       ]
+    },
+    "letsTalkButtonText2": {
+      "type": "string"
+    },
+    "letsTalkButtonUrl2": {
+      "type": "string"
+    },
+    "whatWeDoCard4_Title": {
+      "type": "string"
+    },
+    "whatWeDoCard4_Description": {
+      "type": "text"
+    },
+    "whatWeDoCard4_Icon": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "whatWeDoCard5_Title": {
+      "type": "string"
+    },
+    "whatWeDoCard5_Description": {
+      "type": "text"
+    },
+    "whatWeDoCard5_Icon": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "whatWeDoCard6_Title": {
+      "type": "string"
+    },
+    "whatWeDoCard6_Description": {
+      "type": "text"
+    },
+    "whatWeDoCard6_Icon": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

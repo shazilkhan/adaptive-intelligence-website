@@ -260,9 +260,11 @@ const About = ({ treeCardStats, pageData }) => {
               </span>
             </h2>
           </div>
+          
           <div className="card-wrapper pt-45 lg-pt-20 pb-55 lg-pb-30 mt-85 lg-mt-50">
             <div className="row justify-content-center">
-              {/* Card 1 */}
+              
+              {/* --- Card 1 --- */}
               {pageData?.whatWeDoCard1_Title && (
                 <div className="col-lg-4 col-sm-6" data-aos="fade-up" data-aos-delay="0">
                   <div className="card-style-twentySix text-center mt-25">
@@ -278,7 +280,8 @@ const About = ({ treeCardStats, pageData }) => {
                   </div>
                 </div>
               )}
-              {/* Card 2 */}
+
+              {/* --- Card 2 --- */}
               {pageData?.whatWeDoCard2_Title && (
                   <div className="col-lg-4 col-sm-6" data-aos="fade-up" data-aos-delay="100">
                     <div className="card-style-twentySix text-center mt-25">
@@ -294,7 +297,8 @@ const About = ({ treeCardStats, pageData }) => {
                     </div>
                   </div>
               )}
-               {/* Card 3 */}
+
+              {/* --- Card 3 --- */}
               {pageData?.whatWeDoCard3_Title && (
                   <div className="col-lg-4 col-sm-6" data-aos="fade-up" data-aos-delay="200">
                     <div className="card-style-twentySix text-center mt-25">
@@ -304,14 +308,67 @@ const About = ({ treeCardStats, pageData }) => {
                           src={pageData.whatWeDoCard3_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard3_Icon.url}` : '/images/icon/icon_175.svg'}
                           alt={pageData.whatWeDoCard3_Title || 'Icon'} className="lazy-img"
                         />
-                     </div>
-                     <h5 className="tx-dark mt-40 lg-mt-30 mb-5">{pageData.whatWeDoCard3_Title}</h5>
-                     <p className="fs-18">{pageData.whatWeDoCard3_Description}</p>
+                      </div>
+                      <h5 className="tx-dark mt-40 lg-mt-30 mb-5">{pageData.whatWeDoCard3_Title}</h5>
+                      <p className="fs-18">{pageData.whatWeDoCard3_Description}</p>
                     </div>
                   </div>
               )}
+
+              {/* --- Card 4 (New) --- */}
+              {pageData?.whatWeDoCard4_Title && (
+                  <div className="col-lg-4 col-sm-6" data-aos="fade-up" data-aos-delay="300">
+                    <div className="card-style-twentySix text-center mt-25">
+                      <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
+                        <Image
+                          width={31} height={30}
+                          src={pageData.whatWeDoCard4_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard4_Icon.url}` : '/images/icon/icon_175.svg'}
+                          alt={pageData.whatWeDoCard4_Title || 'Icon'} className="lazy-img"
+                        />
+                      </div>
+                      <h5 className="tx-dark mt-40 lg-mt-30 mb-5">{pageData.whatWeDoCard4_Title}</h5>
+                      <p className="fs-18">{pageData.whatWeDoCard4_Description}</p>
+                    </div>
+                  </div>
+              )}
+
+              {/* --- Card 5 (New) --- */}
+              {pageData?.whatWeDoCard5_Title && (
+                  <div className="col-lg-4 col-sm-6" data-aos="fade-up" data-aos-delay="400">
+                    <div className="card-style-twentySix text-center mt-25">
+                      <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
+                        <Image
+                          width={31} height={30}
+                          src={pageData.whatWeDoCard5_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard5_Icon.url}` : '/images/icon/icon_175.svg'}
+                          alt={pageData.whatWeDoCard5_Title || 'Icon'} className="lazy-img"
+                        />
+                      </div>
+                      <h5 className="tx-dark mt-40 lg-mt-30 mb-5">{pageData.whatWeDoCard5_Title}</h5>
+                      <p className="fs-18">{pageData.whatWeDoCard5_Description}</p>
+                    </div>
+                  </div>
+              )}
+
+              {/* --- Card 6 (New) --- */}
+              {pageData?.whatWeDoCard6_Title && (
+                  <div className="col-lg-4 col-sm-6" data-aos="fade-up" data-aos-delay="500">
+                    <div className="card-style-twentySix text-center mt-25">
+                      <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
+                        <Image
+                          width={31} height={30}
+                          src={pageData.whatWeDoCard6_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard6_Icon.url}` : '/images/icon/icon_175.svg'}
+                          alt={pageData.whatWeDoCard6_Title || 'Icon'} className="lazy-img"
+                        />
+                      </div>
+                      <h5 className="tx-dark mt-40 lg-mt-30 mb-5">{pageData.whatWeDoCard6_Title}</h5>
+                      <p className="fs-18">{pageData.whatWeDoCard6_Description}</p>
+                    </div>
+                  </div>
+              )}
+
             </div>
           </div>
+
           <div className="row">
             <div className="col-xl-10 m-auto">
                <p className="text-lg tx-dark text-center lh-lg mt-25 md-mt-20" data-aos="fade-up">
@@ -479,7 +536,7 @@ const About = ({ treeCardStats, pageData }) => {
         </div>
       </div>
 
-      {/* Let's Talk Section */}
+     {/* Let's Talk Section */}
       <div className="fancy-short-banner-twelve position-relative zn2 pt-160 pb-150 lg-pt-120 lg-pb-120">
         <div className="container">
           <div className="row">
@@ -495,14 +552,57 @@ const About = ({ treeCardStats, pageData }) => {
               <p className="text-lg mb-55 lg-mb-30" data-aos="fade-up" data-aos-delay="150">
                 {pageData?.letsTalkParagraph2}
               </p>
-              <LetsTalkButton 
-                buttonText={pageData?.letsTalkButtonText || "Let's Talk"} 
-                targetPage="/contact" 
-              />
+              
+              {/* Button Group */}
+              <div 
+                className="d-sm-flex align-items-center justify-content-center gap-3"
+                data-aos="fade-up" 
+                data-aos-delay="200"
+              >
+                {/* Button 1: Existing - Note: I restored 'targetPage' prop based on your snippet */}
+                <LetsTalkButton 
+                  buttonText={pageData?.letsTalkButtonText || "Let's Talk"} 
+                  targetPage="/contact" 
+                />
+
+                {/* Button 2: New Pink Button */}
+                {pageData?.letsTalkButtonText2 && (
+                  <Link
+                    href={pageData?.letsTalkButtonUrl2 || "/services"}
+                    className="btn-pink-custom fw-500 tran3s d-inline-flex align-items-center justify-content-center"
+                    style={{ minWidth: "180px" }}
+                  >
+                    {pageData?.letsTalkButtonText2}
+                  </Link>
+                )}
+              </div>
+
             </div>
           </div>
         </div>
         <div className="shapes shape-one" />
+
+        {/* Forced Styles using standard CSS tag to ensure application */}
+        <style dangerouslySetInnerHTML={{__html: `
+          /* Force padding on the existing button class */
+          .btn-twentyOne {
+            padding-top: 0.9rem !important;
+            padding-bottom: 0.9rem !important;
+          }
+          /* Styling for the new Pink Button */
+          .btn-pink-custom {
+            background-color: #FF1292;
+            border: 2px solid #FF1292;
+            color: white !important;
+            padding-top: 0.9rem !important;
+            padding-bottom: 0.9rem !important;
+          }
+          /* Hover effect for Pink Button */
+          .btn-pink-custom:hover {
+            background-color: transparent !important;
+            color: #FF1292 !important;
+          }
+        `}} />
       </div>
 
       <FooterWithSettings />
@@ -576,6 +676,19 @@ const About = ({ treeCardStats, pageData }) => {
             font-size: 1.1rem;
             color: #151937;
         }
+        .btn-twentyOne,
+          .cta-btn-two {
+            padding-top: 0.9rem !important;
+            padding-bottom: 0.9rem !important;
+          }
+          .cta-btn-two {
+            background-color: #FF1292;
+            border: 2px solid #FF1292;
+          }
+          .cta-btn-two:hover {
+            background-color: transparent;
+            color: #FF1292 !important;
+          }
       `}</style>
     </>
   )

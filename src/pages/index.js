@@ -15,6 +15,7 @@ import SuccessStory from "@/components/home-page/SuccessStory";
 import Testimonial from "@/components/home-page/Testimonial";
 import Faq from "@/components/home-page/Faq";
 import LetsTalkButton from "@/components/LetsTalkButton";
+import Link from "next/link";
 
 const HomePage = ({ homepageData }) => {
   
@@ -214,10 +215,35 @@ const HomePage = ({ homepageData }) => {
               >
                 {homepageData?.ctaDescription || "We're ready to help you. Our experts are here, just send a message."}
               </p>
-              <LetsTalkButton 
-                buttonText={homepageData?.ctaButtonText || "Send Message"} 
-                href={homepageData?.ctaButtonUrl || "/contact"} 
-              />
+              
+              {/* Button Group Container */}
+              <div 
+                className="d-sm-flex align-items-center justify-content-center gap-3"
+                data-aos="fade-up" 
+                data-aos-delay="300"
+              >
+                {/* Button 1 (Existing - Dark) */}
+                <LetsTalkButton 
+                  buttonText={homepageData?.ctaButtonText || "Send Message"} 
+                  href={homepageData?.ctaButtonUrl || "/contact"} 
+                />
+
+                {/* Button 2 (New - Initially Pink, No Icon) */}
+                {homepageData?.ctaButtonText2 && (
+                  <Link
+                    href={homepageData?.ctaButtonUrl2 || "/services"}
+                    className="px-5 py-3 fw-bold d-block d-sm-inline-block mt-3 mt-sm-0 transition-3s text-white text-center"
+                    style={{ 
+                      minWidth: "180px",
+                      backgroundColor: "#FF1292", // The pink color from Button 1's hover
+                      border: "2px solid #FF1292"
+                    }}
+                  >
+                    {homepageData?.ctaButtonText2}
+                  </Link>
+                )}
+              </div>
+
             </div>
           </div>
         </div>
@@ -249,6 +275,20 @@ const HomePage = ({ homepageData }) => {
             color: black !important;
             background: white !important;
           }
+
+          .btn-twentyOne,
+                .cta-btn-two {
+                  padding-top: 0.9rem !important;
+                  padding-bottom: 0.9rem !important;
+                }
+                .cta-btn-two {
+                  background-color: #FF1292;
+                  border: 2px solid #FF1292;
+                }
+                .cta-btn-two:hover {
+                  background-color: transparent;
+                  color: #FF1292 !important;
+                }
         `}</style>
       )}
     </>

@@ -118,15 +118,6 @@ const OurMission = ({ data }) => {
               alt="mission image 4"
               className="lazy-img w-100"
             />
-            <div
-              className="customer-data d-flex flex-column align-items-center justify-content-center"
-              data-aos="fade-up"
-            >
-              <div className="fw-500 tx-dark amount">
-                {data.missionCustomerCount || '32k'}
-              </div>
-              <div className="fs-18 tx-dark">{data.missionCustomerLabel || 'Customers'}</div>
-            </div>
           </div>
         </div>
       </div>

@@ -204,6 +204,12 @@
         "videos",
         "audios"
       ]
+    },
+    "ctaButtonText2": {
+      "type": "string"
+    },
+    "ctaButtonUrl2": {
+      "type": "string"
     }
   }
 }
