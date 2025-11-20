@@ -270,7 +270,7 @@ const About = ({ treeCardStats, pageData }) => {
                   <div className="card-style-twentySix text-center mt-25">
                     <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
                       <Image
-                        width={31} height={30} 
+                        width={50} height={50}
                         src={pageData.whatWeDoCard1_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard1_Icon.url}` : '/images/icon/icon_175.svg'}
                         alt={pageData.whatWeDoCard1_Title || 'Icon'} className="lazy-img"
                       />
@@ -287,7 +287,7 @@ const About = ({ treeCardStats, pageData }) => {
                     <div className="card-style-twentySix text-center mt-25">
                      <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
                         <Image
-                          width={31} height={30}
+                          width={50} height={50}
                           src={pageData.whatWeDoCard2_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard2_Icon.url}` : '/images/icon/icon_175.svg'}
                           alt={pageData.whatWeDoCard2_Title || 'Icon'} className="lazy-img"
                         />
@@ -304,7 +304,7 @@ const About = ({ treeCardStats, pageData }) => {
                     <div className="card-style-twentySix text-center mt-25">
                       <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
                         <Image
-                          width={31} height={30}
+                          width={50} height={50}
                           src={pageData.whatWeDoCard3_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard3_Icon.url}` : '/images/icon/icon_175.svg'}
                           alt={pageData.whatWeDoCard3_Title || 'Icon'} className="lazy-img"
                         />
@@ -321,7 +321,7 @@ const About = ({ treeCardStats, pageData }) => {
                     <div className="card-style-twentySix text-center mt-25">
                       <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
                         <Image
-                          width={31} height={30}
+                          width={50} height={50}
                           src={pageData.whatWeDoCard4_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard4_Icon.url}` : '/images/icon/icon_175.svg'}
                           alt={pageData.whatWeDoCard4_Title || 'Icon'} className="lazy-img"
                         />
@@ -338,7 +338,7 @@ const About = ({ treeCardStats, pageData }) => {
                     <div className="card-style-twentySix text-center mt-25">
                       <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
                         <Image
-                          width={31} height={30}
+                          width={50} height={50}
                           src={pageData.whatWeDoCard5_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard5_Icon.url}` : '/images/icon/icon_175.svg'}
                           alt={pageData.whatWeDoCard5_Title || 'Icon'} className="lazy-img"
                         />
@@ -355,7 +355,7 @@ const About = ({ treeCardStats, pageData }) => {
                     <div className="card-style-twentySix text-center mt-25">
                       <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
                         <Image
-                          width={31} height={30}
+                          width={50} height={50}
                           src={pageData.whatWeDoCard6_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard6_Icon.url}` : '/images/icon/icon_175.svg'}
                           alt={pageData.whatWeDoCard6_Title || 'Icon'} className="lazy-img"
                         />
