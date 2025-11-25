@@ -13,7 +13,6 @@ import Link from "next/link";
 
 const ServicesPage = ({ servicesPageData }) => {
   
-  // --- 1. Background Logic for Hero ---
   const heroType = servicesPageData?.heroBackgroundType || 'Image';
   
   const heroVideoUrl = servicesPageData?.heroBackgroundVideo?.url 
@@ -26,7 +25,6 @@ const ServicesPage = ({ servicesPageData }) => {
 
   return (
     <>
-      {/* --- Header --- */}
       <Header menuTextColor="white" />
       
       {/* --- Hero Section --- */}
@@ -64,6 +62,7 @@ const ServicesPage = ({ servicesPageData }) => {
                                     src="/images/shape/shape_186.svg"
                                     alt="shape"
                                     style={{ filter: 'brightness(0) invert(1)' }}
+                                    className="hero-shape"
                                 />
                             </span>
                         </h2>
@@ -76,8 +75,9 @@ const ServicesPage = ({ servicesPageData }) => {
         </div>
       </div>
 
-      {/* --- Services Grid Section (Dark) --- */}
-      <div className="fancy-feature-thirtyOne position-relative zn2 pt-180 pb-140 lg-pt-140 lg-pb-100" style={{ background: 'linear-gradient(135deg, #000 0%, #1a1a1a 100%)' }}>
+      {/* --- Services Grid Section --- */}
+      {/* Added md-pt-80 md-pb-80 for mobile spacing */}
+      <div className="fancy-feature-thirtyOne position-relative zn2 pt-180 pb-140 lg-pt-140 lg-pb-100 md-pt-80 md-pb-80" style={{ background: 'linear-gradient(135deg, #000 0%, #1a1a1a 100%)' }}>
         <div className="container">
           <div className="row">
             <div className="col-xl-8 col-lg-9 m-auto">
@@ -98,6 +98,7 @@ const ServicesPage = ({ servicesPageData }) => {
                       alt="icon shape"
                       width={220}
                       height={5}
+                      className="shape-svg"
                     />
                   </span>
                 </h2>
@@ -114,7 +115,8 @@ const ServicesPage = ({ servicesPageData }) => {
       </div>
 
       {/* --- Process Image Section --- */}
-      <div className="fancy-feature-thirtyOne position-relative zn2 pt-140 pb-140 lg-pt-100 lg-pb-100" style={{ background: 'white' }}>
+      {/* Added md-pt-80 md-pb-80 */}
+      <div className="fancy-feature-thirtyOne position-relative zn2 pt-140 pb-140 lg-pt-100 lg-pb-100 md-pt-80 md-pb-80" style={{ background: 'white' }}>
         <div className="container">
           <div className="row">
             <div className="col-12">
@@ -141,7 +143,8 @@ const ServicesPage = ({ servicesPageData }) => {
       <div className="insights-section-wrapper" style={{ background: '#f8f9fa' }}>
         <div className="container">
           <div className="row align-items-center">
-            <div className="col-lg-6">
+            {/* Added mb-50 on mobile to separate image from text */}
+            <div className="col-lg-6 mb-50 lg-mb-0">
               <div className="insights-image-container" data-aos="fade-right">
                 <Image 
                   src={
@@ -175,11 +178,12 @@ const ServicesPage = ({ servicesPageData }) => {
       </div>
 
       {/* Industries Section */}
-      <div className="fancy-feature-thirtyOne position-relative zn2 pt-180 pb-180 lg-pt-140 lg-pb-140" style={{ background: '#151937' }}>
+      {/* Added md-pt-80 md-pb-80 */}
+      <div className="fancy-feature-thirtyOne position-relative zn2 pt-180 pb-180 lg-pt-140 lg-pb-140 md-pt-80 md-pb-80" style={{ background: '#151937' }}>
         <div className="container">
           <div className="row">
             <div className="col-xl-8 col-lg-9 m-auto">
-              <div className="title-style-ten text-center pb-80 lg-pb-50" data-aos="fade-up">
+              <div className="title-style-ten text-center pb-80 lg-pb-50 md-pb-40" data-aos="fade-up">
                 <h2 className="main-title font-recoleta fw-normal" style={{ color: 'white' }}>
                   {servicesPageData?.industriesHeading || "Industries We Have"}
                   <span className="position-relative">
@@ -188,7 +192,7 @@ const ServicesPage = ({ servicesPageData }) => {
                     <Image
                       src="/images/shape/shape_122.svg"
                       alt="underline"
-                      width={220} height={5} className="mx-auto"
+                      width={220} height={5} className="mx-auto shape-svg"
                     />
                   </span>
                 </h2>
@@ -197,7 +201,8 @@ const ServicesPage = ({ servicesPageData }) => {
           </div>
 
           <div className="row align-items-center">
-            <div className="col-lg-6" data-aos="fade-right">
+            {/* Added mb-50 on mobile */}
+            <div className="col-lg-6 mb-50 lg-mb-0" data-aos="fade-right">
                 <div className="capabilities-image-wrapper"> 
                     <Image
                     src={
@@ -216,12 +221,10 @@ const ServicesPage = ({ servicesPageData }) => {
             <div className="col-lg-6" data-aos="fade-left">
               <div className="capabilities-content ps-lg-5"> 
                 <IndustriesGrid />
-                <div className="mt-50">
-                  {/* Paragraph 1 */}
+                <div className="mt-50 md-mt-30">
                   <p className="industries-subtext" style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '1.1rem', marginBottom: '30px' }}>
                     {servicesPageData?.industriesSubtext}
                   </p>
-                  {/* Paragraph 2 (NEW) */}
                   <p className="industries-subtext" style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '1.1rem', marginBottom: '30px' }}>
                     {servicesPageData?.industriesSubtext2}
                   </p>
@@ -239,7 +242,7 @@ const ServicesPage = ({ servicesPageData }) => {
 
       <LatestCaseStudiesSection />
 
-      <div className="clients-section pt-100 pb-100" style={{ background: '#f8f9fa' }}>
+      <div className="clients-section pt-100 pb-100 md-pt-60 md-pb-60" style={{ background: '#f8f9fa' }}>
         <div className="container">
           <div className="text-center mb-5">
             <h2 className="main-title font-recoleta fw-normal tx-dark">Clients.</h2>
@@ -253,7 +256,7 @@ const ServicesPage = ({ servicesPageData }) => {
       </div>
 
       {/* Testimonials Section */}
-      <div className="feedback-section-ten position-relative pt-200 pb-200 lg-pt-150 lg-pb-150" style={{ background: 'linear-gradient(135deg, #000 0%, #1a1a1a 100%)' }}>
+      <div className="feedback-section-ten position-relative pt-200 pb-200 lg-pt-150 lg-pb-150 md-pt-80 md-pb-80" style={{ background: 'linear-gradient(135deg, #000 0%, #1a1a1a 100%)' }}>
         <div className="container">
           <div className="position-relative">
             <div className="row">
@@ -289,7 +292,8 @@ const ServicesPage = ({ servicesPageData }) => {
         </div>
       </div>
 
-      <div className="fancy-feature-thirtyThree mt-180 lg-mt-120">
+      {/* FAQ */}
+      <div className="fancy-feature-thirtyThree mt-180 lg-mt-120 md-mt-80">
         <div className="container">
           <div className="title-style-ten text-center" data-aos="fade-up">
             <div className="sc-title">{servicesPageData?.faqTagline || "FAQs"}</div>
@@ -308,7 +312,7 @@ const ServicesPage = ({ servicesPageData }) => {
             </h2>
           </div>
           <div
-            className="bg-wrapper position-relative mt-80 lg-mt-40"
+            className="bg-wrapper position-relative mt-80 lg-mt-40 md-mt-40"
             data-aos="fade-up"
           >
             <Faq />
@@ -316,7 +320,8 @@ const ServicesPage = ({ servicesPageData }) => {
         </div>
       </div>
 
-      <div className="fancy-short-banner-twelve position-relative zn2 pt-160 pb-150 lg-pt-120 lg-pb-120">
+      {/* CTA */}
+      <div className="fancy-short-banner-twelve position-relative zn2 pt-160 pb-150 lg-pt-120 lg-pb-120 md-pt-80 md-pb-80">
         <div className="container">
           <div className="row">
             <div className="col-xl-8 m-auto text-center">
@@ -336,26 +341,26 @@ const ServicesPage = ({ servicesPageData }) => {
                 </h2>
               </div>
               <p
-                className="text-lg mt-45 mb-55 lg-mb-30 lg-mt-40"
+                className="text-lg mt-45 mb-55 lg-mb-30 lg-mt-40 md-mt-30 md-mb-30"
                 data-aos="fade-up"
                 data-aos-delay="200"
               >
                 {servicesPageData?.ctaDescription || "We're ready to help you. Our experts are here, just send a message."}
               </p>
               
-              {/* Button Group */}
+              {/* Button Group - Row on all screens */}
               <div 
-                className="d-sm-flex align-items-center justify-content-center gap-3"
+                className="d-flex align-items-center justify-content-center gap-3"
                 data-aos="fade-up" 
                 data-aos-delay="300"
               >
-                {/* Button 1: Existing */}
+                {/* Button 1 */}
                 <LetsTalkButton 
                   buttonText={servicesPageData?.ctaButtonText || "Send Message"} 
                   href={servicesPageData?.ctaButtonUrl || "/contact"} 
                 />
 
-                {/* Button 2: New (Pink) */}
+                {/* Button 2 */}
                 {servicesPageData?.ctaButtonText2 && (
                   <Link
                     href={servicesPageData?.ctaButtonUrl2 || "/services"}
@@ -372,14 +377,11 @@ const ServicesPage = ({ servicesPageData }) => {
         </div>
         <div className="shapes shape-one" />
 
-        {/* Styles for 0.9rem padding & Pink Theme */}
         <style dangerouslySetInnerHTML={{__html: `
-          /* Force padding on the existing button class */
           .btn-twentyOne {
             padding-top: 0.9rem !important;
             padding-bottom: 0.9rem !important;
           }
-          /* Styling for the new Pink Button */
           .btn-pink-custom {
             background-color: #FF1292;
             border: 2px solid #FF1292;
@@ -387,7 +389,6 @@ const ServicesPage = ({ servicesPageData }) => {
             padding-top: 0.9rem !important;
             padding-bottom: 0.9rem !important;
           }
-          /* Hover effect for Pink Button */
           .btn-pink-custom:hover {
             background-color: transparent !important;
             color: #FF1292 !important;
@@ -397,7 +398,6 @@ const ServicesPage = ({ servicesPageData }) => {
 
       <FooterWithSettings />
 
-      {/* --- PAGE STYLES --- */}
       <style jsx>{`
         .services-hero-section { 
             position: relative; 
@@ -446,38 +446,28 @@ const ServicesPage = ({ servicesPageData }) => {
         .feedback-section-ten .main-title { color: white !important; }
 
         @media (max-width: 991px) {
-             .insights-text-content { padding-left: 0; margin-top: 50px; text-align: center; }
-             .insights-section-wrapper { padding: 100px 0; }
+             .insights-text-content { padding-left: 0; margin-top: 0; text-align: center; }
+             .insights-section-wrapper { padding: 80px 0; }
         }
         @media (max-width: 768px) {
-            .services-hero-section { height: 70vh; } 
+            .services-hero-section { 
+                height: auto; 
+                min-height: 500px; 
+                padding-top: 120px; 
+                padding-bottom: 80px;
+            } 
             .capabilities-main-image { height: 250px; }
+            .hero-shape { width: 200px; height: auto; }
         }
       `}</style>
 
-      {/* --- FORCE WHITE MENU STYLES --- */}
       <style jsx global>{`
-        /* Force Menu Links to White */
-        body .theme-main-menu:not(.fixed) .navbar-nav .nav-link {
-            color: white !important;
-        }
-        /* Keep Active/Hover Pink */
+        body .theme-main-menu:not(.fixed) .navbar-nav .nav-link { color: white !important; }
+        body .theme-main-menu:not(.fixed) .navbar-nav .nav-item:hover .nav-link,
         body .theme-main-menu:not(.fixed) .navbar-nav .nav-item.active .nav-link,
-        body .theme-main-menu:not(.fixed) .navbar-nav .nav-item.current-menu-item .nav-link,
-        body .theme-main-menu:not(.fixed) .navbar-nav .nav-item:hover .nav-link {
-            color: #FF1292 !important;
-        }
-        /* White Button Outline */
-        body .theme-main-menu:not(.fixed) .lets-talk-btn {
-            color: white !important;
-            border-color: white !important;
-            background: transparent !important;
-        }
-        /* Button Hover */
-        body .theme-main-menu:not(.fixed) .lets-talk-btn:hover {
-            color: black !important;
-            background: white !important;
-        }
+        body .theme-main-menu:not(.fixed) .navbar-nav .nav-item.current-menu-item .nav-link { color: #FF1292 !important; }
+        body .theme-main-menu:not(.fixed) .lets-talk-btn { color: white !important; border-color: white !important; background: transparent !important; }
+        body .theme-main-menu:not(.fixed) .lets-talk-btn:hover { color: black !important; background: white !important; }
       `}</style>
     </>
   );

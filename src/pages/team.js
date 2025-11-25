@@ -81,7 +81,6 @@ const TeamMemberCard = ({ member }) => {
             
             {member.linkedin_url && (
             <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer" className="connect-link mt-auto">
-                {/* UPDATED TEXT HERE */}
                 <span>LinkedIn</span>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
             </a>
@@ -157,13 +156,15 @@ const TeamPage = ({ teamMembers, pageData }) => {
       </div>
 
       {/* --- TEAM GRIDS --- */}
-      <section className="team-grid-section pb-150 lg-pb-120 pt-150 lg-pt-120" style={{ background: '#fcfcfc' }}>
+      {/* Added md-pt-80 md-pb-80 for mobile spacing */}
+      <section className="team-grid-section pb-150 lg-pb-120 pt-150 lg-pt-120 md-pt-80 md-pb-80" style={{ background: '#fcfcfc' }}>
         <div className="container">
           
           {/* Executive Team */}
           {executives.length > 0 && (
-            <div className="team-group mb-120 lg-mb-80">
-              <div className="text-center mb-60">
+            // Added md-mb-60
+            <div className="team-group mb-120 lg-mb-80 md-mb-60">
+              <div className="text-center mb-60 md-mb-40">
                 <div className="sc-title-pink">LEADERSHIP</div>
                 <h2 className="group-title font-recoleta">Executive Team</h2>
               </div>
@@ -180,9 +181,9 @@ const TeamPage = ({ teamMembers, pageData }) => {
           {/* Creative & Strategy Team */}
           {creatives.length > 0 && (
             <div className="team-group">
-              <div className="text-center mb-60">
-                 <div className="sc-title-pink">EXPERTS</div>
-                 <h2 className="group-title font-recoleta">Creative & Strategy</h2>
+              <div className="text-center mb-60 md-mb-40">
+                  <div className="sc-title-pink">EXPERTS</div>
+                  <h2 className="group-title font-recoleta">Creative & Strategy</h2>
               </div>
               <div className="row g-4 justify-content-center">
                 {creatives.map(member => (
@@ -350,6 +351,26 @@ const TeamPage = ({ teamMembers, pageData }) => {
         .connect-link:hover {
             color: #FF1292;
             border-color: #FF1292;
+        }
+
+        /* --- MOBILE OPTIMIZATION --- */
+        @media (max-width: 768px) {
+            .team-hero-section {
+                height: auto;
+                min-height: 500px;
+                padding-top: 120px;
+                padding-bottom: 80px;
+            }
+            .main-title {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            .group-title {
+                font-size: 2.2rem;
+            }
+            .card-content {
+                padding: 35px 25px;
+            }
         }
 
         /* Conditional Header Colors */

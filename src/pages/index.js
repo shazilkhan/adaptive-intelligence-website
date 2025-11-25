@@ -48,7 +48,7 @@ const HomePage = ({ homepageData }) => {
   <Feature featureData={homepageData} />
 
       {/* Services Section */}
-      <div className="fancy-feature-thirtyOne position-relative zn2 pt-140 pb-140 lg-pt-100 lg-pb-70">
+      <div className="fancy-feature-thirtyOne position-relative zn2 pt-140 pb-140 lg-pt-100 lg-pb-70 md-pt-80 md-pb-80">
         <div className="container">
           <div className="row">
             <div className="col-xl-8 col-lg-9 m-auto">
@@ -65,6 +65,7 @@ const HomePage = ({ homepageData }) => {
                       alt="icon shape"
                       width={220}
                       height={5}
+                      className="shape-svg"
                     />
                   </span>
                 </h2>
@@ -217,8 +218,9 @@ const HomePage = ({ homepageData }) => {
               </p>
               
               {/* Button Group Container */}
+              {/* CHANGED: Removed 'flex-column'. 'd-flex' defaults to Row on ALL screens including mobile. */}
               <div 
-                className="d-sm-flex align-items-center justify-content-center gap-3"
+                className="d-flex align-items-center justify-content-center gap-3"
                 data-aos="fade-up" 
                 data-aos-delay="300"
               >

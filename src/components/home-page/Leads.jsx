@@ -12,7 +12,6 @@ const Leads = () => {
       setIsLoading(true);
       setError(null);
       try {
-        // Ensure we fetch the icon
         const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/services?populate=icon`;
         const res = await fetch(apiUrl);
 
@@ -27,16 +26,11 @@ const Leads = () => {
           id: item.id,
           title: item.title,
           subtitle: item.subtitle,
-          
-          // --- NEW FIELDS MAPPING ---
           descriptionIntro: item.description_intro || "",
           descriptionBold: item.description_bold || "",
           descriptionEnd: item.description_end || "",
           footerText: item.footer_text || "",
-          
-          // Fallback to old description if new fields aren't populated yet
           description: item.description, 
-          
           buttonText: item.buttonText,
           buttonUrl: item.buttonUrl,
           color: item.color,
@@ -64,12 +58,16 @@ const Leads = () => {
   if (leadItems.length === 0) return null;
 
   return (
-    <div className="row g-4">
+    /* FIX: Added 'justify-content-center' and inline style 'margin: 0 auto' 
+       to prevent the "Double Row" issue that causes uneven margins on mobile.
+    */
+    <div className="row g-4 justify-content-center" style={{ margin: "0 auto", width: "100%" }}>
       {leadItems.map((item, index) => {
         const iconUrl = item.icon;
 
         return (
-          <div className="col-lg-4 col-md-6" key={item.id}>
+          // Added 'mx-auto' to ensure individual columns center perfectly
+          <div className="col-lg-4 col-md-6 mx-auto" key={item.id}>
             <div
               className="service-card-modern h-100"
               data-aos="fade-up"
@@ -93,11 +91,9 @@ const Leads = () => {
                 <h3 className="service-title">{item.title || 'Untitled Service'}</h3>
                 <h4 className="service-subtitle">{item.subtitle || ''}</h4>
                 
-                {/* --- DESCRIPTION WITH BULLET --- */}
                 <div className="service-bullet-wrapper">
                     <div className="bullet-dot"></div>
                     <p className="service-description-text">
-                        {/* Render new fields if they exist */}
                         {item.descriptionIntro && (
                             <>
                                 {item.descriptionIntro} 
@@ -105,13 +101,10 @@ const Leads = () => {
                                 {item.descriptionEnd}
                             </>
                         )}
-                        
-                        {/* Fallback to old simple description if new fields are empty */}
                         {(!item.descriptionIntro && !item.descriptionBold) && item.description}
                     </p>
                 </div>
 
-                {/* --- FOOTER TEXT WITH ARROW --- */}
                 {item.footerText && (
                     <p className="service-footer-text">
                         {item.footerText} 
@@ -165,6 +158,7 @@ const Leads = () => {
           line-height: 1;
         }
 
+        /* REVERTED: Original Icon Wrapper Styles */
         .service-icon-wrapper {
           width: 80px;
           height: 80px;
@@ -202,7 +196,6 @@ const Leads = () => {
           letter-spacing: 1px;
         }
 
-        /* --- New Bullet Styles --- */
         .service-bullet-wrapper {
             display: flex;
             align-items: flex-start;
@@ -216,7 +209,7 @@ const Leads = () => {
             background-color: #FF1292;
             border-radius: 50%;
             flex-shrink: 0;
-            margin-top: 8px; /* Aligns dot with the first line of text */
+            margin-top: 8px; 
         }
 
         .service-description-text {
@@ -226,7 +219,6 @@ const Leads = () => {
           margin: 0;
         }
 
-        /* --- New Footer Text Styles --- */
         .service-footer-text {
             font-size: 18px;
             font-weight: 500;
@@ -254,10 +246,11 @@ const Leads = () => {
           opacity: 1;
         }
 
+        /* --- MOBILE OPTIMIZATION --- */
         @media (max-width: 768px) {
           .service-card-modern {
             padding: 30px 20px;
-            min-height: auto;
+            min-height: auto !important;
           }
           .service-number {
             font-size: 36px;
@@ -265,6 +258,7 @@ const Leads = () => {
           .service-title {
             font-size: 24px;
           }
+          /* Removed the Icon resizing overrides here as requested */
         }
       `}</style>
     </div>

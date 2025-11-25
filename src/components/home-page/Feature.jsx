@@ -24,13 +24,16 @@ const Feature = ({ featureData }) => {
   const buttonUrl = featureData?.featureButtonUrl || "/about";
 
   return (
-    <div className="fancy-feature-thirty position-relative mt-190 pb-140 lg-mt-100 lg-pb-120 md-p0">
+    <div 
+      // CHANGED: Removed 'md-p0' and added 'md-mt-80 md-pb-80' for proper vertical spacing on mobile
+      className="fancy-feature-thirty position-relative mt-190 pb-140 lg-mt-100 lg-pb-120 md-mt-80 md-pb-80"
+    >
       <div className="container">
         <div className="row align-items-center">
           
           {/* --- LEFT COLUMN: IMAGE --- */}
-          {/*  */}
-          <div className="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right">
+          {/* Added 'mb-40' for spacing between image and text on mobile */}
+          <div className="col-lg-6 mb-40 mb-lg-0" data-aos="fade-right">
             <div className="image-wrapper position-relative">
                 <Image
                   src={imageUrl}
@@ -61,6 +64,8 @@ const Feature = ({ featureData }) => {
                       alt="shape"
                       width={266}
                       height={7}
+                      // Added class to ensure the underline shape doesn't overflow on small screens
+                      className="shape-underline"
                     />
                   </span>
                 </h2>
@@ -84,6 +89,16 @@ const Feature = ({ featureData }) => {
 
         </div>
       </div>
+      
+      <style jsx>{`
+        /* Mobile adjustment for the underline shape to prevent horizontal scroll */
+        @media (max-width: 576px) {
+            .shape-underline {
+                width: 100%;
+                height: auto;
+            }
+        }
+      `}</style>
     </div>
   );
 };

@@ -34,7 +34,7 @@ const Creatives = ({ pageData }) => {
     <>
       <Header menuTextColor="white" />
 
-      {/* --- HERO SECTION (Eco Style - Large & Cinematic) --- */}
+      {/* --- HERO SECTION --- */}
       <section className="eco-hero">
         <div className="hero-background">
             {heroType === 'Video' && heroVideoUrl ? (
@@ -52,7 +52,6 @@ const Creatives = ({ pageData }) => {
             ) : (
                 <div style={{ width: '100%', height: '100%', background: '#151937' }}></div>
             )}
-            {/* Dark Overlay for text readability */}
             <div className="hero-overlay" />
         </div>
 
@@ -73,8 +72,9 @@ const Creatives = ({ pageData }) => {
         </div>
       </section>
 
-      {/* --- MISSION SECTION (Original Design) --- */}
-      <div className="mission-section pt-150 pb-150 lg-pt-120 lg-pb-120" style={{ background: 'white' }}>
+      {/* --- MISSION SECTION --- */}
+      {/* Updated Padding: md-pt-80 md-pb-80 for mobile */}
+      <div className="mission-section pt-150 pb-150 lg-pt-120 lg-pb-120 md-pt-80 md-pb-80" style={{ background: 'white' }}>
         <div className="container">
           <div className="row align-items-center">
             <div className="col-lg-6 mb-lg-0 mb-50">
@@ -99,11 +99,12 @@ const Creatives = ({ pageData }) => {
         </div>
       </div>
 
-      {/* --- VALUES SECTION (Original Design - Image Left) --- */}
-      <div className="values-section pt-150 pb-150 lg-pt-120 lg-pb-120" style={{ background: '#f8f9fa' }}>
+      {/* --- VALUES SECTION --- */}
+      <div className="values-section pt-150 pb-150 lg-pt-120 lg-pb-120 md-pt-80 md-pb-80" style={{ background: '#f8f9fa' }}>
         <div className="container">
           <div className="row align-items-center">
-            <div className="col-lg-6">
+            {/* On mobile, move text to bottom so image is first */}
+            <div className="col-lg-6 mb-50 lg-mb-0">
               <div className="mission-image">
                 <Image
                   src={
@@ -131,11 +132,11 @@ const Creatives = ({ pageData }) => {
         </div>
       </div>
 
-      {/* --- BENEFITS SECTION (Original Design - Image Right) --- */}
-      <div className="benefits-section pt-150 pb-150 lg-pt-120 lg-pb-120" style={{ background: 'white' }}>
+      {/* --- BENEFITS SECTION --- */}
+      <div className="benefits-section pt-150 pb-150 lg-pt-120 lg-pb-120 md-pt-80 md-pb-80" style={{ background: 'white' }}>
         <div className="container">
           <div className="row align-items-center">
-            <div className="col-lg-6 order-lg-last">
+            <div className="col-lg-6 order-lg-last mb-50 lg-mb-0">
               <div className="mission-image">
                 <Image
                   src={
@@ -163,8 +164,8 @@ const Creatives = ({ pageData }) => {
         </div>
       </div>
 
-      {/* --- CTA SECTION (Original Pink Gradient Design) --- */}
-      <div className="cta-section pt-150 pb-150 lg-pt-120 lg-pb-120" style={{ background: 'linear-gradient(135deg, #FF1292 0%, #e60d82 100%)' }}>
+      {/* --- CTA SECTION --- */}
+      <div className="cta-section pt-150 pb-150 lg-pt-120 lg-pb-120 md-pt-80 md-pb-80" style={{ background: 'linear-gradient(135deg, #FF1292 0%, #e60d82 100%)' }}>
         <div className="container">
           <div className="row">
             <div className="col-xl-8 m-auto text-center">
@@ -208,7 +209,7 @@ const Creatives = ({ pageData }) => {
         :global(body .theme-main-menu:not(.fixed) .lets-talk-btn) { color: white !important; border-color: white !important; background: transparent !important; }
         :global(body .theme-main-menu:not(.fixed) .lets-talk-btn:hover) { color: black !important; background: white !important; }
 
-        /* --- HERO STYLES (Eco / Large Style) --- */
+        /* --- HERO STYLES --- */
         .eco-hero { 
             position: relative; 
             height: 80vh; 
@@ -224,9 +225,8 @@ const Creatives = ({ pageData }) => {
         
         .main-title { font-family: 'Recoleta', serif; font-size: 4rem; font-weight: 400; color: white; line-height: 1.2; margin-bottom: 20px; }
         .hero-subtitle { font-size: 1.25rem; color: rgba(255, 255, 255, 0.85); max-width: 800px; margin: 0 auto; line-height: 1.6; }
-        .shape-underline { position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); }
 
-        /* --- ORIGINAL BODY STYLES --- */
+        /* --- GENERAL STYLES --- */
         .sc-title {
           color: #FF1292;
           text-transform: uppercase;
@@ -254,7 +254,7 @@ const Creatives = ({ pageData }) => {
           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
 
-        /* --- ORIGINAL CTA STYLES --- */
+        /* --- CTA STYLES --- */
         .cta-title {
           color: white;
           font-size: 2.8rem;
@@ -323,22 +323,44 @@ const Creatives = ({ pageData }) => {
           color: #151937;
         }
 
+        /* --- MOBILE & TABLET OPTIMIZATION --- */
         @media (max-width: 991px) {
             .main-title { font-size: 3rem; }
-            .shape-underline { width: 200px; }
+            .section-title { font-size: 2rem; }
+            .cta-title { font-size: 2.2rem; }
         }
+
         @media (max-width: 768px) {
-          .eco-hero { height: 70vh; }
-          .main-title { font-size: 2.5rem; }
-          .section-title { font-size: 2rem; }
-          .cta-title { font-size: 2rem; }
+          .eco-hero { 
+            height: auto; 
+            min-height: 500px;
+            padding-top: 120px;
+            padding-bottom: 80px;
+          }
+          .main-title { 
+            font-size: 2.5rem; 
+            line-height: 1.2;
+          }
+          .section-title { 
+            font-size: 2rem; 
+            margin-bottom: 20px;
+          }
+          .cta-title { 
+            font-size: 2rem; 
+          }
           .cta-buttons {
             flex-direction: column;
             align-items: center;
+            gap: 15px;
           }
           .apply-button, .contact-button {
             width: 100%;
             max-width: 300px;
+            text-align: center;
+            padding: 15px 30px;
+          }
+          .mission-text {
+            font-size: 1rem;
           }
         }
       `}</style>

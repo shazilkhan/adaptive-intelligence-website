@@ -38,14 +38,14 @@ const SuccessStory = ({ successStoryData }) => {
                 className="col-xl-6 col-lg-7 order-lg-last"
                 data-aos="fade-left"
               >
-                <p className="mb-35">
+                <p className="mb-35 sucess-text">
                   "{story1QuoteStart} <span style={{ color: "#FF1292" }}>{story1QuoteHighlight}</span> {story1QuoteEnd}"
                 </p>
                 <h4 className="text-white fw-normal m0">
                   {story1AuthorName} <span className="opacity-75">{story1AuthorCompany}</span>
                 </h4>
               </div>
-              <div className="col-xl-6 col-lg-5 col-md-6 m-auto order-lg-first">
+              <div className="col-xl-6 col-lg-5 col-md-6 m-auto order-lg-first success-image">
                 <Image
                   src={story1Image}
                   alt={story1ImageAlt}

@@ -383,7 +383,9 @@ const Hero = ({ isHomePage = false, children, heroData }) => {
           minHeight: '600px', // Min height
           backgroundColor: "white", // Fallback
           overflow: 'hidden', // Contain elements
-          display: 'flex', // Use flex for alignment
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-start', 
           alignItems: 'center', // Vertically center content
           paddingBottom: isHomePage ? '100px' : '0' // Padding only for homepage
         }}

@@ -33,7 +33,6 @@ const Feedback = ({ feedbackData }) => {
     },
   ];
 
-  // CORRECTED: The avatar URL path is now simpler to match your Strapi data.
   const avatarUrl = feedbackData?.feedbackAvatar?.url
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${feedbackData.feedbackAvatar.url}`
     : "/images/team/adam.jpeg";
@@ -47,7 +46,7 @@ const Feedback = ({ feedbackData }) => {
 
   return (
     <div
-      className="feedback-section-eight position-relative pt-200 pb-30 lg-pt-120 "
+      className="feedback-section-eight position-relative pt-200 pb-30 lg-pt-120"
       data-aos="fade-up"
     >
       <div className="container">
@@ -64,8 +63,8 @@ const Feedback = ({ feedbackData }) => {
             <div className="feedback_slider_eight">
               <div className="item">
                 <div className="feedback-block-eight text-center">
-                  <p className="font-recoleta tx-dark mt-60 mb-65 lg-mt-40 lg-mb-40">
-                    {quoteStart} <span>{quoteHighlight}</span> {quoteEnd}
+                  <p className="font-recoleta tx-dark mt-60 mb-65 lg-mt-40 lg-mb-40 quote-text">
+                    {quoteStart} <span style={{ color: "#FF1292" }}>{quoteHighlight}</span> {quoteEnd}
                   </p>
                   <h6 className="fw-normal fs-20 d-inline-block fst-italic position-relative ps-4">
                     {authorName}, {authorTitle}
@@ -76,6 +75,8 @@ const Feedback = ({ feedbackData }) => {
           </div>
         </div>
       </div>
+      
+      {/* Shapes are rendered here */}
       {images.map((image, index) => (
         <Image
           key={index}
@@ -86,6 +87,37 @@ const Feedback = ({ feedbackData }) => {
           height={image.height}
         />
       ))}
+
+      <style jsx>{`
+        /* --- MOBILE OVERRIDES ONLY (< 768px) --- */
+        @media (max-width: 767px) {
+            
+            /* 1. Reduce the massive 200px padding from the theme */
+            .feedback-section-eight {
+                padding-top: 80px !important;
+                padding-bottom: 50px !important;
+                overflow: hidden; /* Ensures shapes don't cause horizontal scroll */
+            }
+
+            /* 2. Resize the Font Size Only (Keep font-family) */
+            .quote-text {
+                font-size: 40px !important; /* Readable size for mobile */
+                line-height: 1.6 !important;
+                margin-top: 30px !important;
+                margin-bottom: 30px !important;
+            }
+
+            /* 3. Keep shapes but scale them down so they fit the small screen */
+            :global(.shapes) {
+                transform: scale(0.6); /* Make them 60% of original size */
+                z-index: -1; /* Ensure they stay behind text */
+            }
+            
+            /* Adjust individual positions if they block text (Optional) */
+            :global(.shape-one) { top: 5% !important; left: -10% !important; }
+            :global(.shape-two) { top: 10% !important; right: -5% !important; }
+        }
+      `}</style>
     </div>
   );
 };

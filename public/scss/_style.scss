@@ -10837,3 +10837,14 @@ body .btn-twentySix:hover:after {
     font-size: 1.1rem;
     font-weight: 500;
 }
+@media screen and (max-width:766px) {
+  .main-title{
+    font-size: 45px !important;
+}
+.success-image{
+  display: none;
+}
+.sucess-text{
+  font-size: 35px !important;
+}
+}
