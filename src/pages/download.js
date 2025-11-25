@@ -208,11 +208,11 @@ useEffect(() => {
                   </div>
 
                   <div className="next-steps">
-                    <h4>Ready to {resourceData.nextStepsCTA}?</h4>
+                    <h4>Ready to get started?</h4>
                     <p>Let's discuss how to apply these strategies to your specific business.</p>
                     <LetsTalkButton 
                       buttonText="Schedule a Strategy Call" 
-                      href="/contact"
+                      href="https://app.apollo.io/#/meet/managed-meetings/adaptive-booknow/d5q-b45-5h2/30-min"
                     />
                   </div>
                 </div>

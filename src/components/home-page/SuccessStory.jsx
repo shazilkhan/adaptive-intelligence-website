@@ -59,13 +59,6 @@ const SuccessStory = ({ successStoryData }) => {
             </div>
           </div>
         </div>
-        <div
-          className="customer-data d-flex flex-column align-items-center justify-content-center"
-          data-aos="fade-up"
-        >
-          <div className="fw-500 tx-dark amount">{customerCount}</div>
-          <div className="text-lg tx-dark">{customerLabel}</div>
-        </div>
         <Image
           src="/images/ChromeShapes/Shape_TallCylinder1.png"
           alt="img"

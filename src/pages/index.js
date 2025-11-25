@@ -222,25 +222,18 @@ const HomePage = ({ homepageData }) => {
                 data-aos="fade-up" 
                 data-aos-delay="300"
               >
-                {/* Button 1 (Existing - Dark) */}
+                {/* Button 1 (Primary) */}
                 <LetsTalkButton 
                   buttonText={homepageData?.ctaButtonText || "Send Message"} 
                   href={homepageData?.ctaButtonUrl || "/contact"} 
                 />
 
-                {/* Button 2 (New - Initially Pink, No Icon) */}
+                {/* Button 2 (Secondary - reusing the Component) */}
                 {homepageData?.ctaButtonText2 && (
-                  <Link
+                  <LetsTalkButton
+                    buttonText={homepageData?.ctaButtonText2}
                     href={homepageData?.ctaButtonUrl2 || "/services"}
-                    className="px-5 py-3 fw-bold d-block d-sm-inline-block mt-3 mt-sm-0 transition-3s text-white text-center"
-                    style={{ 
-                      minWidth: "180px",
-                      backgroundColor: "#FF1292", // The pink color from Button 1's hover
-                      border: "2px solid #FF1292"
-                    }}
-                  >
-                    {homepageData?.ctaButtonText2}
-                  </Link>
+                  />
                 )}
               </div>
 
