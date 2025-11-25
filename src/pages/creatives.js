@@ -73,7 +73,6 @@ const Creatives = ({ pageData }) => {
       </section>
 
       {/* --- MISSION SECTION --- */}
-      {/* Updated Padding: md-pt-80 md-pb-80 for mobile */}
       <div className="mission-section pt-150 pb-150 lg-pt-120 lg-pb-120 md-pt-80 md-pb-80" style={{ background: 'white' }}>
         <div className="container">
           <div className="row align-items-center">
@@ -92,6 +91,8 @@ const Creatives = ({ pageData }) => {
                   width={600}
                   height={400}
                   className="rounded-img"
+                  // FIX: Force width 100% and height auto to maintain aspect ratio
+                  style={{ width: '100%', height: 'auto' }}
                 />
               </div>
             </div>
@@ -116,6 +117,8 @@ const Creatives = ({ pageData }) => {
                   width={600}
                   height={450}
                   className="rounded-img"
+                  // FIX: Force width 100% and height auto to maintain aspect ratio
+                  style={{ width: '100%', height: 'auto' }}
                 />
               </div>
             </div>
@@ -148,6 +151,8 @@ const Creatives = ({ pageData }) => {
                   width={600}
                   height={450}
                   className="rounded-img"
+                  // FIX: Force width 100% and height auto to maintain aspect ratio
+                  style={{ width: '100%', height: 'auto' }}
                 />
               </div>
             </div>
@@ -249,8 +254,7 @@ const Creatives = ({ pageData }) => {
         }
         .rounded-img {
           border-radius: 12px;
-          width: 100%;
-          height: auto;
+          /* Height auto and Width 100% handled inline to be safe */
           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
 
@@ -332,10 +336,9 @@ const Creatives = ({ pageData }) => {
 
         @media (max-width: 768px) {
           .eco-hero { 
-            height: auto; 
+            /* Reverted to Fixed Height for Cinematic look, but reduced from 80vh */
+            height: 70vh; 
             min-height: 500px;
-            padding-top: 120px;
-            padding-bottom: 80px;
           }
           .main-title { 
             font-size: 2.5rem; 
