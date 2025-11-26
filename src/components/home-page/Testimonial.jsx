@@ -16,8 +16,6 @@ const Testimonial = () => {
         );
         const data = await res.json();
         
-        console.log("Testimonials API Response:", data); 
-        
         if (data?.data && Array.isArray(data.data)) {
           const formattedData = data.data.map(item => {
             const attrs = item.attributes || item;
@@ -31,7 +29,6 @@ const Testimonial = () => {
           });
           setTestimonialData(formattedData);
         } else {
-          console.warn("No testimonials found in API response");
           setTestimonialData(getDefaultTestimonials());
         }
       } catch (error) {
@@ -82,7 +79,7 @@ const Testimonial = () => {
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
-    arrows: false, // Important: We control arrows manually
+    arrows: false,
     responsive: [
       {
         breakpoint: 1024,
@@ -91,11 +88,12 @@ const Testimonial = () => {
         },
       },
       {
-        breakpoint: 768,
+        breakpoint: 767,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          centerMode: false, // Ensure card is not cut off
+          centerMode: false, // Disable center mode to prevent overflow
+          variableWidth: false, // Ensure slides take full calculated width
         },
       },
     ],
@@ -110,19 +108,11 @@ const Testimonial = () => {
   };
 
   if (loading) {
-    return (
-      <div className="text-center py-5">
-        <p>Loading testimonials...</p>
-      </div>
-    );
+    return <div className="text-center py-5"><p>Loading testimonials...</p></div>;
   }
 
   if (testimonialData.length === 0) {
-    return (
-      <div className="text-center py-5">
-        <p>No testimonials available.</p>
-      </div>
-    );
+    return <div className="text-center py-5"><p>No testimonials available.</p></div>;
   }
 
   return (
@@ -158,16 +148,10 @@ const Testimonial = () => {
         className="slider-arrows slick-arrow-five d-flex justify-content-center style-none"
         data-aos="fade-left"
       >
-        <li
-          className="prev_f5 slick-arrow text-center tran3s"
-          onClick={handlePrev}
-        >
+        <li className="prev_f5 slick-arrow text-center tran3s" onClick={handlePrev}>
           <i className="bi bi-arrow-left" />
         </li>
-        <li
-          className="next_f5 slick-arrow text-center tran3s"
-          onClick={handleNext}
-        >
+        <li className="next_f5 slick-arrow text-center tran3s" onClick={handleNext}>
           <i className="bi bi-arrow-right" />
         </li>
       </ul>
@@ -182,22 +166,31 @@ const Testimonial = () => {
 
         /* --- MOBILE OPTIMIZATION --- */
         @media (max-width: 767px) {
-            /* Add side margins to the card wrapper so it doesn't touch screen edges */
-            .item {
-                padding: 0 10px; 
-            }
-
+            /* 1. Constrain the width of the card */
             .feedback-block-ten {
-                padding: 30px 20px !important; /* Reduce internal padding */
-                min-height: auto; /* Allow height to be flexible */
+                width: 90% !important; /* Use 90% of the slide width to leave margin */
+                margin: 0 auto !important; /* Center it */
+                padding: 30px 20px !important;
+                min-height: auto;
+                /* Ensure text breaks inside the card */
+                word-wrap: break-word;
             }
 
+            /* 2. Ensure the slide item container doesn't have weird padding */
+            .item {
+                padding: 0 !important;
+                display: flex !important;
+                justify-content: center;
+            }
+
+            /* 3. Fix Typography */
             .testimonial-company {
-                font-size: 24px; /* Smaller title on mobile */
+                font-size: 24px !important;
+                line-height: 1.2;
             }
             
             .testimonial-text {
-                font-size: 16px; /* Readable text size */
+                font-size: 16px !important;
                 line-height: 1.5;
             }
         }
