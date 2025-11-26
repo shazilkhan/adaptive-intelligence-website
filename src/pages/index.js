@@ -218,11 +218,9 @@ const HomePage = ({ homepageData }) => {
               </p>
               
               {/* Button Group Container */}
-              {/* CHANGED: Removed 'flex-column'. 'd-flex' defaults to Row on ALL screens including mobile. */}
+              {/* FIXED: Removed data-aos="fade-up" so buttons are always visible without animation delay */}
               <div 
                 className="d-flex align-items-center justify-content-center gap-3"
-                data-aos="fade-up" 
-                data-aos-delay="300"
               >
                 {/* Button 1 (Primary) */}
                 <LetsTalkButton 

@@ -61,7 +61,15 @@ const FeaturesBlock = ({ featuresData }) => {
 
       <div className="col-lg-7 col-md-9 m-auto">
         <div className="illustration-holder md-mt-60 position-relative">
-          <Image src={mainImageUrl} alt={featuresData?.whyUsMainImage?.alternativeText || "media"} className="lazy-img main-img ms-auto" width={680} height={648} />
+          <Image 
+            src={mainImageUrl} 
+            alt={featuresData?.whyUsMainImage?.alternativeText || "media"} 
+            className="lazy-img main-img ms-auto" 
+            width={680} 
+            height={648}
+            // FIX: This style prevents stretching by maintaining aspect ratio
+            style={{ width: '100%', height: 'auto' }} 
+          />
           <div className="card-style d-flex flex-column justify-content-center align-items-center">
             <h4 className="m0">{featuresData?.whyUsImageCardStat || "70b+"}</h4>
             <p className="m0 fs-18 tx-dark">{featuresData?.whyUsImageCardLabel || "Created revenue"}</p>
