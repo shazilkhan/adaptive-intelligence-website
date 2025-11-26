@@ -16,11 +16,10 @@ const Testimonial = () => {
         );
         const data = await res.json();
         
-        console.log("Testimonials API Response:", data); // Debug log
+        console.log("Testimonials API Response:", data); 
         
         if (data?.data && Array.isArray(data.data)) {
           const formattedData = data.data.map(item => {
-            // Handle both Strapi v4 structure and possible variations
             const attrs = item.attributes || item;
             return {
               company: attrs.company || "Unknown Company",
@@ -32,7 +31,6 @@ const Testimonial = () => {
           });
           setTestimonialData(formattedData);
         } else {
-          // If no data from API, use fallback
           console.warn("No testimonials found in API response");
           setTestimonialData(getDefaultTestimonials());
         }
@@ -84,6 +82,7 @@ const Testimonial = () => {
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
+    arrows: false, // Important: We control arrows manually
     responsive: [
       {
         breakpoint: 1024,
@@ -95,6 +94,8 @@ const Testimonial = () => {
         breakpoint: 768,
         settings: {
           slidesToShow: 1,
+          slidesToScroll: 1,
+          centerMode: false, // Ensure card is not cut off
         },
       },
     ],
@@ -137,11 +138,11 @@ const Testimonial = () => {
                 className="feedback-block-ten"
                 style={{ background: testimonial.background }}
               >
-                <div className="cmp-name fw-500 tx-dark" style={{ fontSize: "30px" }}>
+                <div className="cmp-name fw-500 tx-dark testimonial-company">
                   {testimonial.company}
                 </div>
                 
-                <p className="tx-dark mt-20 mb-30 lg-mt-15 lg-mb-25" style={{ fontSize: "18px" }}>
+                <p className="tx-dark mt-20 mb-30 lg-mt-15 lg-mb-25 testimonial-text">
                   {testimonial.text}
                 </p>
                 <div className="fw-500 tx-dark fs-18">
@@ -170,6 +171,37 @@ const Testimonial = () => {
           <i className="bi bi-arrow-right" />
         </li>
       </ul>
+
+      <style jsx>{`
+        .testimonial-company {
+            font-size: 30px;
+        }
+        .testimonial-text {
+            font-size: 18px;
+        }
+
+        /* --- MOBILE OPTIMIZATION --- */
+        @media (max-width: 767px) {
+            /* Add side margins to the card wrapper so it doesn't touch screen edges */
+            .item {
+                padding: 0 10px; 
+            }
+
+            .feedback-block-ten {
+                padding: 30px 20px !important; /* Reduce internal padding */
+                min-height: auto; /* Allow height to be flexible */
+            }
+
+            .testimonial-company {
+                font-size: 24px; /* Smaller title on mobile */
+            }
+            
+            .testimonial-text {
+                font-size: 16px; /* Readable text size */
+                line-height: 1.5;
+            }
+        }
+      `}</style>
     </>
   );
 };
