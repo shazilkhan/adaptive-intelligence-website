@@ -1,5 +1,5 @@
 // src/components/home-page/hero.js
-import React from 'react'; // Added React import
+import React from 'react';
 import { Suspense } from "react";
 import HeroContent from "./HeroContent";
 import Partners from "./Partners";
@@ -186,37 +186,37 @@ const AnimatedShape = ({
   top, 
   left, 
   // Large Screen positioning and sizing (1200px - 1449px)
-  largeWidth,
-  largeHeight,
-  largeTop,
-  largeLeft,
+  largeWidth, 
+  largeHeight, 
+  largeTop, 
+  largeLeft, 
   // Laptop positioning and sizing (992px - 1199px)
-  laptopWidth,
-  laptopHeight,
-  laptopTop,
-  laptopLeft,
+  laptopWidth, 
+  laptopHeight, 
+  laptopTop, 
+  laptopLeft, 
   // Tablet positioning and sizing (768px - 991px)
-  tabletWidth,
-  tabletHeight,
-  tabletTop,
-  tabletLeft,
+  tabletWidth, 
+  tabletHeight, 
+  tabletTop, 
+  tabletLeft, 
   // Mobile positioning and sizing (0px - 767px)
-  mobileWidth,
-  mobileHeight,
-  mobileTop,
-  mobileLeft,
+  mobileWidth, 
+  mobileHeight, 
+  mobileTop, 
+  mobileLeft, 
   // Animation props
   animation = "floatMove", 
   duration = "12s", 
   delay = "0s", 
-  opacity = 0.8,
-  zIndex = 1,
+  opacity = 0.8, 
+  zIndex = 1, 
   // Responsive visibility controls
-  hideOnMobile = false,
-  hideOnTablet = false,
-  hideOnLaptop = false,
-  hideOnLarge = false,
-  hideOnDesktop = false
+  hideOnMobile = false, 
+  hideOnTablet = false, 
+  hideOnLaptop = false, 
+  hideOnLarge = false, 
+  hideOnDesktop = false 
 }) => {
 
   const getResponsiveStyles = (deviceWidth, deviceHeight, deviceTop, deviceLeft) => {
@@ -347,7 +347,7 @@ const HomePageContent = ({ heroData }) => {
 
 
 // --- Main Hero Component ---
-const Hero = ({ isHomePage = false, children, heroData }) => {
+const Hero = ({ isHomePage = false, autoHeight = false, children, heroData }) => {
 
   // --- Background Logic ---
   const backgroundType = heroData?.heroBackgroundType || 'Shapes';
@@ -371,6 +371,11 @@ const Hero = ({ isHomePage = false, children, heroData }) => {
   console.log("Hero Component - Determined bgVideoUrl:", bgVideoUrl);
   // --- End Background Logic ---
 
+  // --- LOGIC FOR STYLING ---
+  // We only apply the "Contact Page Style" if autoHeight is explicitly true.
+  // Otherwise, we stick to the strict Cinematic look (80vh, Center Alignment).
+  const useAutoHeight = (isHomePage || autoHeight);
+
   return (
     <>
       {/* Inject animation keyframes */}
@@ -379,15 +384,31 @@ const Hero = ({ isHomePage = false, children, heroData }) => {
       <div
         className="hero-banner-nine position-relative zn2 pt-225 md-pt-150"
         style={{
-          height: isHomePage ? "auto" : "80vh", // Eco-style height
-          minHeight: '600px', // Min height
-          backgroundColor: "white", // Fallback
-          overflow: 'hidden', // Contain elements
+          // 1. HEIGHT: 
+          //    - Contact/Home: 'auto' to fit content.
+          //    - Standard (Team/Services): '80vh' fixed for cinematic effect.
+          height: useAutoHeight ? "auto" : "80vh", 
+          minHeight: '600px', 
+          backgroundColor: "white", 
+          overflow: 'hidden', 
           display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-start', 
-          alignItems: 'center', // Vertically center content
-          paddingBottom: isHomePage ? '100px' : '0' // Padding only for homepage
+          
+          // 2. DIRECTION: 
+          //    - Contact/Home: 'column' to stack content naturally.
+          //    - Standard: 'row' to allow Bootstrap container to center properly.
+          flexDirection: useAutoHeight ? 'column' : 'row',
+          
+          // 3. ALIGNMENT: 
+          //    - Contact/Home: 'flex-start' pushes content to top.
+          //    - Standard: 'center' keeps text in the middle.
+          justifyContent: useAutoHeight ? 'flex-start' : 'center', 
+          alignItems: 'center', 
+          
+          // 4. PADDING OVERRIDES:
+          //    - Contact/Home (AutoHeight): Needs specific padding to clear the nav.
+          //    - Standard Pages: FORCE padding to 0 to override theme defaults like pt-225/pb-150
+          //      This ensures the text stays vertically centered in the 80vh container.
+          paddingBottom: useAutoHeight ? '100px' : '0',
         }}
       >
         {/* --- Background Layer (Renders first, zIndex -1) --- */}

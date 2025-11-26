@@ -49,16 +49,15 @@ const Partners = () => {
   };
 
   return (
-    // Wrapper: Column on Mobile (Stack), Row on Desktop (Side-by-side)
     <div className="partner-section-wrapper d-flex flex-column flex-xl-row align-items-center justify-content-between">
       
       {/* 1. Title Section */}
       <div className="title-wrapper mb-4 mb-xl-0 flex-shrink-0">
+        {/* CHANGED: Removed custom color classes, used 'tx-dark' to force Black Text */}
         <h3 className="title tx-dark d-flex justify-content-center justify-content-xl-start align-items-center m0">
           <span className="fw-bold">100+</span>
           <span className="font-recoleta ps-2">Trusted Partners</span>
           
-          {/* Shape: Hidden on tiny screens, inline on others */}
           <span className="ms-4 d-none d-sm-inline-block">
             <Image
               src="/images/shape/shape_119.svg"
@@ -71,8 +70,9 @@ const Partners = () => {
         </h3>
       </div>
 
-      {/* 2. Logos Container (Full width) */}
-      <div className="logo-container w-100 ps-xl-5">
+      {/* 2. Logos Container */}
+      {/* FIX: minWidth: 0 prevents flexbox overflow issues */}
+      <div className="logo-container w-100 ps-xl-5" style={{ minWidth: 0 }}>
         
         {/* DESKTOP: Static List */}
         <div className="logo-wrapper fw-500 tx-dark d-none d-xl-flex flex-wrap flex-xl-nowrap justify-content-between">
@@ -88,6 +88,7 @@ const Partners = () => {
           <Slider {...sliderSettings}>
             {mobilePartners.map((partner, index) => (
               <div key={index} className="slider-item px-4">
+                {/* CHANGED: Used 'tx-dark' to force Black Text here as well */}
                 <h4 className={`m0 tx-dark fw-500 text-center ${partner.font || ''}`} style={{ whiteSpace: 'nowrap' }}>
                   {partner.name}
                 </h4>
@@ -102,10 +103,11 @@ const Partners = () => {
         .partner-section-wrapper {
             width: 100%;
             position: relative;
+            /* Ensure no horizontal scroll triggers */
+            overflow: hidden; 
         }
 
         .title-wrapper {
-            /* Ensures title stays centered on mobile if flex doesn't catch it */
             text-align: center;
             width: 100%; 
         }
@@ -117,10 +119,10 @@ const Partners = () => {
             }
         }
         
-        /* Prevent horizontal scroll on mobile */
         .mobile-slider-wrapper {
             width: 100%;
             overflow: hidden;
+            margin-top: 10px;
         }
       `}</style>
     </div>

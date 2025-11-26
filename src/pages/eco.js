@@ -210,35 +210,48 @@ const EcoPage = ({ treeCardStats, pageData }) => {
       </section>
 
       {/* Section 4: NOAA Papers */}
-      <section className="noaa-section">
+      <section className="noaa-section pt-150 pb-150 lg-pt-120 lg-pb-120 md-pt-80 md-pb-80">
         <div className="container">
           <div className="row align-items-center">
-            <div className="col-lg-6">
+            
+            {/* Image Column: Added mb-50 for mobile separation */}
+            <div className="col-lg-6 mb-50 lg-mb-0">
               <Image
                 src={noaaImageUrl}
                 alt="Environmental research documents"
                 width={600}
                 height={500}
-                objectFit="cover"
                 className="noaa-image"
+                // FIX: width 100% + height auto prevents stretching
+                style={{ 
+                    width: '100%', 
+                    height: 'auto', 
+                    objectFit: 'cover',
+                    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15)'
+                }}
               />
             </div>
+
+            {/* Text Column: Added ps-lg-5 for desktop spacing */}
             <div className="col-lg-6">
-              <h2 className="section-title">{pageData.noaaTitle}</h2>
-              <p>{pageData.noaaParagraph1}</p>
-              <p>{pageData.noaaParagraph2}</p>
-              <a 
-                href={pageData.noaaDownloadUrl || 'https://we.tl/t-v5QlQl4Kao'} 
-                className="download-button" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                {pageData.noaaDownloadButtonText || 'Download NOAA Papers'}
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </a>
+              <div className="ps-lg-5">
+                <h2 className="section-title">{pageData.noaaTitle}</h2>
+                <p className="mb-30">{pageData.noaaParagraph1}</p>
+                <p className="mb-40">{pageData.noaaParagraph2}</p>
+                <a 
+                    href={pageData.noaaDownloadUrl || 'https://we.tl/t-v5QlQl4Kao'} 
+                    className="download-button" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                >
+                    {pageData.noaaDownloadButtonText || 'Download NOAA Papers'}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="ms-2">
+                    <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                </a>
+              </div>
             </div>
+
           </div>
         </div>
       </section>

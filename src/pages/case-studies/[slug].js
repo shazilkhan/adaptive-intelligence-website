@@ -62,38 +62,45 @@ const SingleCaseStudyPage = ({ resource, relatedResources, pageSettings }) => {
         </div>
       </div>
 
-      <div className="resource-preview pt-150 pb-100 lg-pt-120 lg-pb-80" style={{ background: 'white' }}>
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-6">
-              <div className="resource-mockup">
-                <Image
-                  src={heroImageUrl}
-                  alt={`${resource.badge} Preview`}
-                  width={400}
-                  height={500}
-                  className="mockup-image"
-                />
-              </div>
-            </div>
-            <div className="col-lg-6">
-              <div className="insights-content">
-                <h2 className="insights-title">
-                  This {resource.type} includes insights on:
-                </h2>
-                <ul className="insights-list">
-                  {resource.insights?.map((insight) => (
-                    <li key={insight.id}>
-                      <div className="insight-icon">✓</div>
-                      <span>{insight.text}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
+      <div className="resource-preview pt-150 pb-100 lg-pt-120 lg-pb-80 md-pt-80 md-pb-60" style={{ background: 'white' }}>
+  <div className="container">
+    <div className="row align-items-center">
+      
+      {/* Image Column: Added mb-50 to separate from text on mobile */}
+      <div className="col-lg-6 mb-50 lg-mb-0">
+        <div className="resource-mockup">
+          <Image
+            src={heroImageUrl}
+            alt={`${resource.badge} Preview`}
+            width={400}
+            height={500}
+            className="mockup-image"
+            // FIX: width 100% + height auto ensures the image scales without stretching
+            style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+          />
         </div>
       </div>
+
+      {/* Text Column: Added ps-lg-5 for desktop spacing */}
+      <div className="col-lg-6">
+        <div className="insights-content ps-lg-5">
+          <h2 className="insights-title">
+            This {resource.type} includes insights on:
+          </h2>
+          <ul className="insights-list">
+            {resource.insights?.map((insight) => (
+              <li key={insight.id}>
+                <div className="insight-icon">✓</div>
+                <span>{insight.text}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
       <div className="benefits-section pt-100 pb-150 lg-pt-80 lg-pb-120" style={{ background: '#f8f9fa' }}>
         <div className="container">

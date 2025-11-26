@@ -21,20 +21,16 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data.heroBackgroundImage.url}` 
     : null; 
 
-  // Helper to check if the type is ANY kind of video string
-  // Strapi might send 'Video', 'video', or 'heroBackgroundVideo' depending on how the enum was set up.
   const isVideo = heroType === 'Video' || heroType === 'video' || heroType === 'heroBackgroundVideo';
 
   return (
     <>
       <Header menuTextColor="white" />
       
-      {/* --- HERO SECTION (Large Eco-Style) --- */}
+      {/* --- HERO SECTION --- */}
       <div className="case-studies-hero">
         
-        {/* Dynamic Background Layer */}
         <div className="hero-bg-wrapper">
-            {/* FIX: Updated condition to use 'isVideo' which includes 'heroBackgroundVideo' */}
             {isVideo && heroVideoUrl ? (
                 <video 
                   autoPlay 
@@ -55,7 +51,6 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
                     priority
                 />
             ) : (
-                // Fallback Gradient
                 <div className="hero-bg-fallback" />
             )}
             <div className="hero-overlay" />
@@ -120,56 +115,64 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
 
               return (
                 <div key={study.id} className="col-lg-4 col-md-6">
-                  <div className="featured-case-card">
-                    <div className="case-image">
-                      <Image
-                        src={studyHeroUrl}
-                        alt={study.title}
-                        width={600}
-                        height={400}
-                        className="case-img"
-                        style={{ objectFit: 'cover' }}
-                      />
-                      <div className="case-overlay">
-                        <div className="case-category">{study.category}</div>
-                        {study.metrics && (
-                          <div className="case-metrics">
-                            {Object.entries(study.metrics).map(([key, value], idx) => (
-                              <div key={idx} className="metric-item">
-                                <span className="metric-value">{value}</span>
-                                <span className="metric-label">{key}</span>
+                  {/* FIX: Wrap the entire card in the Link.
+                      Added 'd-block h-100 text-decoration-none' to maintain layout and remove blue links.
+                  */}
+                  <Link href={`/case-studies/${study.slug}`} className="d-block h-100 text-decoration-none card-link-wrapper">
+                      <div className="featured-case-card">
+                        <div className="case-image">
+                          <Image
+                            src={studyHeroUrl}
+                            alt={study.title}
+                            width={600}
+                            height={400}
+                            className="case-img"
+                            style={{ objectFit: 'cover' }}
+                          />
+                          <div className="case-overlay">
+                            <div className="case-category">{study.category}</div>
+                            {study.metrics && (
+                              <div className="case-metrics">
+                                {Object.entries(study.metrics).map(([key, value], idx) => (
+                                  <div key={idx} className="metric-item">
+                                    <span className="metric-value">{value}</span>
+                                    <span className="metric-label">{key}</span>
+                                  </div>
+                                ))}
                               </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="case-content">
+                          <div className="case-meta">
+                            <span className="client-name">{study.client}</span>
+                            <span className="industry">{study.industry}</span>
+                          </div>
+                          <h3 className="case-title">{study.title}</h3>
+                          <p className="case-description">{study.description}</p>
+                          <div className="case-tags">
+                            {study.tags?.map((tag, i) => (
+                              <span key={tag.id || i} className="tag">{tag.text}</span>
                             ))}
                           </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="case-content">
-                      <div className="case-meta">
-                        <span className="client-name">{study.client}</span>
-                        <span className="industry">{study.industry}</span>
-                      </div>
-                      <h3 className="case-title">{study.title}</h3>
-                      <p className="case-description">{study.description}</p>
-                      <div className="case-tags">
-                        {study.tags?.map((tag, i) => (
-                          <span key={tag.id || i} className="tag">{tag.text}</span>
-                        ))}
-                      </div>
-                      <div className="case-results">
-                        <div className="result-highlight">
-                          <span className="result-number">{study.results}</span>
-                          <span className="result-label">Key Result</span>
+                          <div className="case-results">
+                            <div className="result-highlight">
+                              <span className="result-number">{study.results}</span>
+                              <span className="result-label">Key Result</span>
+                            </div>
+                            {/* FIX: Changed from Link to span to prevent illegal nested links.
+                                The parent Link handles the click now.
+                            */}
+                            <span className="case-link">
+                              View Details
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            </span>
+                          </div>
                         </div>
-                        <Link href={`/case-studies/${study.slug}`} className="case-link">
-                          View Details
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                            <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        </Link>
                       </div>
-                    </div>
-                  </div>
+                  </Link>
                 </div>
               );
             })}
@@ -208,14 +211,14 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
         :global(body .theme-main-menu:not(.fixed) .lets-talk-btn) { color: white !important; border-color: white !important; background: transparent !important; }
         :global(body .theme-main-menu:not(.fixed) .lets-talk-btn:hover) { color: black !important; background: white !important; }
 
-        /* --- LARGE HERO STYLES (Eco Match) --- */
+        /* --- HERO STYLES --- */
         .case-studies-hero { 
             position: relative; 
             overflow: hidden; 
-            height: 80vh;          /* Forces large height */
-            min-height: 600px;     /* Minimum height for mobile */
-            display: flex;         /* Flexbox for centering */
-            align-items: center;   /* Vertical center */
+            height: 80vh; 
+            min-height: 600px; 
+            display: flex; 
+            align-items: center; 
             justify-content: center; 
         }
 
@@ -230,7 +233,6 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
         .alt_main_title { color: black; }
         .hero-description { color: rgba(255, 255, 255, 0.7); font-size: 1.2rem; max-width: 600px; margin: 20px auto 0; line-height: 1.6; }
         
-        /* Shape Underline logic */
         .main-title .shape-underline { 
             filter: invert(1); 
             position: absolute; 
@@ -241,13 +243,15 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
         }
 
         /* Card Styles */
+        .card-link-wrapper:hover .featured-case-card { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); }
+        .card-link-wrapper:hover .case-img { transform: scale(1.05); }
+        .card-link-wrapper:hover .case-overlay { opacity: 1; }
+        .card-link-wrapper:hover .case-link { color: #FF1292; transform: translateX(5px); }
+
         .featured-case-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column; }
-        .featured-case-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); }
         .case-image { position: relative; height: 350px; overflow: hidden; }
         .case-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
-        .featured-case-card:hover .case-img { transform: scale(1.05); }
         .case-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 50%, rgba(0,0,0,0.9) 100%); display: flex; flex-direction: column; justify-content: space-between; padding: 25px; opacity: 0; transition: opacity 0.3s ease; }
-        .featured-case-card:hover .case-overlay { opacity: 1; }
         .case-category { background: rgba(255, 18, 146, 0.9); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; width: fit-content; }
         .case-metrics { display: flex; gap: 25px; align-self: flex-end; }
         .metric-item { display: flex; flex-direction: column; align-items: center; text-align: center; }
@@ -265,13 +269,13 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
         .result-highlight { display: flex; flex-direction: column; }
         .result-number { color: #FF1292; font-size: 1.1rem; font-weight: 600; line-height: 1; }
         .result-label { color: #666; font-size: 0.8rem; margin-top: 4px; }
-        .case-link { display: flex; align-items: center; gap: 8px; color: #151937; text-decoration: none; font-weight: 500; transition: all 0.3s ease; }
-        .case-link:hover { color: #FF1292; transform: translateX(5px); }
+        .case-link { display: flex; align-items: center; gap: 8px; color: #151937; font-weight: 500; transition: all 0.3s ease; }
+        
         .cta-title { color: white; font-size: 2.5rem; margin-bottom: 20px; font-family: 'Recoleta', serif; font-weight: 400; }
         .cta-description { color: rgba(255, 255, 255, 0.9); font-size: 1.2rem; margin-bottom: 40px; line-height: 1.6; }
 
         @media (max-width: 768px) {
-          .case-studies-hero { height: 70vh; } /* Adjust slightly for mobile */
+          .case-studies-hero { height: 70vh; }
           .main-title { font-size: 2.5rem; }
           .hero-description { font-size: 1rem; }
           .case-image { height: 280px; }
