@@ -163,14 +163,16 @@ const ContactForm4 = () => {
     setSubmitStatus(null);
     
     try {
-      // Save to Strapi
-      const strapiResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/contact-form-submissions`, {
+      // 1. Send data to the dedicated Internal API Route
+      // This route handles both Apollo (List + Contact) and Strapi backup
+      const response = await fetch('/api/submit-contact-form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           data: {
+            // Mapping form values (snake_case) to API expectation (camelCase)
             firstName: data.first_name,
             lastName: data.last_name,
             email: data.email,
@@ -179,16 +181,15 @@ const ContactForm4 = () => {
             emailOptin: data.email_optin,
             servicesNeeded: data.services_needed,
             leadSource: data.lead_source,
-            submittedAt: new Date().toISOString(),
           }
         }),
       });
 
-      if (!strapiResponse.ok) {
-        throw new Error('Failed to save form submission');
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
       }
 
-      // Open Apollo Meetings widget
+      // 2. Open Apollo Meetings widget (Client-side integration)
       if (typeof window !== 'undefined' && window.ApolloMeetings) {
         window.ApolloMeetings.submit({
           email: data.email,

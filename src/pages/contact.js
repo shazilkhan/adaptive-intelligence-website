@@ -10,19 +10,28 @@ import Container from '@mui/material/Container';
 import { useSettings } from '@/context/SettingsContext';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 
-// 1. Pass 'settings' from getStaticProps to the component
-const Contact = ({ settings: propSettings }) => {
+const Contact = ({ settings: propSettings, contactPageData }) => {
   const { settings: contextSettings } = useSettings();
   
   // Use props for immediate rendering (SEO/Speed), fallback to context
   const settings = propSettings || contextSettings;
 
+  // --- 1. Background Logic ---
+  const heroType = contactPageData?.heroBackgroundType || 'Shapes';
+  const heroVideoUrl = contactPageData?.heroBackgroundVideo?.url;
+  const heroImageUrl = contactPageData?.heroBackgroundImage?.url;
+
+  // Check if we have a Dark Media Background
+  const hasMediaBackground = (heroType === 'Video' && heroVideoUrl) || (heroType === 'Image' && heroImageUrl);
+
   return (
     <div className="contact-page-wrapper">
-      <Header />
       
-      {/* Hero wraps the "Our Team..." black box */}
-      <Hero isHomePage={false}>
+      {/* Header receives the prop, but we will force styles below just in case */}
+      <Header menuTextColor={hasMediaBackground ? "white" : "dark"} />
+      
+      {/* Hero with autoHeight */}
+      <Hero isHomePage={false} autoHeight={true} heroData={contactPageData}>
         <ContactV4 settings={settings} />
       </Hero>
 
@@ -55,42 +64,85 @@ const Contact = ({ settings: propSettings }) => {
 
       <FooterWithSettings />
 
-      {/* --- PAGE SPECIFIC STYLES --- */}
+      {/* --- 1. Layout Fixes (Always Active) --- */}
       <style jsx global>{`
-        /* Override the Global Hero 80vh height just for this page.
-           This pulls the Map & Form up so they are visible immediately.
-        */
         .contact-page-wrapper .hero-banner-nine {
             height: auto !important;
-            min-height: 550px !important; /* Enough space for the shapes */
+            min-height: 550px !important;
             padding-bottom: 80px !important;
             padding-top: 200px !important;
         }
-
-        /* Ensure the black box inside ContactV4 doesn't have massive margins */
         .contact-page-wrapper .contact-v4-container {
             margin-bottom: 0 !important;
         }
       `}</style>
+
+      {/* --- 2. WHITE MENU OVERRIDES (Conditional) --- */}
+      {/* We use a standard style tag to guarantee application without compiler errors */}
+      {hasMediaBackground && (
+        <style dangerouslySetInnerHTML={{__html: `
+          /* Force Nav Links to White when Header is NOT fixed (scrolled) */
+          body .theme-main-menu:not(.fixed) .navbar-nav .nav-link {
+            color: #ffffff !important;
+          }
+          
+          /* Keep Hover/Active states Pink */
+          body .theme-main-menu:not(.fixed) .navbar-nav .nav-item:hover .nav-link,
+          body .theme-main-menu:not(.fixed) .navbar-nav .nav-item.active .nav-link,
+          body .theme-main-menu:not(.fixed) .navbar-nav .nav-item.current-menu-item .nav-link {
+            color: #FF1292 !important;
+          }
+
+          /* Force Mobile Toggler to White */
+          body .theme-main-menu:not(.fixed) .navbar-toggler {
+            border-color: rgba(255,255,255,0.5) !important;
+          }
+          body .theme-main-menu:not(.fixed) .navbar-toggler span {
+            background-color: #ffffff !important;
+          }
+
+          /* Force "Let's Talk" Button to White Outline */
+          body .theme-main-menu:not(.fixed) .lets-talk-btn {
+            color: #ffffff !important;
+            border-color: #ffffff !important;
+            background: transparent !important;
+          }
+          
+          /* Button Hover */
+          body .theme-main-menu:not(.fixed) .lets-talk-btn:hover {
+            color: #000000 !important;
+            background: #ffffff !important;
+          }
+        `}} />
+      )}
     </div>
   );
 };
 
 export async function getStaticProps() {
   let settings = null;
+  let contactPageData = null;
   
   try {
-    const settingsUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/setting?populate=*`;
-    const settingsRes = await fetch(settingsUrl);
-    const settingsJson = await settingsRes.json();
+    const [settingsRes, pageRes] = await Promise.all([
+        fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/setting?populate=*`),
+        fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/contact-page?populate=*`)
+    ]);
+
+    const settingsJson = settingsRes.ok ? await settingsRes.json() : { data: null };
+    const pageJson = pageRes.ok ? await pageRes.json() : { data: null };
+
     settings = settingsJson.data || null;
+    contactPageData = pageJson.data || null;
+
   } catch (error) {
-    console.error("Error fetching settings:", error);
+    console.error("Error fetching contact page data:", error);
   }
 
   return {
     props: {
-      settings
+      settings,
+      contactPageData
     },
     revalidate: 10,
   };

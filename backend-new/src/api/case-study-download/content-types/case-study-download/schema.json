@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "case_study_downloads",
+  "info": {
+    "singularName": "case-study-download",
+    "pluralName": "case-study-downloads",
+    "displayName": "Case Study Download"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "email": {
+      "type": "string"
+    },
+    "resource_slug": {
+      "type": "string"
+    },
+    "resource_title": {
+      "type": "string"
+    },
+    "downloaded_at": {
+      "type": "string"
+    }
+  }
+}
