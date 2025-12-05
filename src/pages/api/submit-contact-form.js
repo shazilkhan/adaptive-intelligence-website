@@ -31,6 +31,9 @@ export default async function handler(req, res) {
     console.log("👉 Processing submission for:", email);
 
     // --- 5. Prepare Apollo Payload ---
+    // CHANGED: We now pull the specific list ID for this form
+    const targetListId = process.env.APOLLO_LIST_ID_CONTACT_FORM;
+
     const apolloPayload = {
       api_key: process.env.APOLLO_API_KEY,
       first_name: firstName,
@@ -38,9 +41,8 @@ export default async function handler(req, res) {
       email: email,
       organization_name: companyName,
       phone_numbers: phone ? [{ value: phone, type: "work" }] : [],
-      // FIX: Add to List (Label) directly during creation
-      // We check if the LIST_ID exists in env, then add it to the array
-      label_ids: process.env.APOLLO_LIST_ID ? [process.env.APOLLO_LIST_ID] : [],
+      // FIX: Add to specific list immediately
+      label_ids: targetListId ? [targetListId] : [], 
       custom_fields: {
         "initial_message": `Services: ${services} | Source: ${sources}`
       }

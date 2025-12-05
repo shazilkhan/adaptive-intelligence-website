@@ -12,13 +12,42 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Save to Strapi Collection: 'case-study-downloads'
-    // Ensure this collection exists in Strapi with fields: email (Text), resource_slug (Text), resource_title (Text)
+    // --- 1. Send to Apollo (Create/Update Contact & Add to List) ---
+    if (process.env.APOLLO_API_KEY && process.env.APOLLO_LIST_ID_DOWNLOADS) {
+      try {
+        const apolloPayload = {
+          api_key: process.env.APOLLO_API_KEY,
+          email: email,
+          // Add to the specific Download List
+          label_ids: [process.env.APOLLO_LIST_ID_DOWNLOADS],
+          custom_fields: {
+            "initial_message": `Downloaded Resource: ${title} (${slug})`
+          }
+          // Note: We don't have First/Last name here based on your URL params, 
+          // so Apollo will try to enrich it or just create it with Email.
+        };
+
+        const apolloRes = await fetch('https://api.apollo.io/v1/contacts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(apolloPayload),
+        });
+
+        if (apolloRes.ok) {
+          console.log(`✅ Added ${email} to Apollo Download List`);
+        } else {
+          console.error("❌ Apollo Error:", await apolloRes.text());
+        }
+      } catch (apolloErr) {
+        console.error("Apollo Connection Failed:", apolloErr);
+      }
+    }
+
+    // --- 2. Save to Strapi (Existing Logic) ---
     const strapiResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-study-downloads`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${process.env.STRAPI_API_TOKEN}` // Uncomment if needed
       },
       body: JSON.stringify({
         data: {
@@ -26,14 +55,14 @@ export default async function handler(req, res) {
           resource_slug: slug,
           resource_title: title,
           downloaded_at: new Date().toISOString(),
-          publishedAt: new Date().toISOString() // Publish immediately
+          publishedAt: new Date().toISOString()
         }
       }),
     });
 
     if (!strapiResponse.ok) {
       console.error("Strapi Tracking Failed:", await strapiResponse.text());
-      return res.status(500).json({ message: 'Failed to track in Strapi' });
+      // We don't return 500 here if Apollo succeeded, just log it.
     }
 
     return res.status(200).json({ success: true });

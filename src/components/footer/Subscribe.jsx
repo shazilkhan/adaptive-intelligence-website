@@ -10,48 +10,32 @@ const Subscribe = () => {
     setStatus('loading');
     setMessage('');
 
-    const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-
     try {
-      // THE FIX: Check the correct '/api/newsletters' endpoint
-      const checkRes = await fetch(`${strapiUrl}/api/newsletters?filters[email][$eq]=${email}`);
-      const checkData = await checkRes.json();
-
-      if (checkData.data && checkData.data.length > 0) {
-        setStatus('error');
-        setMessage('This email is already subscribed.');
-        return;
-      }
-
-      // THE FIX: Create a new entry in the correct '/api/newsletters' endpoint
-      const createRes = await fetch(`${strapiUrl}/api/newsletters`, {
+      // FIX: Call our internal API route (which handles Apollo + Strapi)
+      const response = await fetch('/api/subscribe-newsletter', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          data: {
-            email: email,
-          },
-        }),
+        body: JSON.stringify({ email }),
       });
 
-      if (!createRes.ok) {
-        // Log the server's response for better debugging
-        const errorBody = await createRes.json();
-        console.error('Strapi Error:', errorBody);
-        throw new Error('Failed to subscribe.');
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Handle "Already subscribed" (409) or other errors
+        throw new Error(data.message || 'Failed to subscribe.');
       }
 
-      // 3. Handle success
+      // Handle success
       setStatus('success');
-      setMessage('Thank you for subscribing!');
+      setMessage(data.message || 'Thank you for subscribing!');
       setEmail('');
 
     } catch (error) {
       console.error('Subscription error:', error);
       setStatus('error');
-      setMessage('Something went wrong. Please try again.');
+      setMessage(error.message || 'Something went wrong. Please try again.');
     }
   };
 

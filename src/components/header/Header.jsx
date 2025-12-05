@@ -53,8 +53,12 @@ const Header = ({ style, menuTextColor }) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus(null);
+    
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/lets-talk-submissions`, {
+      // ---------------------------------------------------------
+      // FIX: Point to internal API Route (which sends to Apollo + Strapi)
+      // ---------------------------------------------------------
+      const response = await fetch('/api/submit-lets-talk', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -64,14 +68,23 @@ const Header = ({ style, menuTextColor }) => {
             email: formData.email,
             company: formData.company,
             message: formData.message,
-            submittedAt: new Date().toISOString(),
+            // submittedAt is added by the server now
           }
         }),
       });
-      if (!response.ok) throw new Error('Failed to submit form');
+
+      if (!response.ok) {
+        // Try to parse error message if available
+        const errorData = await response.json().catch(() => ({})); 
+        console.error("Submission Failed:", errorData);
+        throw new Error('Failed to submit form');
+      }
+      
       setSubmitStatus({ type: 'success', message: 'Thank you! We\'ll be in touch soon.' });
       setFormData({ firstName: '', lastName: '', email: '', company: '', message: '' });
+      
       setTimeout(() => { closeMenu(); }, 2000);
+
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitStatus({ type: 'error', message: 'Something went wrong. Please try again.' });
