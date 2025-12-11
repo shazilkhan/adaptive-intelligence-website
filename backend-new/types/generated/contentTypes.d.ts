@@ -979,6 +979,7 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     faqTitleHighlight: Schema.Attribute.String;
     featureButtonText: Schema.Attribute.String;
     featureButtonUrl: Schema.Attribute.String;
+    featureContent: Schema.Attribute.Component<'homepage.text-chunk', true>;
     featureDescription: Schema.Attribute.Text;
     featureImage: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'

@@ -82,6 +82,17 @@ export interface HomepageFeatureListItem extends Struct.ComponentSchema {
   };
 }
 
+export interface HomepageTextChunk extends Struct.ComponentSchema {
+  collectionName: 'components_homepage_text_chunks';
+  info: {
+    displayName: 'Text Chunk';
+  };
+  attributes: {
+    isBold: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    text: Schema.Attribute.Text;
+  };
+}
+
 export interface SharedBulletPoint extends Struct.ComponentSchema {
   collectionName: 'components_shared_bullet_points';
   info: {
@@ -144,6 +155,7 @@ declare module '@strapi/strapi' {
       'eco.hub-card': EcoHubCard;
       'homepage.counter-item': HomepageCounterItem;
       'homepage.feature-list-item': HomepageFeatureListItem;
+      'homepage.text-chunk': HomepageTextChunk;
       'shared.bullet-point': SharedBulletPoint;
       'shared.industry-item': SharedIndustryItem;
       'shared.insight': SharedInsight;

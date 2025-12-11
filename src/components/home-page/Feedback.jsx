@@ -64,7 +64,7 @@ const Feedback = ({ feedbackData }) => {
               <div className="item">
                 <div className="feedback-block-eight text-center">
                   <p className="font-recoleta tx-dark mt-60 mb-65 lg-mt-40 lg-mb-40 quote-text">
-                    {quoteStart} <span style={{ color: "#FF1292" }}>{quoteHighlight}</span> {quoteEnd}
+                    &quot;{quoteStart} <span style={{ color: "#FF1292" }}>{quoteHighlight}</span> {quoteEnd}&quot;
                   </p>
                   <h6 className="fw-normal fs-20 d-inline-block fst-italic position-relative ps-4">
                     {authorName}, {authorTitle}
@@ -75,18 +75,6 @@ const Feedback = ({ feedbackData }) => {
           </div>
         </div>
       </div>
-      
-      {/* Shapes are rendered here */}
-      {images.map((image, index) => (
-        <Image
-          key={index}
-          src={image.src}
-          alt={image.alt}
-          className={image.className}
-          width={image.width}
-          height={image.height}
-        />
-      ))}
 
       <style jsx>{`
         /* --- MOBILE OVERRIDES ONLY (< 768px) --- */

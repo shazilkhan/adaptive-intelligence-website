@@ -290,6 +290,11 @@
     },
     "ctaButtonUrl2": {
       "type": "string"
+    },
+    "featureContent": {
+      "type": "component",
+      "component": "homepage.text-chunk",
+      "repeatable": true
     }
   }
 }

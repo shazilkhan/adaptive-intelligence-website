@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_homepage_text_chunks",
+  "info": {
+    "displayName": "Text Chunk"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "text"
+    },
+    "isBold": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "config": {}
+}
