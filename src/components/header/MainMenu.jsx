@@ -7,28 +7,29 @@ import { usePathname } from "next/navigation";
 const MainMenu = () => {
   const pathname = usePathname();
 
+  // Helper to check active state
   const isActive = (link) => {
     if (link === "/") {
       return pathname === "/";
     }
-    // Helper to check if any item in a dropdown array is active
     if (Array.isArray(link)) {
         return link.some(item => pathname === item.link || pathname.startsWith(item.link));
     }
     return pathname.startsWith(link);
   };
 
+  // --- Dropdown Data ---
   const clientsItems = [
     { name: "Services", link: "/services" },
     { name: "Case Studies", link: "/case-studies" }
   ];
 
-  // --- NEW: Define items for the About dropdown ---
   const aboutItems = [
     { name: "About Us", link: "/about" },
     { name: "Team", link: "/team" }
   ];
 
+  // Helper to render simple links
   const renderSingleNavItem = (label, link) => {
     return (
       <li className="nav-item">
@@ -76,10 +77,34 @@ const MainMenu = () => {
           {/* 1. Home */}
           {renderSingleNavItem("Home", "/")}
 
-          {/* 2. Creatives */}
-          {renderSingleNavItem("Creatives", "/creatives")}
+          {/* 2. About (Dropdown) */}
+          <li className="nav-item dropdown">
+            <a
+              className={`nav-link dropdown-toggle ${isActive(aboutItems) ? "active-menu" : ""}`}
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              data-bs-auto-close="outside"
+              aria-expanded="false"
+              style={{ userSelect: "none" }}
+            >
+              About
+            </a>
+            <ul className="dropdown-menu">
+              {aboutItems.map((item, index) => (
+                <li key={index}>
+                  <Link href={item.link} className={`dropdown-item ${pathname === item.link ? "active" : ""}`}>
+                    <span>{item.name}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </li>
 
-          {/* 3. Clients Dropdown */}
+          {/* 3. Eco */}
+          {renderSingleNavItem("Eco", "/eco")}
+
+          {/* 4. Clients (Dropdown) */}
           <li className="nav-item dropdown">
             <a
               className={`nav-link dropdown-toggle ${isActive(clientsItems) ? "active-menu" : ""}`}
@@ -103,32 +128,11 @@ const MainMenu = () => {
             </ul>
           </li>
 
-          {/* 4. Eco */}
-          {renderSingleNavItem("Eco", "/eco")}
+          {/* 5. Creatives */}
+          {renderSingleNavItem("Creatives", "/creatives")}
 
-          {/* 5. About Dropdown (Updated) */}
-          <li className="nav-item dropdown">
-            <a
-              className={`nav-link dropdown-toggle ${isActive(aboutItems) ? "active-menu" : ""}`}
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              data-bs-auto-close="outside"
-              aria-expanded="false"
-              style={{ userSelect: "none" }}
-            >
-              About
-            </a>
-            <ul className="dropdown-menu">
-              {aboutItems.map((item, index) => (
-                <li key={index}>
-                  <Link href={item.link} className={`dropdown-item ${pathname === item.link ? "active" : ""}`}>
-                    <span>{item.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </li>
+          {/* 6. Contact */}
+          {renderSingleNavItem("Contact", "/contact")}
 
         </ul>
       </div>
