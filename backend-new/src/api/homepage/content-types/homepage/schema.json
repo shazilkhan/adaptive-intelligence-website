@@ -24,7 +24,8 @@
       "type": "string"
     },
     "heroSubtitleEnd": {
-      "type": "string"
+      "type": "text",
+      "maxLength": 10000
     },
     "heroButtonText": {
       "type": "string"

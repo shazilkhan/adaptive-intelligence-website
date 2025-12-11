@@ -1029,7 +1029,10 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     heroButtonText: Schema.Attribute.String;
     heroHighlightedText: Schema.Attribute.String;
     heroSubtitleBold: Schema.Attribute.String;
-    heroSubtitleEnd: Schema.Attribute.String;
+    heroSubtitleEnd: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 10000;
+      }>;
     heroSubtitleStart: Schema.Attribute.Text;
     heroTitle: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
