@@ -239,91 +239,84 @@ const ServicesPage = ({ servicesPageData }) => {
   </div>
 </div>
       <LatestCaseStudiesSection />
-      {/* Testimonials Section */}
-<div className="feedback-section-ten position-relative pt-100 pb-100 lg-pt-100 lg-pb-100 md-pt-80 md-pb-80">
-  
-  {/* --- 1. Background Image & Overlay --- */}
-  <div className="section-bg-wrapper">
-     {servicesPageData?.testimonialsBackgroundImage?.url ? (
-        <Image 
-           src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.testimonialsBackgroundImage.url}`}
-           alt="Testimonial Background"
-           fill
-           className="hero-bg-media"
-           style={{ objectFit: 'cover' }}
-        />
-     ) : (
-        /* Fallback Background if no image uploaded */
-        <div className="hero-bg-fallback" style={{ background: '#1a1a1a', width: '100%', height: '100%' }} />
-     )}
-     
-     {/* Purple Overlay */}
-     <div 
-        className="hero-overlay" 
-        style={{ 
-            background: 'linear-gradient(135deg, rgba(74, 10, 77, 0.9) 0%, rgba(200, 15, 120, 0.85) 100%)', 
-            position: 'absolute', 
-            top:0, 
-            left:0, 
-            width:'100%', 
-            height:'100%', 
-            zIndex: 1 
-        }}
-     ></div>
-  </div>
+{/* ============================================== */}
+      {/* --- CTA Section (Direct Implementation) --- */}
+      {/* ============================================== */}
+      {(() => {
+        // 1. Data Source (Checks both pageData and common variations)
+        const ctaData = servicesPageData || {}; 
 
-  <div className="container position-relative z-2">
-    {/* Header Row */}
-    <div className="row">
-      <div className="col-xl-8 col-lg-9 m-auto">
-        <div className="title-style-ten text-center mb-80 lg-mb-40" data-aos="fade-up">
-          <div className="sc-title" style={{ color: '#FF1292', marginBottom: '20px' }}>
-            {servicesPageData?.testimonialsTagline || "Client Testimonials"}
+        // 2. Text Logic (Matches your schema)
+        const title = ctaData.ctaBgTitle || ctaData.ctaTitle || "Feeling Inspired Yet?";
+        const subtitle = ctaData.ctaBgSubtitle || ctaData.ctaSubtitle || "We're only a click away.";
+        const btnText = ctaData.ctaBgBtnText || ctaData.ctaBtnText || "Schedule a Marketing Audit";
+        const btnUrl = ctaData.ctaBgBtnUrl || ctaData.ctaBtnUrl || "/contact";
+
+        // 3. Smart Image Logic
+        const getBgUrl = (obj) => {
+           if (!obj) return null;
+           const imgField = obj.ctaBgImage || obj['cta-bg'];
+           if (!imgField) return null;
+           return imgField.data?.attributes?.url || imgField.url || imgField.data?.url || null;
+        };
+
+        const rawUrl = getBgUrl(ctaData);
+        // Build full URL if it's relative
+        const fullUrl = rawUrl 
+            ? (rawUrl.startsWith('http') ? rawUrl : `${process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'}${rawUrl}`) 
+            : null;
+
+        return (
+          <div className="cta-hardcoded-wrapper">
+            
+            {/* Background Image Container */}
+            <div className="bg-image-holder">
+              {fullUrl ? (
+                <Image 
+                  src={fullUrl} 
+                  alt="Background" 
+                  fill 
+                  className="cta-cover-image"
+                  sizes="100vw"
+                  priority
+                />
+              ) : (
+                <div className="fallback-bg"></div>
+              )}
+              
+              {/* Gradient Overlay */}
+              <div className="overlay"></div>
+            </div>
+
+            <div className="container position-relative z-2">
+              <div className="row">
+                <div className="col-lg-10 m-auto text-center">
+                  
+                  <h2 className="main-title" data-aos="fade-up">
+                    {title}
+                  </h2>
+                  
+                  <p className="subtitle" data-aos="fade-up" data-aos-delay="100">
+                    {subtitle}
+                  </p>
+
+                  <div className="btn-holder" data-aos="fade-up" data-aos-delay="200">
+                    <div className="d-inline-block">
+                        <LetsTalkButton 
+                            buttonText={btnText}
+                            href={btnUrl}
+                            showIcon={false}
+                            className="custom-cta-button"
+                        />
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
           </div>
-          <h2 className="main-title font-recoleta fw-normal text-white">
-            {servicesPageData?.testimonialsTitle || "Trusted by"}{" "}
-            <span className="position-relative">
-              {servicesPageData?.testimonialsTitleHighlight || "Leading"}{" "}
-              <Image
-                src="/images/shape/shape_129.svg"
-                alt=""
-                width={160}
-                height={6}
-                style={{ position: 'absolute', bottom: '-10px', left: '0', width: '100%' }}
-              />
-            </span>
-            {" "}{servicesPageData?.testimonialsTitleEnd || "Brands"}
-          </h2>
-          
-          {/* Optional Description */}
-          <p className="text-white opacity-75 fs-20 lh-lg mt-30 mb-0">
-             {servicesPageData?.testimonialsDescription || "Don't just take our word for it. Here's what our clients say about working with us."}
-          </p>
-        </div>
-      </div>
-    </div>
-
-    {/* Testimonial Component Row */}
-    <div className="row">
-        <div className="col-12">
-            <Testimonial />
-        </div>
-    </div>
-  </div>
-
- <div 
-        className="hero-overlay" 
-        style={{ 
-            background: 'linear-gradient(135deg, rgba(74, 10, 77, 0.9) 0%, rgba(200, 15, 120, 0.85) 100%)', 
-            position: 'absolute', 
-            top:0, 
-            left:0, 
-            width:'100%', 
-            height:'100%', 
-            zIndex: 1 
-        }}
-     ></div>
-</div>
+        );
+      })()}
       {/*
       <div className="fancy-feature-thirtyThree mt-180 lg-mt-120 md-mt-80">
         <div className="container">
