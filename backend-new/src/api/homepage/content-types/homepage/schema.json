@@ -290,6 +290,9 @@
         "videos",
         "audios"
       ]
+    },
+    "whyUsDescription2": {
+      "type": "text"
     }
   }
 }

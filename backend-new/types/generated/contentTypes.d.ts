@@ -1075,6 +1075,7 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
       true
     >;
     whyUsDescription: Schema.Attribute.Text;
+    whyUsDescription2: Schema.Attribute.Text;
     whyUsImageCardLabel: Schema.Attribute.String;
     whyUsImageCardStat: Schema.Attribute.String;
     whyUsInfoBox1Icon: Schema.Attribute.Media<'images'>;

@@ -35,8 +35,11 @@ const FeaturesBlock = ({ featuresData }) => {
               {featuresData?.whyUsTitleEnd || " in single click."}
             </h2>
           </div>
-          <p className="fs-20 mt-15 mb-45">
+          <p className="fs-20 mt-15 mb-20">
             {featuresData?.whyUsDescription || "Lorem ipsum dolor sit amet..."}
+          </p>
+          <p className="fs-20 mt-15 mb-20">
+            {featuresData?.whyUsDescription2 || "Lorem ipsum dolor sit amet..."}
           </p>
           <div className="info mb-50">
             <div className="row">
