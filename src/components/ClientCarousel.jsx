@@ -31,72 +31,78 @@ const ClientCarousel = () => {
     fetchClientLogos();
   }, []);
 
+  // Settings for Infinite Loop (Ticker Effect)
   const clientSettings = {
     dots: false,
     infinite: true,
-    speed: 500,
-    slidesToShow: 5,
+    speed: 5000,         // Time for one full transition (slower = smoother)
+    slidesToShow: 6,     // Show more logos on big screens
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 0,    // 0 delay = continuous movement
+    cssEase: "linear",   // Constant speed, no stopping
+    pauseOnHover: false, // Keep moving even on hover
+    arrows: false,
     responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 4 } },
+      { breakpoint: 1600, settings: { slidesToShow: 6 } },
+      { breakpoint: 1200, settings: { slidesToShow: 5 } },
+      { breakpoint: 992, settings: { slidesToShow: 4 } },
       { breakpoint: 768, settings: { slidesToShow: 3 } },
       { breakpoint: 480, settings: { slidesToShow: 2 } },
     ],
   };
 
-  if (clientLogos.length === 0) {
-    return <p>Loading client logos...</p>;
-  }
+  if (clientLogos.length === 0) return null;
 
   return (
-    // THE FIX: Add an opening React Fragment tag <>
     <>
-      <Slider {...clientSettings} ref={clientCarouselRef} arrows={false}>
-        {clientLogos.map((client, index) => (
-          <div key={index} className="client-slide-modern">
-            <div className="client-logo-wrapper-modern">
-              <Image 
-                src={client.logo} 
-                alt={client.name}
-                width={0}
-                height={0}
-                sizes="100vw"
-                style={{
-                  width: 'auto',
-                  height: 'auto',
-                  maxWidth: '100%',
-                  maxHeight: '60px'
-                }}
-              />
-            </div>
-          </div>
-        ))}
-      </Slider>
+      <div className="full-width-slider-wrapper">
+          <Slider {...clientSettings} ref={clientCarouselRef}>
+            {clientLogos.map((client, index) => (
+              <div key={index} className="client-slide-modern">
+                <div className="client-logo-wrapper-modern">
+                  <Image 
+                    src={client.logo} 
+                    alt={client.name}
+                    width={200} // High base resolution
+                    height={100}
+                    // Style ensures logo fits vertically but keeps aspect ratio
+                    style={{ 
+                      width: 'auto', 
+                      height: 'auto', 
+                      maxHeight: '80px', // Fits inside the 100px box
+                      maxWidth: '100%',
+                      objectFit: 'contain'
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </Slider>
+      </div>
 
       <style jsx>{`
-        .client-slide-modern {
-          padding: 0 15px;
+        /* Wrapper to ensure no overflow scrollbars */
+        .full-width-slider-wrapper {
+            width: 100%;
+            overflow: hidden;
         }
+
+        .client-slide-modern {
+          padding: 0 15px; /* Spacing between logos */
+        }
+        
         .client-logo-wrapper-modern {
           display: flex;
           align-items: center;
           justify-content: center;
-          height: 80px;
+          height: 100px; /* Fixed height container */
           background: white;
-          border: 1px solid #f0f0f0;
-          transition: all 0.3s ease;
-        }
-        .client-logo-wrapper-modern:hover {
-          border-color: #FF1292;
-          transform: translateY(-3px);
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+          /* Removed border for cleaner look */
         }
       `}</style>
-    {/* THE FIX: Add a closing React Fragment tag </> */}
     </>
   );
 };
 
-export default ClientCarousel
+export default ClientCarousel;

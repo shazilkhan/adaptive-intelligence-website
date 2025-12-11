@@ -176,17 +176,25 @@ const ServicesPage = ({ servicesPageData }) => {
         </div>
       </div>
 
-            <div className="clients-section pt-100 pb-100 md-pt-60 md-pb-60" style={{ background: '#f8f9fa' }}>
-        <div className="container">
-          <div className="text-center mb-5">
+          {/* ============================================== */}
+      {/* --- Clients Section (Full Width Infinite) --- */}
+      {/* ============================================== */}
+      <div className="clients-section pt-100 pb-100 md-pt-60 md-pb-60" style={{ background: '#f8f9fa' }}>
+        
+        {/* 1. Title Container (Stays Centered) */}
+        <div className="container mb-50">
+          <div className="text-center">
             <h2 className="main-title font-recoleta fw-normal tx-dark">Clients.</h2>
-            <div className="title-underline mx-auto"></div>
-            <p className="fs-20 mt-20">Trusted by industry leaders worldwide</p>
-          </div>
-          <div className="clients-carousel">
-            <ClientCarousel />
+            <div className="title-underline mx-auto" style={{ width: '60px', height: '2px', background: '#000', marginTop: '15px' }}></div>
+            <p className="fs-20 mt-20 opacity-75">Trusted by industry leaders worldwide</p>
           </div>
         </div>
+
+        {/* 2. Carousel Container (Full Width) */}
+        <div className="container-fluid p-0">
+            <ClientCarousel />
+        </div>
+
       </div>
 
       {/* Industries Section */}
