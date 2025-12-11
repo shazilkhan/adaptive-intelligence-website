@@ -12,7 +12,9 @@ const Leads = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/services?populate=icon`;
+        // UPDATED: Added '&sort=order:asc' to the end
+        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/services?populate=icon&sort=order:asc`;
+        
         const res = await fetch(apiUrl);
 
         if (!res.ok) {

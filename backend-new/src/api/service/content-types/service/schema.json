@@ -47,6 +47,9 @@
     },
     "footer_text": {
       "type": "string"
+    },
+    "order": {
+      "type": "integer"
     }
   }
 }

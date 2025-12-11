@@ -9,8 +9,9 @@ const ServicesGridBullets = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch specific fields and populate the icon and the nested features component
-        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/service-lists?populate[0]=icon&populate[1]=features`;
+        // Updated API URL: Added '&sort=order:asc' at the end
+        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/service-lists?populate[0]=icon&populate[1]=features&sort=order:asc`;
+        
         const res = await fetch(apiUrl);
         const json = await res.json();
 
