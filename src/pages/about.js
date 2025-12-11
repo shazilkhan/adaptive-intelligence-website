@@ -284,6 +284,9 @@ const About = ({ treeCardStats, pageData }) => {
                 <p className="text-lg tx-dark lh-lg mb-40 lg-mb-30" style={{ opacity: 0.9 }}>
                   {pageData?.whoWeAreParagraph2}
                 </p>
+                <p className="text-lg tx-dark lh-lg mb-40 lg-mb-30" style={{ opacity: 0.9 }}>
+                  {pageData?.whoWeAreParagraph3}
+                </p>
                 
                 {/* Reusable Component Button */}
                 <div className="mt-40 lg-mt-30">
@@ -457,42 +460,58 @@ const About = ({ treeCardStats, pageData }) => {
       </div> */}
 
 {/* ============================================== */}
-      {/* --- Our Values Section (Final & Clean) --- */}
+      {/* --- Our Values & Mission Section (Final) --- */}
       {/* ============================================== */}
       <div className="our-values-section position-relative pt-120 pb-120 md-pt-80 md-pb-80">
         <div className="container">
           
-          {/* 1. Dynamic Header Section */}
-          <div className="row justify-content-center mb-60 lg-mb-40">
+          {/* 1. MISSION SECTION (Top) */}
+          <div className="row justify-content-center mb-80 lg-mb-60">
             <div className="col-lg-8 text-center" data-aos="fade-up">
-              {/* Top Heading (e.g. Our Mission) */}
-              <h2 className="font-recoleta fw-normal text-white display-4 mb-30">
-                {pageData?.valuesSectionTitle || "Our Mission"}
-              </h2>
               
-              {/* Description Text */}
-              <p className="text-lg text-white opacity-75 lh-lg">
+              {/* Mission Label */}
+              <div className="mission-heading text-uppercase fw-bold mb-20" style={{ color: 'white', letterSpacing: '2px', fontSize: '22px', borderBottom: '2px solid #FF1292', display: 'inline-block', paddingBottom: '5px' }}>
+                {pageData?.valuesSectionMissionHeading || "Our Mission"}
+              </div>
+              
+              {/* Mission Text */}
+              <h3 className="text-white fw-normal lh-base mt-20 mb-0" style={{ fontSize: '24px', opacity: 0.95 }}>
                 {pageData?.valuesSectionDescription || "We're expanding into new markets, developing proprietary creative technology, and committing to measurable environmental action."}
-              </p>
+              </h3>
+
             </div>
           </div>
 
-          {/* 2. Values List (Safe Logic) */}
+          {/* 2. VALUES INTRO (Middle) */}
+          <div className="row justify-content-center mb-50">
+             <div className="col-lg-8 text-center" data-aos="fade-up">
+                
+                {/* Values Main Title */}
+                <h2 className="font-recoleta fw-normal text-white display-4 mb-20">
+                    {pageData?.valuesSectionMainHeading || "Our Values"}
+                </h2>
+
+                {/* Values Main Description (NEW) */}
+                <p className="text-lg text-white opacity-75 lh-lg mb-0">
+                    {pageData?.valuesSectionMainDescription}
+                </p>
+
+             </div>
+          </div>
+
+          {/* 3. VALUES GRID (Bottom) */}
           <div className="row justify-content-center g-4">
             
-            {/* Loading State */}
             {values.length === 0 && (
                 <div className="text-center text-white opacity-25 py-5">Loading values...</div>
             )}
 
             {values.map((item, index) => {
-                // HANDLE DATA SAFELY (v4 vs v5)
                 const data = item.attributes || item; 
                 if (!data) return null; 
 
                 const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
                 
-                // Icon URL Logic
                 const rawIcon = data.icon?.data?.attributes?.url || data.icon?.url;
                 const iconUrl = rawIcon ? (rawIcon.startsWith('http') ? rawIcon : `${API_URL}${rawIcon}`) : null;
 
@@ -505,19 +524,19 @@ const About = ({ treeCardStats, pageData }) => {
                   >
                     <div className="value-card">
                       
-                      {/* Icon Box */}
+                      {/* Icon */}
                       <div className="value-icon-wrapper">
                          {iconUrl && (
                              <Image 
                                src={iconUrl} 
-                               width={40} height={40} 
+                               width={35} height={35} 
                                alt={data.title} 
                                className="w-100 h-100 object-fit-contain"
                              />
                          )}
                       </div>
 
-                      {/* Text Content */}
+                      {/* Text */}
                       <div className="text-content">
                         <h4 className="value-title font-recoleta">
                           {data.title}

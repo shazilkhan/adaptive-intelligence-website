@@ -428,6 +428,9 @@
         "videos",
         "audios"
       ]
+    },
+    "valuesSectionMainDescription": {
+      "type": "text"
     }
   }
 }
