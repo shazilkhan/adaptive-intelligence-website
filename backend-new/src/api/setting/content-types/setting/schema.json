@@ -106,6 +106,12 @@
     },
     "spotifyUrl": {
       "type": "string"
+    },
+    "googleAnalyticsCode": {
+      "type": "text"
+    },
+    "googleTagManagerCode": {
+      "type": "text"
     }
   }
 }

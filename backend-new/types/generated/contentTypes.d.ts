@@ -1384,6 +1384,8 @@ export interface ApiSettingSetting extends Struct.SingleTypeSchema {
     emailSupportTitle: Schema.Attribute.String;
     facebookUrl: Schema.Attribute.String;
     favicon: Schema.Attribute.Media<'images'>;
+    googleAnalyticsCode: Schema.Attribute.Text;
+    googleTagManagerCode: Schema.Attribute.Text;
     googleUrl: Schema.Attribute.String;
     instagramUrl: Schema.Attribute.String;
     linkedinUrl: Schema.Attribute.String;

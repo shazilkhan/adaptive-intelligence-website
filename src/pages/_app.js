@@ -8,7 +8,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
 import { useRouter } from 'next/router';
 import "@/styles/index.scss";
-
+import GlobalScripts from '@/components/GlobalScripts';
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
@@ -50,6 +50,7 @@ function App({ Component, pageProps, emotionCache = clientSideEmotionCache }) {
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        <GlobalScripts />
         {getLayout(<Component {...pageProps} />)}
         <TawkMessengerReact ref={tawkMessengerRef} propertyId="67d06a8394256e190a48045e" widgetId="1im3204h5" customStyle={customStyle} />
       </ThemeProvider>
