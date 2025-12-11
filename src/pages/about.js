@@ -623,7 +623,7 @@ const About = ({ treeCardStats, pageData }) => {
       </section> */}
 
       {/* Sustainability Section */}
-      <section className="sustainability-section fancy-feature-thirtyTwo mt-140 lg-mt-120 md-mt-80">
+      <section className="sustainability-section fancy-feature-thirtyTwo mt-140 lg-mt-120 md-mt-80 mb-140 lg-mb-120 md-mb-80 ">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-lg-6" data-aos="fade-right">
@@ -672,6 +672,91 @@ const About = ({ treeCardStats, pageData }) => {
           </div>
         </div>
       </section> 
+
+ {/* ============================================== */}
+      {/* --- CTA Section (Direct Implementation) --- */}
+      {/* ============================================== */}
+      {(() => {
+        // 1. Data Source (Uses existing pageData or defaults)
+        // This means if you add fields like 'ctaBgTitle' to your About Page later, 
+        // it will pick them up automatically without changing the query.
+        const ctaData = pageData || {}; 
+
+        // 2. Text Logic
+        const title = ctaData.ctaBgTitle || ctaData.ctaTitle || "Feeling Inspired Yet?";
+        const subtitle = ctaData.ctaBgSubtitle || ctaData.ctaSubtitle || "We're only a click away.";
+        const btnText = ctaData.ctaBgBtnText || ctaData.ctaBtnText || "Schedule a Marketing Audit";
+        const btnUrl = ctaData.ctaBgBtnUrl || ctaData.ctaBtnUrl || "/contact";
+
+        // 3. Smart Image Logic (Handles Strapi v4/v5 & Local Fallbacks)
+        const getBgUrl = (obj) => {
+           if (!obj) return null;
+           const imgField = obj.ctaBgImage || obj['cta-bg']; // Checks both naming conventions
+           if (!imgField) return null;
+           
+           // Deep checks for various Strapi formats
+           return imgField.data?.attributes?.url || imgField.url || imgField.data?.url || null;
+        };
+
+        const rawUrl = getBgUrl(ctaData);
+        const fullUrl = rawUrl 
+            ? (rawUrl.startsWith('http') ? rawUrl : `${process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'}${rawUrl}`) 
+            : null;
+
+        return (
+          <div className="cta-hardcoded-wrapper">
+            
+            {/* Background Image Container */}
+            <div className="bg-image-holder">
+              {fullUrl ? (
+                <Image 
+                  src={fullUrl} 
+                  alt="Background" 
+                  fill 
+                  className="cta-cover-image"
+                  sizes="100vw"
+                  priority
+                />
+              ) : (
+                // Fallback Purple Background if no image uploaded
+                <div className="fallback-bg"></div>
+              )}
+              
+              {/* The Purple/Pink Gradient Overlay */}
+              <div className="overlay"></div>
+            </div>
+
+            <div className="container position-relative z-2">
+              <div className="row">
+                <div className="col-lg-10 m-auto text-center">
+                  
+                  <h2 className="main-title" data-aos="fade-up">
+                    {title}
+                  </h2>
+                  
+                  <p className="subtitle" data-aos="fade-up" data-aos-delay="100">
+                    {subtitle}
+                  </p>
+
+                  <div className="btn-holder" data-aos="fade-up" data-aos-delay="200">
+                    <div className="d-inline-block">
+                        {/* Ensure LetsTalkButton is imported at top of file */}
+                        <LetsTalkButton 
+                            buttonText={btnText}
+                            href={btnUrl}
+                            showIcon={false}
+                            className="custom-cta-button"
+                        />
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
 
       
       <FooterWithSettings />
