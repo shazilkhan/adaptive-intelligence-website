@@ -185,12 +185,6 @@ const Creatives = ({ pageData }) => {
                 >
                   {pageData.applyButtonText || 'Apply to Work With Us'}
                 </a>
-                <a 
-                  href={`mailto:${pageData.hrEmail || 'HR@aii.agency'}`}
-                  className="contact-button"
-                >
-                  {pageData.contactButtonText || 'Contact HR Team'}
-                </a>
               </div>
               <p className="contact-info">
                 Questions? Reach us at{' '}
