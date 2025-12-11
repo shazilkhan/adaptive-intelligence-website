@@ -69,10 +69,6 @@ const FeaturesBlock = ({ featuresData }) => {
             // FIX: This style prevents stretching by maintaining aspect ratio
             style={{ width: '100%', height: 'auto' }} 
           />
-          <div className="card-style d-flex flex-column justify-content-center align-items-center">
-            <h4 className="m0">{featuresData?.whyUsImageCardStat || "70b+"}</h4>
-            <p className="m0 fs-18 tx-dark">{featuresData?.whyUsImageCardLabel || "Created revenue"}</p>
-          </div>
         </div>
       </div>
     </>
