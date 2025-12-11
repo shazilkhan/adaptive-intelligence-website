@@ -16,6 +16,7 @@ import Testimonial from "@/components/home-page/Testimonial";
 import Faq from "@/components/home-page/Faq";
 import LetsTalkButton from "@/components/LetsTalkButton";
 import Link from "next/link";
+import TreeStats from "@/components/home-page/TreeStats";
 
 const HomePage = ({ homepageData }) => {
   
@@ -92,6 +93,7 @@ const HomePage = ({ homepageData }) => {
           <div className="container">
             <div className="row">
               <Counter counterData={homepageData?.whyUsCounterItems} />
+              <TreeStats />
             </div>
           </div>
         </div>
@@ -126,71 +128,91 @@ const HomePage = ({ homepageData }) => {
         <SuccessStory successStoryData={homepageData} />
       </div>
 
-      {/* Testimonials */}
-      <div className="feedback-section-ten position-relative pt-200 lg-pt-150">
-        <div className="container">
-          <div className="position-relative">
-            <div className="row">
-              <div className="col-lg-5">
-                <div
-                  className="title-style-ten text-center text-lg-start"
-                  data-aos="fade-right"
-                >
-                  <div className="sc-title">
-                    {homepageData?.testimonialsTagline || "Client Testimonials"}
-                  </div>
-                  <h2 className="main-title font-recoleta fw-normal tx-dark">
-                    {homepageData?.testimonialsTitle || "Trusted by"}
-                    <span className="position-relative">
-                      {" "}
-                      {homepageData?.testimonialsTitleHighlight || "Leading"}{" "}
-                      <Image
-                        src="/images/shape/shape_129.svg"
-                        alt=""
-                        width={160}
-                        height={6}
-                      />
-                    </span>
-                    {homepageData?.testimonialsTitleEnd || " Brands"}
-                  </h2>
-                </div>
-              </div>
-            </div>
-            <Testimonial />
-          </div>
-        </div>
-      </div>
+      {/* Testimonials Section */}
+<div className="feedback-section-ten position-relative pt-100 lg-pt-100 pb-100 lg-pb-100">
+  
+  {/* --- 1. Background Image & Overlay --- */}
+  <div className="section-bg-wrapper">
+     {homepageData?.testimonialsBackgroundImage?.url ? (
+        <Image 
+           src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${homepageData.testimonialsBackgroundImage.url}`}
+           alt="Testimonial Background"
+           fill
+           className="hero-bg-media"
+           style={{ objectFit: 'cover' }}
+        />
+     ) : (
+        /* Fallback Dark Background */
+        <div className="hero-bg-fallback" style={{ background: '#2c003e', width: '100%', height: '100%' }} />
+     )}
+     
+     {/* Purple Overlay (Adjust opacity to match your image) */}
+     <div 
+        className="hero-overlay" 
+        style={{ 
+            background: 'linear-gradient(135deg, rgba(74, 10, 77, 0.9) 0%, rgba(200, 15, 120, 0.85) 100%)', 
+            position: 'absolute', 
+            top:0, 
+            left:0, 
+            width:'100%', 
+            height:'100%', 
+            zIndex: 1 
+        }}
+     ></div>
+  </div>
 
-      {/* FAQ */}
-      <div className="fancy-feature-thirtyThree mt-180 lg-mt-120">
-        <div className="container">
-          <div className="title-style-ten text-center" data-aos="fade-up">
-            <div className="sc-title">{homepageData?.faqTagline || "FAQs"}</div>
-            <h2 className="main-title font-recoleta fw-normal tx-dark">
-              {homepageData?.faqTitle || "Answers to your most"} &amp;{" "}
-              <span className="position-relative">
-                {homepageData?.faqTitleHighlight || "frequently"}{" "}
-                <Image
-                  width={219}
-                  height={7}
-                  src="/images/shape/shape_132.svg"
-                  alt=""
-                />
-                {homepageData?.faqTitleEnd || " asked questions."}
-              </span>
-            </h2>
+  <div className="container position-relative z-2">
+    <div className="row">
+      <div className="col-lg-8 m-auto">
+        <div
+          className="title-style-ten text-center mb-80 lg-mb-40"
+          data-aos="fade-up"
+        >
+          <div className="sc-title" style={{ color: '#FF1292' }}>
+            {homepageData?.testimonialsTagline || "Client Testimonials"}
           </div>
-          <div
-            className="bg-wrapper position-relative mt-80 lg-mt-40"
-            data-aos="fade-up"
-          >
-            <Faq />
-          </div>
+          <h2 className="main-title font-recoleta fw-normal text-white">
+            {homepageData?.testimonialsTitle || "Trusted By"}{" "}
+            <span className="position-relative">
+              {homepageData?.testimonialsTitleHighlight || "Leading Brands"}
+              <Image
+                src="/images/shape/shape_129.svg"
+                alt=""
+                width={160}
+                height={6}
+                style={{ position: 'absolute', bottom: '-10px', left: '0', width: '100%' }}
+              />
+            </span>
+          </h2>
         </div>
       </div>
+    </div>
+
+    {/* --- Testimonial Component --- */}
+    {/* We don't restrict columns here, we let the component handle the width */}
+    <div className="row">
+        <div className="col-12">
+            <Testimonial />
+        </div>
+    </div>
+  </div>
+
+  <style jsx>{`
+    .section-bg-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+    .z-2 { z-index: 2; }
+  `}</style>
+</div>
+
 
       {/* CTA Section */}
-      <div className="fancy-short-banner-twelve position-relative zn2 pt-160 pb-150 lg-pt-120 lg-pb-120">
+      <div className="fancy-short-banner-twelve position-relative zn2 pt-160 pb-100 lg-pt-120 lg-pb-100">
         <div className="container">
           <div className="row">
             <div className="col-xl-8 m-auto text-center">
@@ -226,22 +248,51 @@ const HomePage = ({ homepageData }) => {
                 <LetsTalkButton 
                   buttonText={homepageData?.ctaButtonText || "Send Message"} 
                   href={homepageData?.ctaButtonUrl || "/contact"} 
+                  size="large"
                 />
-
-                {/* Button 2 (Secondary - reusing the Component) */}
-                {homepageData?.ctaButtonText2 && (
-                  <LetsTalkButton
-                    buttonText={homepageData?.ctaButtonText2}
-                    href={homepageData?.ctaButtonUrl2 || "/services"}
-                  />
-                )}
               </div>
 
             </div>
           </div>
         </div>
-        <div className="shapes shape-one" />
       </div>
+
+            {/* FAQ */}
+      {/* FAQ Section */}
+<div className="fancy-feature-thirtyThree mt-100 lg-mt-100 mb-100 lg-mb-100">
+  <div className="container">
+    <div className="title-style-ten text-center" data-aos="fade-up">
+      <div className="sc-title">{homepageData?.faqTagline || "FAQs"}</div>
+      <h2 className="main-title font-recoleta fw-normal tx-dark">
+        {homepageData?.faqTitle || "Answers to your most"} &amp;{" "}
+        <span className="position-relative">
+          {homepageData?.faqTitleHighlight || "frequently"}{" "}
+          <Image
+            width={219}
+            height={7}
+            src="/images/shape/shape_132.svg"
+            alt=""
+          />
+          {homepageData?.faqTitleEnd || " asked questions."}
+        </span>
+      </h2>
+    </div>
+
+    {/* FIX: Added inline style to override the default grey background of .bg-wrapper */}
+    <div
+      className="bg-wrapper position-relative mt-80 lg-mt-40"
+      data-aos="fade-up"
+      style={{ 
+        background: 'transparent', 
+        padding: '0', 
+        boxShadow: 'none',
+        borderRadius: '0' 
+      }}
+    >
+      <Faq />
+    </div>
+  </div>
+</div>
       <FooterWithSettings />
 
       {/* --- 3. Apply CSS Overrides ONLY if media background exists --- */}

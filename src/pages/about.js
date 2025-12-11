@@ -7,6 +7,9 @@ import CounterSection from "@/components/home-page/Counter";
 import LetsTalkButton from '@/components/LetsTalkButton';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 import Faq from "@/components/home-page/Faq";
+import AdaptiveIntelligence from '@/components/AdaptiveIntelligence';
+import OurValues from '@/components/OurValues';
+import { useState, useEffect } from 'react';
 
 export const metadata = {
   title: "About Adaptive Intelligence | About Our Agency",
@@ -84,6 +87,28 @@ export async function getStaticProps() {
 }
 
 const About = ({ treeCardStats, pageData }) => {
+
+  const [values, setValues] = useState([]);
+  
+  useEffect(() => {
+    const fetchValues = async () => {
+      try {
+        const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
+        const res = await fetch(`${API_URL}/api/values?populate=*&sort=order:asc`);
+        const json = await res.json();
+        
+        // Safety check: Ensure json.data exists and is an array
+        if (json && Array.isArray(json.data)) {
+            setValues(json.data);
+        } else {
+            console.warn("Strapi returned unexpected Values format:", json);
+        }
+      } catch (error) {
+        console.error("Failed to fetch values:", error);
+      }
+    };
+    fetchValues();
+  }, []);
   
   const heroType = pageData?.heroBackgroundType || 'Image';
   const heroVideoUrl = pageData?.heroBackgroundVideo?.url 
@@ -152,30 +177,23 @@ const About = ({ treeCardStats, pageData }) => {
         </div>
       </div>
 
-      {/* Counter Section */}
+      {/* Counter Section 
       <div className="wrapper mt-90 lg-mt-30 md-mt-40">
         <div className="container">
           <CounterSection counterData={pageData?.counterItems} />
         </div>
       </div>
-
-      {/* Our Mission Section */}
-      {/* Added md-pt-80 for mobile spacing */}
+  
+      {/* Our Mission Section 
+      {/* Added md-pt-80 for mobile spacing 
       <div className="fancy-feature-fiftyEight position-relative zn2 pt-120 lg-pt-100 md-pt-80" id="mission">
         <div className="container position-relative">
           <OurMission data={pageData} />
-          <Image
-            width={449}
-            height={808}
-            src="/images/shape/shape_187.svg"
-            alt="shape"
-            className="lazy-img shapes shape-one d-none d-lg-block"
-          />
         </div>
       </div>
 
-      {/* Who We Are Section */}
-      {/* Added md-mt-80 */}
+      {/* Who We Are Section 
+      {/* Added md-mt-80 *
       <section className="fancy-feature-thirtyTwo mt-180 lg-mt-120 md-mt-80">
         <div className="container">
           <div className="row align-items-center">
@@ -238,9 +256,135 @@ const About = ({ treeCardStats, pageData }) => {
           </div>
         </div>
       </section>
+      */}
 
-      {/* What We Do Best Section */}
-      {/* Added md-mt-80 */}
+      {/* --- Who We Are Section (Redesigned) --- */}
+      <div className="who-we-are-section position-relative pt-180 pb-180 lg-pt-120 lg-pb-120 md-pt-80 md-pb-80" style={{ background: 'white' }}>
+        <div className="container">
+          <div className="row align-items-center">
+            
+            {/* 1. TEXT COLUMN (Left) */}
+            <div className="col-lg-6 order-lg-1 mb-50 lg-mb-0" data-aos="fade-right">
+              <div className="text-content-wrapper pe-xxl-5 me-xxl-4">
+                
+                {/* Pink Tagline */}
+                <div className="text-uppercase fw-bold mb-20" style={{ color: '#FF1292', letterSpacing: '1px', fontSize: '13px' }}>
+                  {pageData?.whoWeAreTagline || 'INNOVATIVE AND SUSTAINABLE'}
+                </div>
+                
+                {/* Title */}
+                <h2 className="main-title font-recoleta fw-normal tx-dark mb-40 lg-mb-30">
+                  {pageData?.whoWeAreTitle || 'Who We Are'}
+                </h2>
+                
+                {/* Paragraphs */}
+                <p className="text-lg tx-dark lh-lg mb-30" style={{ opacity: 0.9 }}>
+                  {pageData?.whoWeAreParagraph1}
+                </p>
+                <p className="text-lg tx-dark lh-lg mb-40 lg-mb-30" style={{ opacity: 0.9 }}>
+                  {pageData?.whoWeAreParagraph2}
+                </p>
+                
+                {/* Reusable Component Button */}
+                <div className="mt-40 lg-mt-30">
+                    <LetsTalkButton 
+                        text="View Our Services"
+                        href="/services" 
+                    />
+                </div>
+
+              </div>
+            </div>
+
+            {/* 2. IMAGE COLUMN (Right) */}
+            <div className="col-lg-6 order-lg-2" data-aos="fade-left">
+              <div className="image-wrapper position-relative ms-lg-5">
+                {/* Ensure whoWeAreImageUrl is defined before rendering */}
+                {whoWeAreImageUrl && (
+                  <Image
+                    width={800}
+                    height={900}
+                    src={whoWeAreImageUrl}
+                    alt={pageData?.whoWeAreTitle || "Who We Are"}
+                    className="w-100 h-auto"
+                    style={{ objectFit: 'cover' }} 
+                  />
+                )}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+{/* ============================================== */}
+      {/* --- Adaptive Intelligence Section (Aligned) --- */}
+      {/* ============================================== */}
+      {(() => {
+        // 1. Get the API URL from your project settings (like your other section)
+        const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+
+        // 2. Data Access
+        const title = pageData?.adaptiveIntelligenceTitle || "Ad·ap·tive In·tel·li·gence";
+        const features = pageData?.adaptiveIntelligenceFeatures || [];
+        
+        // 3. Construct URLs using the same logic as your "What We Do" section
+        // We handle the check: "Does the URL exist? If yes, add API_URL to front."
+        
+        const rawVideo = pageData?.adaptiveIntelligenceBgVideo?.data?.attributes?.url || pageData?.adaptiveIntelligenceBgVideo?.url;
+        const videoUrl = rawVideo ? `${API_URL}${rawVideo}` : null;
+
+        const rawImage = pageData?.adaptiveIntelligenceBgImage?.data?.attributes?.url || pageData?.adaptiveIntelligenceBgImage?.url;
+        const imageUrl = rawImage ? `${API_URL}${rawImage}` : null;
+
+        return (
+          <div className="adaptive-section">
+             
+            {/* Background Layer */}
+            <div className="bg-layer">
+                {videoUrl ? (
+                    <video autoPlay muted loop playsInline className="bg-media">
+                        <source src={videoUrl} type="video/mp4" />
+                    </video>
+                ) : imageUrl ? (
+                    <Image 
+                        src={imageUrl} 
+                        alt="Background" 
+                        fill 
+                        className="bg-media"
+                        priority 
+                    />
+                ) : (
+                    // Fallback if nothing uploaded
+                    <div className="bg-media" style={{background: '#121212'}}></div>
+                )}
+                
+                <div className="bg-overlay"></div>
+            </div>
+
+            {/* Content Box */}
+            <div className="content-box" data-aos="fade-up">
+                <h2 className="section-title font-recoleta text-white">
+                    {title}
+                </h2>
+
+                {features.length > 0 && (
+                    <ol className="custom-numbered-list text-white">
+                        {features.map((item, index) => (
+                            <li key={index}>
+                                {item.text || item.attributes?.text}
+                            </li>
+                        ))}
+                    </ol>
+                )}
+            </div>
+            
+          </div>
+        );
+      })()}
+
+      {/* What We Do Best Section
+      {/* Added md-mt-80 *
       <div className="fancy-feature-fiftyNine position-relative mt-140 lg-mt-100 md-mt-80" data-aos="fade-up">
         <div className="container">
           <div className="title-style-ten text-center" data-aos="fade-up">
@@ -259,7 +403,7 @@ const About = ({ treeCardStats, pageData }) => {
           
           <div className="card-wrapper pt-45 lg-pt-20 pb-55 lg-pb-30 mt-85 lg-mt-50 md-mt-40">
             <div className="row justify-content-center g-4">
-              {/* Cards Rendering Logic - Kept same logic but added 'g-4' to row for spacing */}
+              {/* Cards Rendering Logic - Kept same logic but added 'g-4' to row for spacing 
               {pageData?.whatWeDoCard1_Title && (
                 <div className="col-lg-4 col-sm-6" data-aos="fade-up" data-aos-delay="0">
                   <div className="card-style-twentySix text-center h-100">
@@ -276,7 +420,7 @@ const About = ({ treeCardStats, pageData }) => {
                 </div>
               )}
               {/* ... (Repeat for other cards, keeping structure same but ensuring columns have spacing) ... */}
-              {/* Simplified for brevity, assume cards 2-6 follow same pattern */}
+              {/* Simplified for brevity, assume cards 2-6 follow same pattern *
                {pageData?.whatWeDoCard2_Title && (
                   <div className="col-lg-4 col-sm-6" data-aos="fade-up" data-aos-delay="100">
                     <div className="card-style-twentySix text-center h-100">
@@ -310,9 +454,89 @@ const About = ({ treeCardStats, pageData }) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
-    {/* Our Values Section */}
+{/* ============================================== */}
+      {/* --- Our Values Section (Final & Clean) --- */}
+      {/* ============================================== */}
+      <div className="our-values-section position-relative pt-120 pb-120 md-pt-80 md-pb-80">
+        <div className="container">
+          
+          {/* 1. Dynamic Header Section */}
+          <div className="row justify-content-center mb-60 lg-mb-40">
+            <div className="col-lg-8 text-center" data-aos="fade-up">
+              {/* Top Heading (e.g. Our Mission) */}
+              <h2 className="font-recoleta fw-normal text-white display-4 mb-30">
+                {pageData?.valuesSectionTitle || "Our Mission"}
+              </h2>
+              
+              {/* Description Text */}
+              <p className="text-lg text-white opacity-75 lh-lg">
+                {pageData?.valuesSectionDescription || "We're expanding into new markets, developing proprietary creative technology, and committing to measurable environmental action."}
+              </p>
+            </div>
+          </div>
+
+          {/* 2. Values List (Safe Logic) */}
+          <div className="row justify-content-center g-4">
+            
+            {/* Loading State */}
+            {values.length === 0 && (
+                <div className="text-center text-white opacity-25 py-5">Loading values...</div>
+            )}
+
+            {values.map((item, index) => {
+                // HANDLE DATA SAFELY (v4 vs v5)
+                const data = item.attributes || item; 
+                if (!data) return null; 
+
+                const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
+                
+                // Icon URL Logic
+                const rawIcon = data.icon?.data?.attributes?.url || data.icon?.url;
+                const iconUrl = rawIcon ? (rawIcon.startsWith('http') ? rawIcon : `${API_URL}${rawIcon}`) : null;
+
+                return (
+                  <div 
+                    key={item.id || index} 
+                    className="col-lg-10" 
+                    data-aos="fade-up" 
+                    data-aos-delay={index * 100}
+                  >
+                    <div className="value-card">
+                      
+                      {/* Icon Box */}
+                      <div className="value-icon-wrapper">
+                         {iconUrl && (
+                             <Image 
+                               src={iconUrl} 
+                               width={40} height={40} 
+                               alt={data.title} 
+                               className="w-100 h-100 object-fit-contain"
+                             />
+                         )}
+                      </div>
+
+                      {/* Text Content */}
+                      <div className="text-content">
+                        <h4 className="value-title font-recoleta">
+                          {data.title}
+                        </h4>
+                        <p className="value-desc">
+                          {data.description}
+                        </p>
+                      </div>
+
+                    </div>
+                  </div>
+                );
+            })}
+          </div>
+
+        </div>
+      </div>
+   {/*
+    {/* Our Values Section *
       <section className="values-section fancy-feature-thirtyTwo mt-140 lg-mt-120 md-mt-80" id="vision">
         <div className="container">
          <div className="title-style-ten text-center" data-aos="fade-up">
@@ -330,7 +554,7 @@ const About = ({ treeCardStats, pageData }) => {
             )}
          </div>
          <div className="row gx-xxl-5 mt-60 lg-mt-40 g-4">
-           {/* Value 1 */}
+           {/* Value 1 *
            {pageData?.value1_Title && (
              <div className="col-md-6 col-lg-3 d-flex" data-aos="fade-up" data-aos-delay="0">
                <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column w-100">
@@ -346,7 +570,7 @@ const About = ({ treeCardStats, pageData }) => {
                </div>
              </div>
            )}
-           {/* Value 2 */}
+           {/* Value 2 *
            {pageData?.value2_Title && (
              <div className="col-md-6 col-lg-3 d-flex" data-aos="fade-up" data-aos-delay="100">
                <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column w-100">
@@ -362,7 +586,7 @@ const About = ({ treeCardStats, pageData }) => {
                 </div>
              </div>
            )}
-           {/* Value 3 */}
+           {/* Value 3 *
            {pageData?.value3_Title && (
              <div className="col-md-6 col-lg-3 d-flex" data-aos="fade-up" data-aos-delay="200">
                <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column w-100">
@@ -378,7 +602,7 @@ const About = ({ treeCardStats, pageData }) => {
                 </div>
              </div>
            )}
-           {/* Value 4 */}
+           {/* Value 4 *
            {pageData?.value4_Title && (
              <div className="col-md-6 col-lg-3 d-flex" data-aos="fade-up" data-aos-delay="300">
                <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column w-100">
@@ -396,7 +620,7 @@ const About = ({ treeCardStats, pageData }) => {
            )}
          </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Sustainability Section */}
       <section className="sustainability-section fancy-feature-thirtyTwo mt-140 lg-mt-120 md-mt-80">
@@ -447,90 +671,9 @@ const About = ({ treeCardStats, pageData }) => {
             </div>
           </div>
         </div>
-      </section>
+      </section> 
+
       
-      {/* FAQ Section */}
-      <div className="fancy-feature-thirtyThree mt-180 lg-mt-120 md-mt-80">
-        <div className="container">
-          <div className="title-style-ten text-center" data-aos="fade-up">
-            <div className="sc-title">FAQ</div>
-            <h2 className="main-title font-recoleta fw-normal tx-dark">
-              Questions &amp;{" "}
-              <span className="position-relative">
-                Answers{" "}
-                <Image width={219} height={7} src="/images/shape/shape_132.svg" alt=""/>
-              </span>
-            </h2>
-          </div>
-          <div className="bg-wrapper position-relative mt-80 lg-mt-40 md-mt-40" data-aos="fade-up">
-            <Faq />
-            <Image width={65} height={66} src="/images/shape/shape_133.svg" alt="shape" className="lazy-img shapes shape-one d-none d-lg-block"/>
-          </div>
-        </div>
-      </div>
-
-     {/* CTA Section (Updated to match HomePage) */}
-      <div className="fancy-short-banner-twelve position-relative zn2 pt-160 pb-150 lg-pt-120 lg-pb-120 md-pt-80 md-pb-80">
-        <div className="container">
-          <div className="row">
-            <div className="col-xl-8 m-auto text-center">
-              <div className="title-style-ten" data-aos="fade-up">
-                <h2 className="main-title font-recoleta fw-normal tx-dark">
-                  {pageData?.letsTalkTitle || "Let's Talk"}
-                </h2>
-              </div>
-              <p className="text-lg mt-45 mb-30 lg-mb-30 lg-mt-40" data-aos="fade-up" data-aos-delay="100">
-                {pageData?.letsTalkParagraph1}
-              </p>
-              <p className="text-lg mb-55 lg-mb-30" data-aos="fade-up" data-aos-delay="150">
-                {pageData?.letsTalkParagraph2}
-              </p>
-              
-              {/* Button Group */}
-              <div 
-                className="d-flex align-items-center justify-content-center gap-3"
-                data-aos="fade-up" 
-                data-aos-delay="200"
-              >
-                {/* Button 1 */}
-                <LetsTalkButton 
-                  buttonText={pageData?.letsTalkButtonText || "Let's Talk"} 
-                  href="/contact" 
-                />
-
-                {/* Button 2: Pink Button */}
-                {pageData?.letsTalkButtonText2 && (
-                  <Link
-                    href={pageData?.letsTalkButtonUrl2 || "/services"}
-                    className="btn-pink-custom fw-500 tran3s d-inline-flex align-items-center justify-content-center"
-                    style={{ minWidth: "180px" }}
-                  >
-                    {pageData?.letsTalkButtonText2}
-                  </Link>
-                )}
-              </div>
-
-            </div>
-          </div>
-        </div>
-        <div className="shapes shape-one" />
-
-        {/* Styles for Pink Theme Button */}
-        <style dangerouslySetInnerHTML={{__html: `
-          .btn-pink-custom {
-            background-color: #FF1292;
-            border: 2px solid #FF1292;
-            color: white !important;
-            padding-top: 0.9rem !important;
-            padding-bottom: 0.9rem !important;
-          }
-          .btn-pink-custom:hover {
-            background-color: transparent !important;
-            color: #FF1292 !important;
-          }
-        `}} />
-      </div>
-
       <FooterWithSettings />
 
       <style jsx>{`

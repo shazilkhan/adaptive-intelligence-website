@@ -44,7 +44,7 @@ const FooterWithSettings = () => {
         </div>
       </div>
       <CopyrightFooter />
-      <div className="shapes shape-one" />
+
     </div>
   );
 };

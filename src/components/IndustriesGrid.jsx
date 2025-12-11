@@ -1,4 +1,5 @@
 // src/components/IndustriesGrid.jsx
+"use client";
 import React, { useState, useEffect } from 'react';
 import Image from "next/image";
 
@@ -10,18 +11,24 @@ const IndustriesGrid = () => {
     const fetchIndustries = async () => {
       setIsLoading(true);
       try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/industries?populate=image`; // Adjust 'image' if needed
+        // Updated populate to get all fields including description
+        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/industries?populate=*&sort=name:asc`;
         const res = await fetch(apiUrl);
         if (!res.ok) throw new Error('Failed to fetch industries');
         const json = await res.json();
 
-        const formattedIndustries = (json.data || []).map(item => ({
-          id: item.id,
-          name: item.name,
-          imageUrl: item.image?.url // Use simple .url for v5
-            ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${item.image.url}`
-            : '/images/icon/innovation.png' // Fallback
-        }));
+        const formattedIndustries = (json.data || []).map(item => {
+           const attrs = item.attributes || item;
+           return {
+             id: item.id,
+             name: attrs.name,
+             // Look for a description field
+             description: attrs.description || "Strategic campaigns and content tailored for this industry.", 
+             imageUrl: attrs.image?.url
+               ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${attrs.image.url}`
+               : '/images/icon/innovation.png'
+           };
+        });
         setIndustries(formattedIndustries);
       } catch (error) {
         console.error("Error fetching industries:", error);
@@ -34,114 +41,107 @@ const IndustriesGrid = () => {
   }, []);
 
   if (isLoading) {
-    return <p style={{ color: 'rgba(255, 255, 255, 0.7)', textAlign: 'center' }}>Loading industries...</p>;
+    return <p className="text-center text-white opacity-50">Loading industries...</p>;
   }
 
-  if (industries.length === 0) {
-    return null; // Or a message like "No industries found."
-  }
+  if (industries.length === 0) return null;
 
   return (
     <>
-      {/* --- Use the same grid wrapper class --- */}
       <div className="capabilities-grid-enhanced">
         {industries.map((industry) => (
-          // --- Use the same card structure and classes ---
-          <div key={industry.id} className="capability-card-enhanced industry-card"> {/* Added industry-card */}
+          <div key={industry.id} className="capability-card-enhanced industry-card">
+            
+            {/* ICON (Centered Top) */}
             <div className="capability-icon">
               <Image
                 src={industry.imageUrl}
-                alt={`${industry.name || 'Industry'} icon`}
-                width={35} // Match original icon size
-                height={35} // Match original icon size
-                // Keep filter if icons should be white on dark background
-                style={{ filter: 'brightness(0) invert(1)' }}
+                alt={`${industry.name} icon`}
+                width={50}
+                height={50}
               />
             </div>
-            <div className="capability-content">
-              {/* Removed <p> tag, just use h4 */}
-              <h4>{industry.name}</h4>
+
+            {/* CONTENT (Centered) */}
+            <div className="capability-content text-center mt-4">
+              <h4 className="text-white mb-3 font-recoleta fw-normal">{industry.name}</h4>
+              <p className="text-white opacity-75 fs-16 lh-base mb-0">
+                {industry.description}
+              </p>
             </div>
+
           </div>
         ))}
       </div>
 
-      {/* --- Copy relevant styles from ServicesPage --- */}
       <style jsx>{`
-        /* Original styles for the grid and cards */
+        /* --- GRID LAYOUT --- */
         .capabilities-grid-enhanced {
           display: grid;
-          /* Keep 2 columns like the original design */
-          grid-template-columns: repeat(2, 1fr);
-          gap: 20px;
-          margin-bottom: 40px; /* Copied from original */
+          /* 4 Columns on Desktop */
+          grid-template-columns: repeat(4, 1fr);
+          gap: 25px;
         }
 
+        /* --- CARD STYLE --- */
         .capability-card-enhanced {
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          padding: 25px;
-          position: relative;
+          background: #1e2246; /* Slightly lighter than section bg */
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          border-radius: 20px;
+          padding: 40px 30px;
           transition: all 0.3s ease;
-          display: flex; /* Original used flex */
-          align-items: center; /* Vertically center icon and text */
-          gap: 15px; /* Space between icon and text */
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          height: 100%;
         }
-
-        /* Added industry-card specific styles if needed, or keep combined */
-        .industry-card {
-           /* You might adjust padding or text alignment if needed */
-           /* padding-top: 35px; */
-           /* padding-bottom: 35px; */
-        }
-
 
         .capability-card-enhanced:hover {
-          background: rgba(255, 255, 255, 0.1);
+          background: #242954;
+          transform: translateY(-5px);
           border-color: #FF1292;
-          transform: translateY(-3px);
-          box-shadow: 0 10px 25px rgba(255, 18, 146, 0.15);
+          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
+        /* --- ICON CIRCLE --- */
         .capability-icon {
-          width: 50px; /* Original icon wrapper size */
-          height: 50px;
-          background: rgba(255, 18, 146, 0.1);
-          border: 1px solid rgba(255, 18, 146, 0.3);
+          width: 70px;
+          height: 70px;
           border-radius: 50%;
+          border: 1px solid rgba(255, 18, 146, 0.5);
           display: flex;
           align-items: center;
           justify-content: center;
-          flex-shrink: 0;
+          margin-bottom: 10px;
+          transition: all 0.3s ease;
         }
 
-        /* Removed .capability-icon img filter here as it's inline */
-
-        .capability-content h4 {
-          color: white;
-          font-size: 1.2rem; /* Original size */
-          margin-bottom: 0; /* Remove default margin */
-          font-weight: 600;
+        .capability-card-enhanced:hover .capability-icon {
+           background: #FF1292;
+           border-color: #FF1292;
         }
 
-        /* Responsive grid adjustment */
-        @media (max-width: 768px) {
+        /* --- RESPONSIVE --- */
+        @media (max-width: 1200px) {
            .capabilities-grid-enhanced {
-               grid-template-columns: 1fr; /* Stack on smaller screens */
+              grid-template-columns: repeat(3, 1fr); /* 3 cols on laptop */
            }
         }
-        @media (max-width: 480px) {
-          .capability-card-enhanced {
-            padding: 20px;
-            /* Optional: stack icon above text on smallest screens */
-            /* flex-direction: column; */
-            /* text-align: center; */
-          }
-          .capability-icon {
-             /* margin: 0 auto 15px; */ /* If stacking */
-          }
+
+        @media (max-width: 991px) {
+           .capabilities-grid-enhanced {
+              grid-template-columns: repeat(2, 1fr); /* 2 cols on tablet */
+           }
         }
 
+        @media (max-width: 576px) {
+           .capabilities-grid-enhanced {
+              grid-template-columns: 1fr; /* 1 col on mobile */
+           }
+           .capability-card-enhanced {
+              padding: 30px 20px;
+           }
+        }
       `}</style>
     </>
   );

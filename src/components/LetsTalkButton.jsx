@@ -1,8 +1,4 @@
-// ===================================================================
-// Updated LetsTalkButton to use new URL structure
-// ===================================================================
-
-// File: components/LetsTalkButton.js - Updated for dynamic resources
+// File: components/LetsTalkButton.js
 "use client";
 import Link from "next/link";
 import { useState } from "react";
@@ -14,25 +10,57 @@ const LetsTalkButton = ({
   usePopup = false,
   popupTitle = "Get Your Free Resource",
   popupDescription = "Enter your email to access the download",
-  resourceSlug = "infstones-case-study" // New prop for dynamic resources
+  resourceSlug = "infstones-case-study",
+  size = "medium", // Options: "small", "medium", "large"
+  className = ""   // Allow passing extra classes
 }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // ===================================================================
+  // 1. Sizing Logic
+  // ===================================================================
+  const sizeStyles = {
+    small: {
+      padding: '10px 20px',
+      fontSize: '14px',
+      gap: '6px',
+      iconSize: '14'
+    },
+    medium: {
+      padding: '15px 30px',
+      fontSize: '16px',
+      gap: '8px',
+      iconSize: '16'
+    },
+    large: {
+      padding: '20px 50px',
+      fontSize: '20px',
+      gap: '12px',
+      iconSize: '20'
+    }
+  };
+
+  const currentSize = sizeStyles[size] || sizeStyles.medium;
+
+  // ===================================================================
+  // 2. Style Definitions
+  // ===================================================================
   const buttonStyle = {
     background: 'white',
     color: 'black',
     border: '1px solid #ff1292',
     borderRadius: '0',
-    padding: '15px 30px',
     textDecoration: 'none',
     display: 'inline-flex',
     alignItems: 'center',
-    gap: '8px',
     transition: 'all 0.3s ease',
     fontWeight: '500',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    padding: currentSize.padding,
+    fontSize: currentSize.fontSize,
+    gap: currentSize.gap
   };
 
   const hoverStyle = {
@@ -40,6 +68,29 @@ const LetsTalkButton = ({
     borderColor: '#ff1292',
     color: 'white'
   };
+
+  // Helper for dynamic arrow icon
+  const ArrowIcon = () => (
+    <svg
+      width={currentSize.iconSize}
+      height={currentSize.iconSize}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M7 17L17 7M17 7H7M17 7V17"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+
+  // ===================================================================
+  // 3. Logic Handlers
+  // ===================================================================
 
   const handlePopupSubmit = async (e) => {
     e.preventDefault();
@@ -66,8 +117,8 @@ const LetsTalkButton = ({
       localStorage.setItem('downloadRequests', JSON.stringify(existingEmails));
       
       console.log('New Download Request:', emailData);
-      console.log('Total Collected Emails:', existingEmails.length);
 
+      // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1500));
 
       // Redirect to download page with slug parameter
@@ -94,7 +145,9 @@ const LetsTalkButton = ({
     setIsSubmitting(false);
   };
 
-  // Export functions (same as before)
+  // ===================================================================
+  // 4. Admin / Debug Tools (Window Exports)
+  // ===================================================================
   if (typeof window !== 'undefined') {
     window.exportDownloadRequests = () => {
       const data = JSON.parse(localStorage.getItem('downloadRequests') || '[]');
@@ -129,11 +182,17 @@ const LetsTalkButton = ({
     };
   }
 
+  // ===================================================================
+  // 5. Render Logic
+  // ===================================================================
+
+  // Case A: Popup Button
   if (usePopup) {
     return (
       <>
         <button
           onClick={handleButtonClick}
+          className={className}
           style={buttonStyle}
           onMouseEnter={(e) => {
             e.target.style.background = hoverStyle.background;
@@ -146,27 +205,11 @@ const LetsTalkButton = ({
             e.target.style.color = buttonStyle.color;
           }}
         >
-          <span>{buttonText}</span>
-          {showIcon && (
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7 17L17 7M17 7H7M17 7V17"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          )}
+          <span style={{ pointerEvents: 'none' }}>{buttonText}</span>
+          {showIcon && <span style={{ pointerEvents: 'none', display: 'flex' }}><ArrowIcon /></span>}
         </button>
 
-        {/* Popup Modal - same as before */}
+        {/* Popup Modal */}
         {isPopupOpen && (
           <div className="popup-overlay" onClick={(e) => {
             if (e.target === e.currentTarget && !isSubmitting) closePopup();
@@ -221,6 +264,8 @@ const LetsTalkButton = ({
             </div>
           </div>
         )}
+
+        {/* Styles for Popup */}
         <style jsx>{`
           .popup-overlay {
             position: fixed;
@@ -411,9 +456,11 @@ const LetsTalkButton = ({
     );
   }
 
+  // Case B: Regular Link Button
   return (
     <Link
       href={href}
+      className={className}
       style={buttonStyle}
       onMouseEnter={(e) => {
         e.target.style.background = hoverStyle.background;
@@ -426,24 +473,8 @@ const LetsTalkButton = ({
         e.target.style.color = buttonStyle.color;
       }}
     >
-      <span>{buttonText}</span>
-      {showIcon && (
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M7 17L17 7M17 7H7M17 7V17"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      )}
+      <span style={{ pointerEvents: 'none' }}>{buttonText}</span>
+      {showIcon && <span style={{ pointerEvents: 'none', display: 'flex' }}><ArrowIcon /></span>}
     </Link>
   );
 };

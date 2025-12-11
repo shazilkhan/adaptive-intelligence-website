@@ -49,7 +49,6 @@ const FeaturesBlock = ({ featuresData }) => {
               <div className="col-sm-6">
                 <div className="icon d-flex mt-30">
                   <Image src={infoBox2Icon1Url} alt="logo" className="lazy-img me-4" width={43} height={43} />
-                  <Image src={infoBox2Icon2Url} alt="logo" className="lazy-img" width={43} height={43} />
                 </div>
                 <h4 className="tx-dark mt-20">{featuresData?.whyUsInfoBox2Title || "Certified by AWP..."}</h4>
               </div>

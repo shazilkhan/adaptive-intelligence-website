@@ -10,7 +10,6 @@ import IndustriesGrid from '@/components/IndustriesGrid';
 import ServicesGridBullets from "@/components/ServicesGridBullets"; 
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 import Link from "next/link";
-
 const ServicesPage = ({ servicesPageData }) => {
   
   const heroType = servicesPageData?.heroBackgroundType || 'Image';
@@ -177,72 +176,7 @@ const ServicesPage = ({ servicesPageData }) => {
         </div>
       </div>
 
-      {/* Industries Section */}
-      {/* Added md-pt-80 md-pb-80 */}
-      <div className="fancy-feature-thirtyOne position-relative zn2 pt-180 pb-180 lg-pt-140 lg-pb-140 md-pt-80 md-pb-80" style={{ background: '#151937' }}>
-        <div className="container">
-          <div className="row">
-            <div className="col-xl-8 col-lg-9 m-auto">
-              <div className="title-style-ten text-center pb-80 lg-pb-50 md-pb-40" data-aos="fade-up">
-                <h2 className="main-title font-recoleta fw-normal" style={{ color: 'white' }}>
-                  {servicesPageData?.industriesHeading || "Industries We Have"}
-                  <span className="position-relative">
-                    {" "}
-                    {servicesPageData?.industriesHeadingHighlight || "Served"}
-                    <Image
-                      src="/images/shape/shape_122.svg"
-                      alt="underline"
-                      width={220} height={5} className="mx-auto shape-svg"
-                    />
-                  </span>
-                </h2>
-              </div>
-            </div>
-          </div>
-
-          <div className="row align-items-center">
-            {/* Added mb-50 on mobile */}
-            <div className="col-lg-6 mb-50 lg-mb-0" data-aos="fade-right">
-                <div className="capabilities-image-wrapper"> 
-                    <Image
-                    src={
-                        servicesPageData?.industriesImage?.url
-                        ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.industriesImage.url}`
-                        : "/images/assets/team-diverse-analysts-consultants-reviewing-data-checklists_482257-125957.jpg" 
-                    }
-                    alt={servicesPageData?.industriesHeading || "Industries served"}
-                    width={600}
-                    height={450}
-                    className="capabilities-main-image" 
-                    />
-                </div>
-            </div>
-
-            <div className="col-lg-6" data-aos="fade-left">
-              <div className="capabilities-content ps-lg-5"> 
-                <IndustriesGrid />
-                <div className="mt-50 md-mt-30">
-                  <p className="industries-subtext" style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '1.1rem', marginBottom: '30px' }}>
-                    {servicesPageData?.industriesSubtext}
-                  </p>
-                  <p className="industries-subtext" style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '1.1rem', marginBottom: '30px' }}>
-                    {servicesPageData?.industriesSubtext2}
-                  </p>
-                  
-                  <LetsTalkButton
-                    buttonText={servicesPageData?.industriesButtonText || "Discuss Your Project"}
-                    href={servicesPageData?.industriesButtonUrl || "/contact"}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <LatestCaseStudiesSection />
-
-      <div className="clients-section pt-100 pb-100 md-pt-60 md-pb-60" style={{ background: '#f8f9fa' }}>
+            <div className="clients-section pt-100 pb-100 md-pt-60 md-pb-60" style={{ background: '#f8f9fa' }}>
         <div className="container">
           <div className="text-center mb-5">
             <h2 className="main-title font-recoleta fw-normal tx-dark">Clients.</h2>
@@ -255,44 +189,142 @@ const ServicesPage = ({ servicesPageData }) => {
         </div>
       </div>
 
-      {/* Testimonials Section */}
-      <div className="feedback-section-ten position-relative pt-200 pb-200 lg-pt-150 lg-pb-150 md-pt-80 md-pb-80" style={{ background: 'linear-gradient(135deg, #000 0%, #1a1a1a 100%)' }}>
-        <div className="container">
-          <div className="position-relative">
-            <div className="row">
-              <div className="col-lg-5">
-                <div
-                  className="title-style-ten text-center text-lg-start"
-                  data-aos="fade-right"
-                >
-                  <div className="sc-title" style={{ color: '#FF1292', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '14px', fontWeight: '600', marginBottom: '20px' }}>
-                    {servicesPageData?.testimonialsTagline || "Client Testimonials"}
-                  </div>
-                  <h2 className="main-title font-recoleta fw-normal" style={{ color: 'white', marginTop: '20px' }}>
-                    {servicesPageData?.testimonialsTitle || "Trusted by"}{" "}
-                    <span className="position-relative">
-                      {servicesPageData?.testimonialsTitleHighlight || "Leading"}{" "}
-                      <Image
-                        src="/images/shape/shape_129.svg"
-                        alt=""
-                        width={160}
-                        height={6}
-                      />
-                    </span>
-                    {" "}{servicesPageData?.testimonialsTitleEnd || "Brands"}
-                  </h2>
-                  <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '1.1rem', marginTop: '20px', lineHeight: '1.6' }}>
-                    {servicesPageData?.testimonialsDescription || "Don't just take our word for it. Here's what our clients say about working with us."}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <Testimonial />
-          </div>
+      {/* Industries Section */}
+<div className="fancy-feature-thirtyOne position-relative zn2 pt-140 pb-140 lg-pt-100 lg-pb-100" style={{ background: '#151937' }}>
+  <div className="container">
+    
+    {/* 1. Header Section */}
+    <div className="row">
+      <div className="col-xl-8 col-lg-9 m-auto">
+        <div className="title-style-ten text-center pb-60 lg-pb-40" data-aos="fade-up">
+          <h2 className="main-title font-recoleta fw-normal text-white">
+            {servicesPageData?.industriesHeading || "Industries We Have"}
+            <span className="position-relative ms-2">
+              {servicesPageData?.industriesHeadingHighlight || "Served"}
+              <Image
+                src="/images/shape/shape_122.svg"
+                alt="underline"
+                width={220} height={5} 
+                className="shape-svg"
+                style={{ position: 'absolute', bottom: '-5px', left: 0, width: '100%' }}
+              />
+            </span>
+          </h2>
         </div>
       </div>
+    </div>
 
-      {/* FAQ */}
+    {/* 2. Grid Section (Full Width) */}
+    <div className="row">
+      <div className="col-12" data-aos="fade-up">
+        <IndustriesGrid />
+      </div>
+    </div>
+
+    {/* 3. Bottom CTA Section (Centered) */}
+    <div className="row mt-60 lg-mt-40">
+      <div className="col-xl-8 m-auto text-center" data-aos="fade-up">
+        <p className="text-white fs-20 lh-lg mb-35">
+          {servicesPageData?.industriesSubtext || "Not seeing your industry? No problem. Reach out to our team! We likely have experience helping brands in your space."}
+        </p>
+        
+        <LetsTalkButton
+          buttonText={servicesPageData?.industriesButtonText || "Reach Out"}
+          href={servicesPageData?.industriesButtonUrl || "/contact"}
+          showIcon={true}
+        />
+      </div>
+    </div>
+
+  </div>
+</div>
+      <LatestCaseStudiesSection />
+      {/* Testimonials Section */}
+<div className="feedback-section-ten position-relative pt-100 pb-100 lg-pt-100 lg-pb-100 md-pt-80 md-pb-80">
+  
+  {/* --- 1. Background Image & Overlay --- */}
+  <div className="section-bg-wrapper">
+     {servicesPageData?.testimonialsBackgroundImage?.url ? (
+        <Image 
+           src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.testimonialsBackgroundImage.url}`}
+           alt="Testimonial Background"
+           fill
+           className="hero-bg-media"
+           style={{ objectFit: 'cover' }}
+        />
+     ) : (
+        /* Fallback Background if no image uploaded */
+        <div className="hero-bg-fallback" style={{ background: '#1a1a1a', width: '100%', height: '100%' }} />
+     )}
+     
+     {/* Purple Overlay */}
+     <div 
+        className="hero-overlay" 
+        style={{ 
+            background: 'linear-gradient(135deg, rgba(74, 10, 77, 0.9) 0%, rgba(200, 15, 120, 0.85) 100%)', 
+            position: 'absolute', 
+            top:0, 
+            left:0, 
+            width:'100%', 
+            height:'100%', 
+            zIndex: 1 
+        }}
+     ></div>
+  </div>
+
+  <div className="container position-relative z-2">
+    {/* Header Row */}
+    <div className="row">
+      <div className="col-xl-8 col-lg-9 m-auto">
+        <div className="title-style-ten text-center mb-80 lg-mb-40" data-aos="fade-up">
+          <div className="sc-title" style={{ color: '#FF1292', marginBottom: '20px' }}>
+            {servicesPageData?.testimonialsTagline || "Client Testimonials"}
+          </div>
+          <h2 className="main-title font-recoleta fw-normal text-white">
+            {servicesPageData?.testimonialsTitle || "Trusted by"}{" "}
+            <span className="position-relative">
+              {servicesPageData?.testimonialsTitleHighlight || "Leading"}{" "}
+              <Image
+                src="/images/shape/shape_129.svg"
+                alt=""
+                width={160}
+                height={6}
+                style={{ position: 'absolute', bottom: '-10px', left: '0', width: '100%' }}
+              />
+            </span>
+            {" "}{servicesPageData?.testimonialsTitleEnd || "Brands"}
+          </h2>
+          
+          {/* Optional Description */}
+          <p className="text-white opacity-75 fs-20 lh-lg mt-30 mb-0">
+             {servicesPageData?.testimonialsDescription || "Don't just take our word for it. Here's what our clients say about working with us."}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    {/* Testimonial Component Row */}
+    <div className="row">
+        <div className="col-12">
+            <Testimonial />
+        </div>
+    </div>
+  </div>
+
+ <div 
+        className="hero-overlay" 
+        style={{ 
+            background: 'linear-gradient(135deg, rgba(74, 10, 77, 0.9) 0%, rgba(200, 15, 120, 0.85) 100%)', 
+            position: 'absolute', 
+            top:0, 
+            left:0, 
+            width:'100%', 
+            height:'100%', 
+            zIndex: 1 
+        }}
+     ></div>
+</div>
+      {/*
       <div className="fancy-feature-thirtyThree mt-180 lg-mt-120 md-mt-80">
         <div className="container">
           <div className="title-style-ten text-center" data-aos="fade-up">
@@ -320,7 +352,6 @@ const ServicesPage = ({ servicesPageData }) => {
         </div>
       </div>
 
-      {/* CTA */}
       <div className="fancy-short-banner-twelve position-relative zn2 pt-160 pb-150 lg-pt-120 lg-pb-120 md-pt-80 md-pb-80">
         <div className="container">
           <div className="row">
@@ -348,19 +379,18 @@ const ServicesPage = ({ servicesPageData }) => {
                 {servicesPageData?.ctaDescription || "We're ready to help you. Our experts are here, just send a message."}
               </p>
               
-              {/* Button Group - Row on all screens */}
               <div 
                 className="d-flex align-items-center justify-content-center gap-3"
                 data-aos="fade-up" 
                 data-aos-delay="300"
               >
-                {/* Button 1 */}
+
                 <LetsTalkButton 
                   buttonText={servicesPageData?.ctaButtonText || "Send Message"} 
                   href={servicesPageData?.ctaButtonUrl || "/contact"} 
                 />
 
-                {/* Button 2 */}
+
                 {servicesPageData?.ctaButtonText2 && (
                   <Link
                     href={servicesPageData?.ctaButtonUrl2 || "/services"}
@@ -375,7 +405,6 @@ const ServicesPage = ({ servicesPageData }) => {
             </div>
           </div>
         </div>
-        <div className="shapes shape-one" />
 
         <style dangerouslySetInnerHTML={{__html: `
           .btn-twentyOne {
@@ -394,7 +423,7 @@ const ServicesPage = ({ servicesPageData }) => {
             color: #FF1292 !important;
           }
         `}} />
-      </div>
+      </div> */}
 
       <FooterWithSettings />
 

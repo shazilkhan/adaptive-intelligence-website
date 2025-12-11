@@ -40,6 +40,9 @@
       "type": "component",
       "component": "shared.bullet-point",
       "repeatable": true
+    },
+    "footer_text": {
+      "type": "text"
     }
   }
 }

@@ -210,6 +210,38 @@
     },
     "ctaButtonUrl2": {
       "type": "string"
+    },
+    "testimonialsBackgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "ctaBgTitle": {
+      "type": "string"
+    },
+    "ctaBgSubtitle": {
+      "type": "string"
+    },
+    "ctaBgBtnText": {
+      "type": "string"
+    },
+    "ctaBgBtnUrl": {
+      "type": "string"
+    },
+    "ctaBgImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

@@ -5,20 +5,18 @@ const Feature = ({ featureData }) => {
   // --- 1. Image Logic ---
   const imageUrl = featureData?.featureImage?.url
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${featureData.featureImage.url}`
-    : null; // No fallback image, so we know if it breaks
+    : null;
   
   const imageAlt = featureData?.featureImage?.alternativeText || "Feature Image";
 
-  // --- 2. Text Fields (Must match Strapi API IDs) ---
+  // --- 2. Text Fields ---
   const tagline = featureData?.featureTagline;
   const title = featureData?.featureTitle;
   const titleHighlight = featureData?.featureTitleHighlight;
   
-  // Optional lead-in paragraph
   const description = featureData?.featureDescription; 
 
-  // --- 3. Dynamic Content Repeater (The Bold/Regular text) ---
-  // Default to empty array so it doesn't crash if empty
+  // --- 3. Dynamic Content Repeater ---
   const contentItems = featureData?.featureContent || [];
 
   // --- 4. CTA Fields ---
@@ -26,14 +24,14 @@ const Feature = ({ featureData }) => {
   const buttonText = featureData?.featureButtonText;
   const buttonUrl = featureData?.featureButtonUrl || "#";
 
-  if (!featureData) return null; // Don't render if no data
+  if (!featureData) return null;
 
   return (
     <div 
       className="fancy-feature-thirty position-relative mt-190 pb-140 lg-mt-100 lg-pb-120 md-mt-80 md-pb-80"
     >
       <div className="container">
-        <div className="row align-items-center">
+        <div className="row align-items-start">
           
           {/* LEFT COLUMN: IMAGE */}
           <div className="col-lg-6 mb-40 mb-lg-0" data-aos="fade-right">
@@ -53,14 +51,17 @@ const Feature = ({ featureData }) => {
 
           {/* RIGHT COLUMN: TEXT */}
           <div className="col-lg-6 ms-auto" data-aos="fade-left">
+            {/* REVERTED: Kept the original spacing classes here */}
             <div className="block-style-four ps-xxl-5 ms-xxl-4">
               <div className="title-style-ten">
                 <div className="sc-title" style={{ color: '#FF1292' }}>
                     {tagline}
                 </div>
-                <h2 className="main-title font-recoleta fw-normal tx-dark">
-                  {title}{" "}
-                  <span className="position-relative">
+                
+                {/* Applied responsive-title class */}
+                <h2 className="main-title font-recoleta fw-normal tx-dark responsive-title">
+                  {title}&nbsp;
+                  <span className="position-relative d-inline">
                     {titleHighlight}
                     <Image
                       src="/images/shape/shape_122.svg"
@@ -83,17 +84,17 @@ const Feature = ({ featureData }) => {
               {/* REPEATER CONTENT SECTION */}
               <div className="fs-20 pt-20 pb-30 lg-pb-10 content-repeater-wrapper">
                 {contentItems.map((item) => (
-                  <span 
+                  <p 
                     key={item.id} 
-                    className={item.isBold ? "fw-bold tx-dark" : ""}
+                    className={`mb-4 ${item.isBold ? "fw-bold tx-dark" : ""}`}
                   >
-                    {item.text}{" "}
-                  </span>
+                    {item.text}
+                  </p>
                 ))}
               </div>
 
               {/* CTA SECTION */}
-              <div className="btn-eighteen position-relative d-inline-block tx-dark mt-50 lg-mt-30">
+              <div className="btn-eighteen position-relative d-inline-block tx-dark mt-30 lg-mt-30">
                 {linkText}{" "}
                 <Link 
                     href={buttonUrl} 
@@ -111,8 +112,21 @@ const Feature = ({ featureData }) => {
       </div>
       
       <style jsx>{`
-        @media (max-width: 576px) {
-            .shape-underline { width: 100%; height: auto; }
+        /* Desktop size */
+        .responsive-title {
+            font-size: 3.4rem;
+            line-height: 1.2;
+        }
+
+        /* Mobile size (Under 768px) */
+        @media (max-width: 768px) {
+            .responsive-title {
+                font-size: 2.2rem; /* Reduced to fit mobile screens */
+            }
+            .shape-underline { 
+                width: 100%; 
+                height: auto; 
+            }
         }
       `}</style>
     </div>

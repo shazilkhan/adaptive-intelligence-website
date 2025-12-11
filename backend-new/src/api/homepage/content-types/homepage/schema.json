@@ -73,14 +73,6 @@
     "featureTitleHighlight": {
       "type": "string"
     },
-    "featureDescription": {
-      "type": "text"
-    },
-    "featureListItems": {
-      "type": "component",
-      "component": "homepage.feature-list-item",
-      "repeatable": true
-    },
     "featureLinkText": {
       "type": "string"
     },
@@ -126,14 +118,6 @@
       "type": "string"
     },
     "whyUsInfoBox2Icon1": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
-      "allowedTypes": [
-        "images"
-      ]
-    },
-    "whyUsInfoBox2Icon2": {
       "type": "media",
       "multiple": false,
       "required": false,
@@ -295,6 +279,16 @@
       "type": "component",
       "component": "homepage.text-chunk",
       "repeatable": true
+    },
+    "testimonialsBackgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

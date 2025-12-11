@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_shared_adaptive_intelligence_features",
+  "info": {
+    "displayName": "adaptiveIntelligenceFeatures"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

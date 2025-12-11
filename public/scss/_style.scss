@@ -10869,3 +10869,151 @@ padding: 30px !important;
   right: -1%;
 }
 }
+/* --- Adaptive Intelligence Section Styles --- */
+
+.adaptive-section {
+    position: relative;
+    min-height: 700px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.adaptive-section .bg-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.adaptive-section .bg-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.adaptive-section .bg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Darkens the video/image */
+    z-index: 1;
+}
+
+.adaptive-section .content-box {
+    position: relative;
+    z-index: 2; /* Ensures text sits ON TOP of the overlay */
+    background: rgba(22, 22, 22, 0.85);
+    padding: 60px 80px;
+    max-width: 900px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    backdrop-filter: blur(5px);
+    border-radius: 4px;
+}
+
+.adaptive-section .section-title {
+    font-size: 48px;
+    margin-bottom: 30px;
+    font-weight: normal;
+}
+
+/* Numbered List Styles */
+.custom-numbered-list {
+    counter-reset: my-counter;
+    list-style: none;
+    padding-left: 10px;
+    display: inline-block;
+    text-align: left;
+    margin: 0 auto;
+}
+
+.custom-numbered-list li {
+    position: relative;
+    padding-left: 35px;
+    font-size: 18px;
+    line-height: 1.6em;
+    opacity: 0.9;
+    margin-bottom: 15px;
+}
+
+.custom-numbered-list li::before {
+    counter-increment: my-counter;
+    content: counter(my-counter) ".";
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: bold;
+    color: #FF1292; /* Pink Number */
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .adaptive-section { min-height: 500px; }
+    .adaptive-section .content-box { padding: 40px 20px; }
+    .adaptive-section .section-title { font-size: 32px; }
+}
+/* --- Values Section Styles (Updated: Clean & No Yellow) --- */
+.our-values-section {
+    background-color: #0d1026; /* Deep Navy Background */
+}
+
+.value-card {
+    background: #151932; /* Slightly lighter navy */
+    border-radius: 8px;
+    padding: 30px;
+    transition: transform 0.3s ease;
+    /* Clean, subtle border that doesn't change color on hover */
+    border: 1px solid rgba(255, 255, 255, 0.05); 
+    display: flex;
+    align-items: flex-start;
+    height: 100%;
+}
+
+.value-card:hover {
+    transform: translateY(-5px);
+    /* No border color change, just the lift effect */
+}
+
+.value-icon-wrapper {
+    flex-shrink: 0;
+    width: 70px;
+    height: 70px;
+    margin-right: 25px;
+    /* REMOVED YELLOW BORDER. Replaced with subtle white ring or remove entirely. */
+    border: 1px solid rgba(255, 255, 255, 0.15); 
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+}
+
+.value-title {
+    color: white;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.value-desc {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 16px;
+    line-height: 1.6em;
+    margin: 0;
+}
+
+/* Mobile Stack */
+@media (max-width: 768px) {
+    .value-card { flex-direction: column; text-align: center; }
+    .value-icon-wrapper { margin: 0 auto 20px auto; }
+}

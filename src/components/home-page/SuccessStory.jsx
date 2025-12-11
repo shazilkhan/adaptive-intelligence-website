@@ -59,14 +59,6 @@ const SuccessStory = ({ successStoryData }) => {
             </div>
           </div>
         </div>
-        <Image
-          src="/images/ChromeShapes/Shape_TallCylinder1.png"
-          alt="img"
-          className="lazy-img img-three"
-          data-aos="fade-up"
-          width={200}
-          height={250}
-        />
       </div>
     </>
   );

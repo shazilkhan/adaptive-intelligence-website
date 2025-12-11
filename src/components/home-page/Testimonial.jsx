@@ -16,24 +16,18 @@ const Testimonial = () => {
         );
         const data = await res.json();
         
-        console.log("Testimonials API Response:", data); // Debug log
-        
         if (data?.data && Array.isArray(data.data)) {
           const formattedData = data.data.map(item => {
-            // Handle both Strapi v4 structure and possible variations
             const attrs = item.attributes || item;
             return {
               company: attrs.company || "Unknown Company",
-              position: attrs.position || "Position",
+              position: attrs.position || "",
               name: attrs.name || "Anonymous",
-              background: attrs.background || "#FA0B5F",
               text: attrs.text || "No testimonial text provided.",
             };
           });
           setTestimonialData(formattedData);
         } else {
-          // If no data from API, use fallback
-          console.warn("No testimonials found in API response");
           setTestimonialData(getDefaultTestimonials());
         }
       } catch (error) {
@@ -52,125 +46,155 @@ const Testimonial = () => {
       company: "Winsite Digital",
       position: "Founder & CEO",
       name: "Jarad",
-      background: "#FA0B5F",
-      text: "Gifted brand and content strategists. They will work with you to understand your business and your core philosophy at its deepest levels. They fundamentally understand that we write copy for the benefit of people first, SEO second — but certainly not to the latter's detriment.",
+      text: "Gifted brand and content strategists. They will work with you to understand your business and your core philosophy at its deepest levels.",
     },
     {
-      company: "Advantage Benefit Solutions",
-      position: "Chief Operating Officer",
-      name: "Alexandra",
-      background: "#00FCFC",
-      text: "I came looking to get fantastic copy and I got just that and so much more. Not only did the agency provide outstanding copy and clarity, they also helped me put together a marketing strategy to take our company to the next level. Would recommend to anyone in a heartbeat, especially if you are the type of person that is looking to hire the very best.",
-    },
-    {
-      company: "Credabl",
-      position: "Chief Brand Officer",
-      name: "Dina",
-      background: "#F27AFF",
-      text: "A talented creative team that has the remarkable ability to convert basic text into something very user friendly, meaningful and both interesting and enjoyable to read. Very happy with their work and looking forward to future campaigns with them.",
-    },
-    {
-      company: "Intersect Marketing Group",
-      position: "Strategy Director",
-      name: "Bob",
-      background: "#52C1FF",
-      text: "Yet another example of excellent quality of work, ability to meet an agreed upon deadline, and a willingness to communicate questions and ideas as often as needed. I really appreciate that adaptiveintelligence.online takes the time to understand your project and cheerfully suggests methods to make their deliverables better than you anticipated.",
-    },
+        company: "Advantage Benefit Solutions",
+        position: "Chief Operating Officer",
+        name: "Alexandra",
+        text: "I came looking to get fantastic copy and I got just that and so much more. Not only did the agency provide outstanding copy and clarity, they also helped me put together a marketing strategy.",
+      },
   ];
 
   const settings = {
     dots: false,
     infinite: true,
-    speed: 500,
-    slidesToShow: 3,
+    speed: 700,
+    slidesToShow: 1,
     slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
+    arrows: false,
+    fade: true, 
   };
 
-  const handlePrev = () => {
-    sliderRef.current?.slickPrev();
-  };
+  const handlePrev = () => sliderRef.current?.slickPrev();
+  const handleNext = () => sliderRef.current?.slickNext();
 
-  const handleNext = () => {
-    sliderRef.current?.slickNext();
-  };
-
-  if (loading) {
-    return (
-      <div className="text-center py-5">
-        <p>Loading testimonials...</p>
-      </div>
-    );
-  }
-
-  if (testimonialData.length === 0) {
-    return (
-      <div className="text-center py-5">
-        <p>No testimonials available.</p>
-      </div>
-    );
-  }
+  if (loading) return <div className="text-white text-center">Loading...</div>;
 
   return (
-    <>
-      <div
-        className="slider-wrapper feedback_slider_ten pt-70 lg-pt-40"
-        data-aos="fade-up"
-      >
-        <Slider {...settings} arrows={false} ref={sliderRef}>
-          {testimonialData.map((testimonial, index) => (
-            <div key={`${testimonial.company}-${index}`} className="item">
-              <div
-                className="feedback-block-ten"
-                style={{ background: testimonial.background }}
-              >
-                <div className="cmp-name fw-500 tx-dark" style={{ fontSize: "30px" }}>
-                  {testimonial.company}
-                </div>
-                
-                <p className="tx-dark mt-20 mb-30 lg-mt-15 lg-mb-25" style={{ fontSize: "18px" }}>
-                  {testimonial.text}
-                </p>
-                <div className="fw-500 tx-dark fs-18">
-                  {testimonial.name}
-                </div>
-                <div className="fs-18 tx-dark">{testimonial.position}</div>
-              </div>
-            </div>
-          ))}
-        </Slider>
-      </div>
-      <ul
-        className="slider-arrows slick-arrow-five d-flex justify-content-center style-none"
-        data-aos="fade-left"
-      >
-        <li
-          className="prev_f5 slick-arrow text-center tran3s"
+    <div className="testimonial-section-wrapper">
+      
+      {/* Flex container to keep arrows and slider aligned */}
+      <div className="d-flex align-items-center justify-content-center gap-4 gap-xl-5">
+        
+        {/* Left Arrow */}
+        <button 
           onClick={handlePrev}
+          className="arrow-btn d-none d-lg-flex"
+          aria-label="Previous Testimonial"
         >
           <i className="bi bi-arrow-left" />
-        </li>
-        <li
-          className="next_f5 slick-arrow text-center tran3s"
+        </button>
+
+        {/* The Slider Window */}
+        <div className="slider-container">
+          <Slider {...settings} ref={sliderRef}>
+            {testimonialData.map((testimonial, index) => (
+              <div key={index}>
+                <div className="glass-card text-center mx-auto">
+                  {/* Company */}
+                  <div className="mb-4">
+                      <h3 className="company-name font-recoleta fw-normal text-white mb-1">
+                          {testimonial.company}
+                      </h3>
+                  </div>
+
+                  {/* Text */}
+                  <p className="testimonial-text text-white lh-lg mb-40 lg-mb-30 m-auto">
+                    "{testimonial.text}"
+                  </p>
+
+                  {/* Person */}
+                  <div>
+                    <div className="fw-500 text-white fs-18 text-uppercase ls-1">
+                      {testimonial.name}
+                    </div>
+                    <div className="fs-16 text-white opacity-75">
+                      {testimonial.position}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </Slider>
+        </div>
+
+        {/* Right Arrow */}
+        <button 
           onClick={handleNext}
+          className="arrow-btn d-none d-lg-flex"
+          aria-label="Next Testimonial"
         >
           <i className="bi bi-arrow-right" />
-        </li>
-      </ul>
-    </>
+        </button>
+      </div>
+
+      {/* Mobile Arrows */}
+      <div className="d-flex d-lg-none justify-content-center gap-3 mt-5">
+        <button onClick={handlePrev} className="arrow-btn mobile"><i className="bi bi-arrow-left" /></button>
+        <button onClick={handleNext} className="arrow-btn mobile"><i className="bi bi-arrow-right" /></button>
+      </div>
+
+      <style jsx>{`
+        /* --- LAYOUT --- */
+        .slider-container {
+            width: 100%;
+            /* CHANGE: Increased from 900px to 1100px */
+            max-width: 1100px; 
+            min-height: 400px;
+        }
+
+        /* --- GLASS CARD --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 60px 80px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+
+        .company-name { font-size: 2.2rem; }
+        .testimonial-text { font-size: 1.25rem; max-width: 90%; }
+        .ls-1 { letter-spacing: 1px; }
+
+        /* --- ARROWS --- */
+        .arrow-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: transparent;
+            color: white;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .arrow-btn:hover {
+            background: white;
+            color: #FF1292;
+            border-color: white;
+        }
+
+        .arrow-btn.mobile {
+            width: 50px;
+            height: 50px;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 991px) {
+            .glass-card { padding: 40px 30px; }
+            .company-name { font-size: 1.8rem; }
+            .testimonial-text { font-size: 1.1rem; }
+        }
+      `}</style>
+    </div>
   );
 };
 

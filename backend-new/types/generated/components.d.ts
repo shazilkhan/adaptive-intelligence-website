@@ -93,6 +93,17 @@ export interface HomepageTextChunk extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedAdaptiveIntelligenceFeatures
+  extends Struct.ComponentSchema {
+  collectionName: 'components_shared_adaptive_intelligence_features';
+  info: {
+    displayName: 'adaptiveIntelligenceFeatures';
+  };
+  attributes: {
+    text: Schema.Attribute.Text;
+  };
+}
+
 export interface SharedBulletPoint extends Struct.ComponentSchema {
   collectionName: 'components_shared_bullet_points';
   info: {
@@ -100,6 +111,22 @@ export interface SharedBulletPoint extends Struct.ComponentSchema {
   };
   attributes: {
     text: Schema.Attribute.String;
+  };
+}
+
+export interface SharedCtaBanner extends Struct.ComponentSchema {
+  collectionName: 'components_shared_cta_banners';
+  info: {
+    displayName: 'cta-banner';
+  };
+  attributes: {
+    backgroundImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    buttonText: Schema.Attribute.String;
+    buttonUrl: Schema.Attribute.String;
+    subtitle: Schema.Attribute.String;
+    title: Schema.Attribute.String;
   };
 }
 
@@ -156,7 +183,9 @@ declare module '@strapi/strapi' {
       'homepage.counter-item': HomepageCounterItem;
       'homepage.feature-list-item': HomepageFeatureListItem;
       'homepage.text-chunk': HomepageTextChunk;
+      'shared.adaptive-intelligence-features': SharedAdaptiveIntelligenceFeatures;
       'shared.bullet-point': SharedBulletPoint;
+      'shared.cta-banner': SharedCtaBanner;
       'shared.industry-item': SharedIndustryItem;
       'shared.insight': SharedInsight;
       'shared.key-phase': SharedKeyPhase;

@@ -366,6 +366,68 @@
         "videos",
         "audios"
       ]
+    },
+    "adaptiveIntelligenceTitle": {
+      "type": "string"
+    },
+    "adaptiveIntelligenceBgVideo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "adaptiveIntelligenceBgImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "adaptiveIntelligenceFeatures": {
+      "type": "component",
+      "component": "shared.adaptive-intelligence-features",
+      "repeatable": true
+    },
+    "valuesSectionTitle": {
+      "type": "string"
+    },
+    "valuesSectionDescription": {
+      "type": "text"
+    },
+    "valuesSectionMissionHeading": {
+      "type": "string"
+    },
+    "valuesSectionMainHeading": {
+      "type": "text"
+    },
+    "ctaBgTitle": {
+      "type": "string"
+    },
+    "ctaBgSubtitle": {
+      "type": "string"
+    },
+    "ctaBgBtnText": {
+      "type": "string"
+    },
+    "ctaBgBtnUrl": {
+      "type": "string"
+    },
+    "ctaBgImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

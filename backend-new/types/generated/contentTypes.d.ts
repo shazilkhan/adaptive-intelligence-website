@@ -441,10 +441,28 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    adaptiveIntelligenceBgImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    adaptiveIntelligenceBgVideo: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    adaptiveIntelligenceFeatures: Schema.Attribute.Component<
+      'shared.adaptive-intelligence-features',
+      true
+    >;
+    adaptiveIntelligenceTitle: Schema.Attribute.String;
     counterItems: Schema.Attribute.Component<'homepage.counter-item', true>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    ctaBgBtnText: Schema.Attribute.String;
+    ctaBgBtnUrl: Schema.Attribute.String;
+    ctaBgImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    ctaBgSubtitle: Schema.Attribute.String;
+    ctaBgTitle: Schema.Attribute.String;
     heroBackgroundImage: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
     >;
@@ -518,6 +536,10 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
     >;
     value4_Title: Schema.Attribute.String;
     valuesDescription: Schema.Attribute.Text;
+    valuesSectionDescription: Schema.Attribute.Text;
+    valuesSectionMainHeading: Schema.Attribute.Text;
+    valuesSectionMissionHeading: Schema.Attribute.String;
+    valuesSectionTitle: Schema.Attribute.String;
     valuesTagline: Schema.Attribute.String;
     valuesTitle: Schema.Attribute.String;
     whatWeDoCard1_Description: Schema.Attribute.Text;
@@ -980,15 +1002,10 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     featureButtonText: Schema.Attribute.String;
     featureButtonUrl: Schema.Attribute.String;
     featureContent: Schema.Attribute.Component<'homepage.text-chunk', true>;
-    featureDescription: Schema.Attribute.Text;
     featureImage: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
     >;
     featureLinkText: Schema.Attribute.String;
-    featureListItems: Schema.Attribute.Component<
-      'homepage.feature-list-item',
-      true
-    >;
     featureTagline: Schema.Attribute.String;
     featureTitle: Schema.Attribute.String;
     featureTitleHighlight: Schema.Attribute.String;
@@ -1038,6 +1055,9 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     successStory1QuoteEnd: Schema.Attribute.Text;
     successStory1QuoteHighlight: Schema.Attribute.String;
     successStory1QuoteStart: Schema.Attribute.Text;
+    testimonialsBackgroundImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
     testimonialsTagline: Schema.Attribute.String;
     testimonialsTitle: Schema.Attribute.String;
     testimonialsTitleEnd: Schema.Attribute.String;
@@ -1057,7 +1077,6 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     whyUsInfoBox1Icon: Schema.Attribute.Media<'images'>;
     whyUsInfoBox1Title: Schema.Attribute.String;
     whyUsInfoBox2Icon1: Schema.Attribute.Media<'images'>;
-    whyUsInfoBox2Icon2: Schema.Attribute.Media<'images'>;
     whyUsInfoBox2Title: Schema.Attribute.String;
     whyUsMainImage: Schema.Attribute.Media<'images'>;
     whyUsTagline: Schema.Attribute.String;
@@ -1081,6 +1100,7 @@ export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
     image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -1176,6 +1196,7 @@ export interface ApiServiceListServiceList extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     features: Schema.Attribute.Component<'shared.bullet-point', true>;
+    footer_text: Schema.Attribute.Text;
     icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -1251,6 +1272,13 @@ export interface ApiServicesPageServicesPage extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    ctaBgBtnText: Schema.Attribute.String;
+    ctaBgBtnUrl: Schema.Attribute.String;
+    ctaBgImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    ctaBgSubtitle: Schema.Attribute.String;
+    ctaBgTitle: Schema.Attribute.String;
     ctaButtonText: Schema.Attribute.String;
     ctaButtonText2: Schema.Attribute.String;
     ctaButtonUrl: Schema.Attribute.String;
@@ -1310,6 +1338,9 @@ export interface ApiServicesPageServicesPage extends Struct.SingleTypeSchema {
     servicesSectionTagline: Schema.Attribute.String;
     servicesSectionTitle: Schema.Attribute.String;
     servicesSectionTitleHighlight: Schema.Attribute.String;
+    testimonialsBackgroundImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
     testimonialsDescription: Schema.Attribute.Text;
     testimonialsTagline: Schema.Attribute.String;
     testimonialsTitle: Schema.Attribute.String;
@@ -1473,6 +1504,34 @@ export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
     position: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     text: Schema.Attribute.Text;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiValueValue extends Struct.CollectionTypeSchema {
+  collectionName: 'values';
+  info: {
+    displayName: 'Value';
+    pluralName: 'values';
+    singularName: 'value';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::value.value'> &
+      Schema.Attribute.Private;
+    order: Schema.Attribute.Integer;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -2010,6 +2069,7 @@ declare module '@strapi/strapi' {
       'api::team-member.team-member': ApiTeamMemberTeamMember;
       'api::team-page.team-page': ApiTeamPageTeamPage;
       'api::testimonial.testimonial': ApiTestimonialTestimonial;
+      'api::value.value': ApiValueValue;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

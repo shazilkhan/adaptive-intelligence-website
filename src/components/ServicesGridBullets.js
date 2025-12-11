@@ -72,7 +72,14 @@ const ServicesGridBullets = () => {
                         ))}
                     </ul>
                 </div>
-                {/* -------------------------- */}
+
+                {/* --- NEW: Footer Text Section --- */}
+                {item.footer_text && (
+                    <p className="service-footer-text mt-4 mb-0">
+                        {item.footer_text}
+                    </p>
+                )}
+                {/* ------------------------------- */}
 
               </div>
 
@@ -185,6 +192,13 @@ const ServicesGridBullets = () => {
           margin-top: 9px; /* Align with text line height */
           margin-right: 12px;
           flex-shrink: 0;
+        }
+
+        /* Footer Text Style - Matches Bullets */
+        .service-footer-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            line-height: 1.6;
         }
 
         .service-accent-dark {
