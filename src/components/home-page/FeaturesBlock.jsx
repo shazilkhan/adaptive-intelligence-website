@@ -41,20 +41,43 @@ const FeaturesBlock = ({ featuresData }) => {
           <p className="fs-20 mt-15 mb-20">
             {featuresData?.whyUsDescription2 || "Lorem ipsum dolor sit amet..."}
           </p>
-          <div className="info mb-50">
+<div className="info mb-50">
             <div className="row">
+              
+              {/* --- Icon 1 --- */}
               <div className="col-sm-6">
                 <div className="icon mt-30">
-                  <Image src={infoBox1IconUrl} alt="logo" className="lazy-img" width={43} height={43} />
+                  {/* REPLACE href WITH YOUR LINK */}
+                  <Link href="https://maps.app.goo.gl/s72NXE1sEAZNWk4Y7" target="_blank" rel="noopener noreferrer">
+                    <Image 
+                        src={infoBox1IconUrl} 
+                        alt="logo" 
+                        className="lazy-img" 
+                        width={43} height={43} 
+                        style={{ cursor: 'pointer' }} // Adds a hand cursor on hover
+                    />
+                  </Link>
                 </div>
                 <h4 className="tx-dark mt-20">{featuresData?.whyUsInfoBox1Title || "Secure & trusted..."}</h4>
               </div>
+
+              {/* --- Icon 2 --- */}
               <div className="col-sm-6">
                 <div className="icon d-flex mt-30">
-                  <Image src={infoBox2Icon1Url} alt="logo" className="lazy-img me-4" width={43} height={43} />
+                  {/* REPLACE href WITH YOUR LINK */}
+                  <Link href="https://clutch.co/profile/adaptive-intelligence-international" target="_blank" rel="noopener noreferrer">
+                    <Image 
+                        src={infoBox2Icon1Url} 
+                        alt="logo" 
+                        className="lazy-img me-4" 
+                        width={43} height={43} 
+                        style={{ cursor: 'pointer' }} 
+                    />
+                  </Link>
                 </div>
                 <h4 className="tx-dark mt-20">{featuresData?.whyUsInfoBox2Title || "Certified by AWP..."}</h4>
               </div>
+
             </div>
           </div>
           <LetsTalkButton buttonText={featuresData?.whyUsButtonText || "More Details?"} href={featuresData?.whyUsButtonUrl || "/contact"} />
