@@ -27,10 +27,6 @@ const CopyrightFooter = () => {
   // Default social links as fallback
   const defaultIcons = [
     {
-      icon: "fab fa-spotify", // <-- Changed from fa-twitter
-      href: "https://open.spotify.com/playlist/37i9dQZF1EpoYM2VvfSDDr?si=c035b4827ce043b9&nd=1&dlsi=227d0bfc319349d4", // <-- Add a default Spotify URL if you have one
-    },
-    {
       icon: "fab fa-linkedin-in",
       href: "https://www.linkedin.com/company/adaptiveintelligenceinternational",
     },
@@ -39,21 +35,17 @@ const CopyrightFooter = () => {
       href: "https://share.google/wqS5CzKTOC81TZj03",
     },
     {
-      icon: "/images/icon/upwork.svg",
-      href: "https://www.upwork.com/agencies/adaptiveintelligence/",
-    },
-    {
       icon: "fab fa-instagram",
       href: "https://www.instagram.com/adaptiveintelligence.online/",
+    },
+    {
+      icon: "fab fa-spotify",
+      href: "https://open.spotify.com/playlist/37i9dQZF1EpoYM2VvfSDDr?si=c035b4827ce043b9&nd=1&dlsi=227d0bfc319349d4",
     },
   ];
 
   // Use settings if available, otherwise use defaults
   const icons = settings ? [
-    {
-      icon: "fab fa-spotify", // <-- Changed from fa-twitter
-      href: settings.spotifyUrl || "#", // <-- Changed from twitterUrl, add default if needed
-    },
     {
       icon: "fab fa-linkedin-in",
       href: settings.linkedinUrl || "https://www.linkedin.com/company/adaptiveintelligenceinternational",
@@ -63,12 +55,12 @@ const CopyrightFooter = () => {
       href: settings.googleUrl || "https://share.google/wqS5CzKTOC81TZj03",
     },
     {
-      icon: "/images/icon/upwork.svg",
-      href: settings.upworkUrl || "https://www.upwork.com/agencies/adaptiveintelligence/",
-    },
-    {
       icon: "fab fa-instagram",
       href: settings.instagramUrl || "https://www.instagram.com/adaptiveintelligence.online/",
+    },
+    {
+      icon: "fab fa-spotify",
+      href: settings.spotifyUrl || "#",
     },
   ] : defaultIcons;
 

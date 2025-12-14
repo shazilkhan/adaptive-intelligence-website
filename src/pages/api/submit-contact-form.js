@@ -18,15 +18,16 @@ export default async function handler(req, res) {
   try {
     // 4. Safely extract data
     const bodyData = req.body.data || {};
-    
+
     const firstName = bodyData.firstName || "";
     const lastName = bodyData.lastName || "";
     const email = bodyData.email || "";
     const phone = bodyData.phone || "";
     const companyName = bodyData.companyName || "";
-    
+
     const services = Array.isArray(bodyData.servicesNeeded) ? bodyData.servicesNeeded.join(', ') : "None";
     const sources = Array.isArray(bodyData.leadSource) ? bodyData.leadSource.join(', ') : "None";
+    const userMessage = bodyData.message || "";
 
     console.log("👉 Processing submission for:", email);
 
@@ -42,9 +43,9 @@ export default async function handler(req, res) {
       organization_name: companyName,
       phone_numbers: phone ? [{ value: phone, type: "work" }] : [],
       // FIX: Add to specific list immediately
-      label_ids: targetListId ? [targetListId] : [], 
+      label_ids: targetListId ? [targetListId] : [],
       custom_fields: {
-        "initial_message": `Services: ${services} | Source: ${sources}`
+        "initial_message": `Message: ${userMessage} | Services: ${services} | Source: ${sources}`
       }
     };
 
@@ -53,9 +54,9 @@ export default async function handler(req, res) {
     // --- 6. Send to Apollo (Create Contact) ---
     const apolloResponse = await fetch('https://api.apollo.io/v1/contacts', {
       method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json', 
-        'Cache-Control': 'no-cache' 
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache'
       },
       body: JSON.stringify(apolloPayload),
     });
@@ -65,10 +66,10 @@ export default async function handler(req, res) {
     // --- 7. Check for Apollo Errors ---
     if (!apolloResponse.ok) {
       console.error("❌ Apollo API Error Response:", JSON.stringify(contactData, null, 2));
-      return res.status(400).json({ 
-        success: false, 
-        message: "Apollo Rejected the Request", 
-        details: contactData 
+      return res.status(400).json({
+        success: false,
+        message: "Apollo Rejected the Request",
+        details: contactData
       });
     }
 
@@ -82,10 +83,10 @@ export default async function handler(req, res) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             data: {
-              firstName, lastName, email, phone, companyName, 
+              firstName, lastName, email, phone, companyName, message: userMessage,
               emailOptin: bodyData.emailOptin,
-              servicesNeeded: bodyData.servicesNeeded, 
-              leadSource: bodyData.leadSource, 
+              servicesNeeded: bodyData.servicesNeeded,
+              leadSource: bodyData.leadSource,
               submittedAt: new Date().toISOString(),
             }
           }),
@@ -101,10 +102,10 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('❌ CRITICAL SERVER ERROR:', error);
-    return res.status(500).json({ 
-        success: false, 
-        message: 'Internal Server Error', 
-        error: error.message 
+    return res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+      error: error.message
     });
   }
 }

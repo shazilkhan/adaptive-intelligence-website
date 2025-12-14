@@ -7,7 +7,7 @@ const FeaturesBlock = ({ featuresData }) => {
   const mainImageUrl = featuresData?.whyUsMainImage?.url
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${featuresData.whyUsMainImage.url}`
     : "/images/assets/john-FlPc9-unsplash.jpg";
-    
+
   const infoBox1IconUrl = featuresData?.whyUsInfoBox1Icon?.url
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${featuresData.whyUsInfoBox1Icon.url}`
     : "/images/logo/Plogo-34.png";
@@ -15,7 +15,7 @@ const FeaturesBlock = ({ featuresData }) => {
   const infoBox2Icon1Url = featuresData?.whyUsInfoBox2Icon1?.url
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${featuresData.whyUsInfoBox2Icon1.url}`
     : "/images/logo/Plogo-35.png";
-    
+
   const infoBox2Icon2Url = featuresData?.whyUsInfoBox2Icon2?.url
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${featuresData.whyUsInfoBox2Icon2.url}`
     : "/images/logo/Plogo-36.png";
@@ -41,20 +41,20 @@ const FeaturesBlock = ({ featuresData }) => {
           <p className="fs-20 mt-15 mb-20">
             {featuresData?.whyUsDescription2 || "Lorem ipsum dolor sit amet..."}
           </p>
-<div className="info mb-50">
+          <div className="info mb-50">
             <div className="row">
-              
+
               {/* --- Icon 1 --- */}
               <div className="col-sm-6">
                 <div className="icon mt-30">
                   {/* REPLACE href WITH YOUR LINK */}
                   <Link href="https://maps.app.goo.gl/s72NXE1sEAZNWk4Y7" target="_blank" rel="noopener noreferrer">
-                    <Image 
-                        src={infoBox1IconUrl} 
-                        alt="logo" 
-                        className="lazy-img" 
-                        width={43} height={43} 
-                        style={{ cursor: 'pointer' }} // Adds a hand cursor on hover
+                    <Image
+                      src={infoBox1IconUrl}
+                      alt="logo"
+                      className="lazy-img"
+                      width={43} height={43}
+                      style={{ cursor: 'pointer' }} // Adds a hand cursor on hover
                     />
                   </Link>
                 </div>
@@ -66,12 +66,12 @@ const FeaturesBlock = ({ featuresData }) => {
                 <div className="icon d-flex mt-30">
                   {/* REPLACE href WITH YOUR LINK */}
                   <Link href="https://clutch.co/profile/adaptive-intelligence-international" target="_blank" rel="noopener noreferrer">
-                    <Image 
-                        src={infoBox2Icon1Url} 
-                        alt="logo" 
-                        className="lazy-img me-4" 
-                        width={43} height={43} 
-                        style={{ cursor: 'pointer' }} 
+                    <Image
+                      src={infoBox2Icon1Url}
+                      alt="logo"
+                      className="lazy-img me-4"
+                      width={43} height={43}
+                      style={{ cursor: 'pointer' }}
                     />
                   </Link>
                 </div>
@@ -80,20 +80,22 @@ const FeaturesBlock = ({ featuresData }) => {
 
             </div>
           </div>
-          <LetsTalkButton buttonText={featuresData?.whyUsButtonText || "More Details?"} href={featuresData?.whyUsButtonUrl || "/contact"} />
+          <div className="letstalk-btnn d-flex justify-content-center">
+            <LetsTalkButton buttonText={featuresData?.whyUsButtonText || "More Details?"} href={featuresData?.whyUsButtonUrl || "/contact"} />
+          </div>
         </div>
       </div>
 
       <div className="col-lg-7 col-md-9 m-auto">
         <div className="illustration-holder md-mt-60 position-relative">
-          <Image 
-            src={mainImageUrl} 
-            alt={featuresData?.whyUsMainImage?.alternativeText || "media"} 
-            className="lazy-img main-img ms-auto" 
-            width={680} 
+          <Image
+            src={mainImageUrl}
+            alt={featuresData?.whyUsMainImage?.alternativeText || "media"}
+            className="lazy-img main-img ms-auto"
+            width={680}
             height={648}
             // FIX: This style prevents stretching by maintaining aspect ratio
-            style={{ width: '100%', height: 'auto' }} 
+            style={{ width: '100%', height: 'auto' }}
           />
         </div>
       </div>

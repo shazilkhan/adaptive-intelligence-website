@@ -12,9 +12,9 @@ const ClientCarousel = () => {
         const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/client-logos?populate=logo`;
         const res = await fetch(apiUrl);
         if (!res.ok) throw new Error('Failed to fetch logos');
-        
+
         const json = await res.json();
-        
+
         const formattedLogos = (json.data || json).map(item => ({
           name: item.name,
           logo: item.logo?.url
@@ -57,28 +57,28 @@ const ClientCarousel = () => {
   return (
     <>
       <div className="full-width-slider-wrapper">
-          <Slider {...clientSettings} ref={clientCarouselRef}>
-            {clientLogos.map((client, index) => (
-              <div key={index} className="client-slide-modern">
-                <div className="client-logo-wrapper-modern">
-                  <Image 
-                    src={client.logo} 
-                    alt={client.name}
-                    width={200} // High base resolution
-                    height={100}
-                    // Style ensures logo fits vertically but keeps aspect ratio
-                    style={{ 
-                      width: 'auto', 
-                      height: 'auto', 
-                      maxHeight: '80px', // Fits inside the 100px box
-                      maxWidth: '100%',
-                      objectFit: 'contain'
-                    }}
-                  />
-                </div>
+        <Slider {...clientSettings} ref={clientCarouselRef}>
+          {clientLogos.map((client, index) => (
+            <div key={index} className="client-slide-modern">
+              <div className="client-logo-wrapper-modern">
+                <Image
+                  src={client.logo}
+                  alt={client.name}
+                  width={200} // High base resolution
+                  height={100}
+                  // Style ensures logo fits vertically but keeps aspect ratio
+                  style={{
+                    width: 'auto',
+                    height: 'auto',
+                    maxHeight: '80px', // Fits inside the 100px box
+                    maxWidth: '100%',
+                    objectFit: 'contain'
+                  }}
+                />
               </div>
-            ))}
-          </Slider>
+            </div>
+          ))}
+        </Slider>
       </div>
 
       <style jsx>{`
@@ -97,7 +97,7 @@ const ClientCarousel = () => {
           align-items: center;
           justify-content: center;
           height: 100px; /* Fixed height container */
-          background: white;
+          background: transparent;
           /* Removed border for cleaner look */
         }
       `}</style>

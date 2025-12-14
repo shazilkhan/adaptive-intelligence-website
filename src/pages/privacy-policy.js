@@ -11,7 +11,7 @@ const PrivacyPolicyPage = () => {
   return (
     <>
       <Header menuTextColor="white" />
-      
+
       {/* Page Header */}
       <div className="content-page-header" style={{ background: '#000000', paddingTop: '180px', paddingBottom: '120px' }}>
         <div className="container">
@@ -21,9 +21,8 @@ const PrivacyPolicyPage = () => {
                 <h1 className="page-title" style={{ color: 'white', fontSize: '3rem', fontFamily: 'Recoleta, serif', marginBottom: '20px' }}>
                   Privacy Policy
                 </h1>
-                <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '1.1rem' }}>
-                  Last Updated: August 12, 2024
-                </p>
+                Last Updated: 2025
+
               </div>
             </div>
           </div>
@@ -39,11 +38,11 @@ const PrivacyPolicyPage = () => {
                 <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '30px', color: '#666' }}>
                   Adaptive Intelligence International ("us", "we", or "our") operates the Adaptive Intelligence International website (the "Service").
                 </p>
-                
+
                 <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '30px', color: '#666' }}>
                   This page informs you of our policies regarding the collection, use and disclosure of Personal Information when you use our Service.
                 </p>
-                
+
                 <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '40px', color: '#666' }}>
                   We will not use or share your information with anyone except as described in this Privacy Policy.
                 </p>
@@ -168,7 +167,7 @@ const PrivacyPolicyPage = () => {
 
                 <div className="copyright-notice" style={{ background: '#f8f9fa', padding: '20px', borderRadius: '8px', marginTop: '60px', textAlign: 'center' }}>
                   <p style={{ color: '#666', margin: '0', fontSize: '0.9rem' }}>
-                    © 2024 Adaptive Intelligence International. All Rights Reserved.
+                    © 2025 Adaptive Intelligence International. All Rights Reserved.
                   </p>
                 </div>
               </div>
@@ -177,7 +176,7 @@ const PrivacyPolicyPage = () => {
         </div>
       </div>
 
-<FooterWithSettings />
+      <FooterWithSettings />
 
       <style jsx>{`
         /* White Header Menu Fix */

@@ -4,73 +4,73 @@ import Header from "@/components/header/Header";
 import LetsTalkButton from "@/components/LetsTalkButton";
 import Testimonial from "@/components/home-page/Testimonial";
 import Faq from "@/components/home-page/Faq";
-import ClientCarousel from "@/components/ClientCarousel"; 
-import LatestCaseStudiesSection from '@/components/case-studies/LatestCaseStudiesSection'; 
+import ClientCarousel from "@/components/ClientCarousel";
+import LatestCaseStudiesSection from '@/components/case-studies/LatestCaseStudiesSection';
 import IndustriesGrid from '@/components/IndustriesGrid';
-import ServicesGridBullets from "@/components/ServicesGridBullets"; 
+import ServicesGridBullets from "@/components/ServicesGridBullets";
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 import Link from "next/link";
 const ServicesPage = ({ servicesPageData }) => {
-  
+
   const heroType = servicesPageData?.heroBackgroundType || 'Image';
-  
-  const heroVideoUrl = servicesPageData?.heroBackgroundVideo?.url 
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.heroBackgroundVideo.url}` 
+
+  const heroVideoUrl = servicesPageData?.heroBackgroundVideo?.url
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.heroBackgroundVideo.url}`
     : null;
-    
-  const heroImageUrl = servicesPageData?.heroBackgroundImage?.url 
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.heroBackgroundImage.url}` 
+
+  const heroImageUrl = servicesPageData?.heroBackgroundImage?.url
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.heroBackgroundImage.url}`
     : null;
 
   return (
     <>
       <Header menuTextColor="white" />
-      
+
       {/* --- Hero Section --- */}
       <div className="services-hero-section">
         <div className="hero-bg-wrapper">
-            {heroType === 'Video' && heroVideoUrl ? (
-                <video autoPlay loop muted playsInline className="hero-bg-media">
-                    <source src={heroVideoUrl} type="video/mp4" />
-                </video>
-            ) : heroImageUrl ? (
-                <Image 
-                    src={heroImageUrl}
-                    alt="Hero Background"
-                    fill
-                    className="hero-bg-media"
-                    style={{ objectFit: 'cover' }}
-                    priority
-                />
-            ) : (
-                <div className="hero-bg-fallback" />
-            )}
-            <div className="hero-overlay" />
+          {heroType === 'Video' && heroVideoUrl ? (
+            <video autoPlay loop muted playsInline className="hero-bg-media">
+              <source src={heroVideoUrl} type="video/mp4" />
+            </video>
+          ) : heroImageUrl ? (
+            <Image
+              src={heroImageUrl}
+              alt="Hero Background"
+              fill
+              className="hero-bg-media"
+              style={{ objectFit: 'cover' }}
+              priority
+            />
+          ) : (
+            <div className="hero-bg-fallback" />
+          )}
+          <div className="hero-overlay" />
         </div>
 
         <div className="container position-relative z-2">
-            <div className="row">
-                <div className="col-xl-10 m-auto text-center">
-                    <div className="title-style-fourteen" data-aos="fade-up">
-                        <h2 className="main-title font-recoleta fw-normal text-white">
-                            {servicesPageData?.servicesHeroTitle || "Services"}.
-                            <span className="position-relative ms-2">
-                                <Image
-                                    width={302}
-                                    height={9}
-                                    src="/images/shape/shape_186.svg"
-                                    alt="shape"
-                                    style={{ filter: 'brightness(0) invert(1)' }}
-                                    className="hero-shape"
-                                />
-                            </span>
-                        </h2>
-                        <p className="text-lg text-white text-center lh-lg mt-25 md-mt-20" data-aos="fade-up">
-                            {servicesPageData?.servicesHeroDescription || "We deliver comprehensive solutions that drive growth, enhance brand visibility, and create meaningful connections with your audience."}
-                        </p>
-                    </div>
-                </div>
+          <div className="row">
+            <div className="col-xl-10 m-auto text-center">
+              <div className="title-style-fourteen" data-aos="fade-up">
+                <h2 className="main-title font-recoleta fw-normal text-white">
+                  {servicesPageData?.servicesHeroTitle || "Services"}.
+                  <span className="position-relative ms-2">
+                    <Image
+                      width={302}
+                      height={9}
+                      src="/images/shape/shape_186.svg"
+                      alt="shape"
+                      style={{ filter: 'brightness(0) invert(1)' }}
+                      className="hero-shape"
+                    />
+                  </span>
+                </h2>
+                <p className="text-lg text-white text-center lh-lg mt-25 md-mt-20" data-aos="fade-up">
+                  {servicesPageData?.servicesHeroDescription || "We deliver comprehensive solutions that drive growth, enhance brand visibility, and create meaningful connections with your audience."}
+                </p>
+              </div>
             </div>
+          </div>
         </div>
       </div>
 
@@ -119,20 +119,20 @@ const ServicesPage = ({ servicesPageData }) => {
         <div className="container">
           <div className="row">
             <div className="col-12">
-                <div className="process-image-wrapper text-center" data-aos="fade-up">
-                    <Image 
-                        src={
-                            servicesPageData?.processImage?.url
-                            ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.processImage.url}`
-                            : "/images/assets/process_placeholder.jpg" 
-                        }
-                        alt="Our Process"
-                        width={1200}
-                        height={800}
-                        className="img-fluid process-main-image"
-                        style={{ height: 'auto', borderRadius: '12px' }}
-                    />
-                </div>
+              <div className="process-image-wrapper text-center" data-aos="fade-up">
+                <Image
+                  src={
+                    servicesPageData?.processImage?.url
+                      ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.processImage.url}`
+                      : "/images/assets/process_placeholder.jpg"
+                  }
+                  alt="Our Process"
+                  width={1200}
+                  height={800}
+                  className="img-fluid process-main-image"
+                  style={{ height: 'auto', borderRadius: '12px' }}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -145,11 +145,11 @@ const ServicesPage = ({ servicesPageData }) => {
             {/* Added mb-50 on mobile to separate image from text */}
             <div className="col-lg-6 mb-50 lg-mb-0">
               <div className="insights-image-container" data-aos="fade-right">
-                <Image 
+                <Image
                   src={
                     servicesPageData?.insightsImage?.url
                       ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.insightsImage.url}`
-                      : "/images/assets/marketing_insights_placeholder.jpg" 
+                      : "/images/assets/marketing_insights_placeholder.jpg"
                   }
                   alt={servicesPageData?.insightsHeading || "Marketing Insights"}
                   width={600}
@@ -166,21 +166,23 @@ const ServicesPage = ({ servicesPageData }) => {
                 <p className="body-text fs-20 mt-30 mb-50 lg-mb-30">
                   {servicesPageData?.insightsBodyText || "Stay ahead of the curve with our data-driven analysis and strategic guidance."}
                 </p>
-                <LetsTalkButton 
-                  buttonText={servicesPageData?.insightsButtonText || "Market Trend Report"}
-                  href={servicesPageData?.insightsButtonUrl || "/contact"}
-                />
+                <div className="d-flex justify-content-center">
+                  <LetsTalkButton
+                    buttonText={servicesPageData?.insightsButtonText || "Market Trend Report"}
+                    href={servicesPageData?.insightsButtonUrl || "/contact"}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-          {/* ============================================== */}
+      {/* ============================================== */}
       {/* --- Clients Section (Full Width Infinite) --- */}
       {/* ============================================== */}
       <div className="clients-section pt-100 pb-100 md-pt-60 md-pb-60" style={{ background: '#f8f9fa' }}>
-        
+
         {/* 1. Title Container (Stays Centered) */}
         <div className="container mb-50">
           <div className="text-center">
@@ -192,67 +194,67 @@ const ServicesPage = ({ servicesPageData }) => {
 
         {/* 2. Carousel Container (Full Width) */}
         <div className="container-fluid p-0">
-            <ClientCarousel />
+          <ClientCarousel />
         </div>
 
       </div>
 
       {/* Industries Section */}
-<div className="fancy-feature-thirtyOne position-relative zn2 pt-140 pb-140 lg-pt-100 lg-pb-100" style={{ background: '#151937' }}>
-  <div className="container">
-    
-    {/* 1. Header Section */}
-    <div className="row">
-      <div className="col-xl-8 col-lg-9 m-auto">
-        <div className="title-style-ten text-center pb-60 lg-pb-40" data-aos="fade-up">
-          <h2 className="main-title font-recoleta fw-normal text-white">
-            {servicesPageData?.industriesHeading || "Industries We Have"}
-            <span className="position-relative ms-2">
-              {servicesPageData?.industriesHeadingHighlight || "Served"}
-              <Image
-                src="/images/shape/shape_122.svg"
-                alt="underline"
-                width={220} height={5} 
-                className="shape-svg"
-                style={{ position: 'absolute', bottom: '-5px', left: 0, width: '100%' }}
+      <div className="fancy-feature-thirtyOne position-relative zn2 pt-140 pb-140 lg-pt-100 lg-pb-100" style={{ background: '#151937' }}>
+        <div className="container">
+
+          {/* 1. Header Section */}
+          <div className="row">
+            <div className="col-xl-8 col-lg-9 m-auto">
+              <div className="title-style-ten text-center pb-60 lg-pb-40" data-aos="fade-up">
+                <h2 className="main-title font-recoleta fw-normal text-white">
+                  {servicesPageData?.industriesHeading || "Industries We Have"}
+                  <span className="position-relative ms-2">
+                    {servicesPageData?.industriesHeadingHighlight || "Served"}
+                    <Image
+                      src="/images/shape/shape_122.svg"
+                      alt="underline"
+                      width={220} height={5}
+                      className="shape-svg"
+                      style={{ position: 'absolute', bottom: '-5px', left: 0, width: '100%' }}
+                    />
+                  </span>
+                </h2>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. Grid Section (Full Width) */}
+          <div className="row">
+            <div className="col-12" data-aos="fade-up">
+              <IndustriesGrid />
+            </div>
+          </div>
+
+          {/* 3. Bottom CTA Section (Centered) */}
+          <div className="row mt-60 lg-mt-40">
+            <div className="col-xl-8 m-auto text-center" data-aos="fade-up">
+              <p className="text-white fs-20 lh-lg mb-35">
+                {servicesPageData?.industriesSubtext || "Not seeing your industry? No problem. Reach out to our team! We likely have experience helping brands in your space."}
+              </p>
+
+              <LetsTalkButton
+                buttonText={servicesPageData?.industriesButtonText || "Reach Out"}
+                href={servicesPageData?.industriesButtonUrl || "/contact"}
+                showIcon={true}
               />
-            </span>
-          </h2>
+            </div>
+          </div>
+
         </div>
       </div>
-    </div>
-
-    {/* 2. Grid Section (Full Width) */}
-    <div className="row">
-      <div className="col-12" data-aos="fade-up">
-        <IndustriesGrid />
-      </div>
-    </div>
-
-    {/* 3. Bottom CTA Section (Centered) */}
-    <div className="row mt-60 lg-mt-40">
-      <div className="col-xl-8 m-auto text-center" data-aos="fade-up">
-        <p className="text-white fs-20 lh-lg mb-35">
-          {servicesPageData?.industriesSubtext || "Not seeing your industry? No problem. Reach out to our team! We likely have experience helping brands in your space."}
-        </p>
-        
-        <LetsTalkButton
-          buttonText={servicesPageData?.industriesButtonText || "Reach Out"}
-          href={servicesPageData?.industriesButtonUrl || "/contact"}
-          showIcon={true}
-        />
-      </div>
-    </div>
-
-  </div>
-</div>
       <LatestCaseStudiesSection />
-{/* ============================================== */}
+      {/* ============================================== */}
       {/* --- CTA Section (Direct Implementation) --- */}
       {/* ============================================== */}
       {(() => {
         // 1. Data Source (Checks both pageData and common variations)
-        const ctaData = servicesPageData || {}; 
+        const ctaData = servicesPageData || {};
 
         // 2. Text Logic (Matches your schema)
         const title = ctaData.ctaBgTitle || ctaData.ctaTitle || "Feeling Inspired Yet?";
@@ -262,28 +264,28 @@ const ServicesPage = ({ servicesPageData }) => {
 
         // 3. Smart Image Logic
         const getBgUrl = (obj) => {
-           if (!obj) return null;
-           const imgField = obj.ctaBgImage || obj['cta-bg'];
-           if (!imgField) return null;
-           return imgField.data?.attributes?.url || imgField.url || imgField.data?.url || null;
+          if (!obj) return null;
+          const imgField = obj.ctaBgImage || obj['cta-bg'];
+          if (!imgField) return null;
+          return imgField.data?.attributes?.url || imgField.url || imgField.data?.url || null;
         };
 
         const rawUrl = getBgUrl(ctaData);
         // Build full URL if it's relative
-        const fullUrl = rawUrl 
-            ? (rawUrl.startsWith('http') ? rawUrl : `${process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'}${rawUrl}`) 
-            : null;
+        const fullUrl = rawUrl
+          ? (rawUrl.startsWith('http') ? rawUrl : `${process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'}${rawUrl}`)
+          : null;
 
         return (
           <div className="cta-hardcoded-wrapper">
-            
+
             {/* Background Image Container */}
             <div className="bg-image-holder">
               {fullUrl ? (
-                <Image 
-                  src={fullUrl} 
-                  alt="Background" 
-                  fill 
+                <Image
+                  src={fullUrl}
+                  alt="Background"
+                  fill
                   className="cta-cover-image"
                   sizes="100vw"
                   priority
@@ -291,7 +293,7 @@ const ServicesPage = ({ servicesPageData }) => {
               ) : (
                 <div className="fallback-bg"></div>
               )}
-              
+
               {/* Gradient Overlay */}
               <div className="overlay"></div>
             </div>
@@ -299,23 +301,23 @@ const ServicesPage = ({ servicesPageData }) => {
             <div className="container position-relative z-2">
               <div className="row">
                 <div className="col-lg-10 m-auto text-center">
-                  
+
                   <h2 className="main-title" data-aos="fade-up">
                     {title}
                   </h2>
-                  
+
                   <p className="subtitle" data-aos="fade-up" data-aos-delay="100">
                     {subtitle}
                   </p>
 
                   <div className="btn-holder" data-aos="fade-up" data-aos-delay="200">
                     <div className="d-inline-block">
-                        <LetsTalkButton 
-                            buttonText={btnText}
-                            href={btnUrl}
-                            showIcon={false}
-                            className="custom-cta-button"
-                        />
+                      <LetsTalkButton
+                        buttonText={btnText}
+                        href={btnUrl}
+                        showIcon={false}
+                        className="custom-cta-button"
+                      />
                     </div>
                   </div>
 

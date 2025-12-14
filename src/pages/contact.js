@@ -12,7 +12,7 @@ import FooterWithSettings from "@/components/footer/FooterWithSettings";
 
 const Contact = ({ settings: propSettings, contactPageData }) => {
   const { settings: contextSettings } = useSettings();
-  
+
   // Use props for immediate rendering (SEO/Speed), fallback to context
   const settings = propSettings || contextSettings;
 
@@ -26,19 +26,19 @@ const Contact = ({ settings: propSettings, contactPageData }) => {
 
   return (
     <div className="contact-page-wrapper">
-      
+
       {/* Header receives the prop, but we will force styles below just in case */}
       <Header menuTextColor={hasMediaBackground ? "white" : "dark"} />
-      
+
       {/* Hero with autoHeight */}
       <Hero isHomePage={false} autoHeight={true} heroData={contactPageData}>
         <ContactV4 settings={settings} />
       </Hero>
 
-      <div className="contact-section-four pt-0 md-pt-0">
+      <div className="contact-section-four pt-0 md-pt-0" id='contact'>
         <div className="contact-meta mt-0 lg-mt-40">
           <div className="row gx-0">
-            
+
             {/* FORM COLUMN */}
             <div className="col-lg-6 order-lg-last d-flex">
               <div className="form-wrapper pt-60 lg-pt-40 pb-85 lg-pb-50 w-100">
@@ -80,7 +80,8 @@ const Contact = ({ settings: propSettings, contactPageData }) => {
       {/* --- 2. WHITE MENU OVERRIDES (Conditional) --- */}
       {/* We use a standard style tag to guarantee application without compiler errors */}
       {hasMediaBackground && (
-        <style dangerouslySetInnerHTML={{__html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
           /* Force Nav Links to White when Header is NOT fixed (scrolled) */
           body .theme-main-menu:not(.fixed) .navbar-nav .nav-link {
             color: #ffffff !important;
@@ -122,11 +123,11 @@ const Contact = ({ settings: propSettings, contactPageData }) => {
 export async function getStaticProps() {
   let settings = null;
   let contactPageData = null;
-  
+
   try {
     const [settingsRes, pageRes] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/setting?populate=*`),
-        fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/contact-page?populate=*`)
+      fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/setting?populate=*`),
+      fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/contact-page?populate=*`)
     ]);
 
     const settingsJson = settingsRes.ok ? await settingsRes.json() : { data: null };

@@ -14,12 +14,12 @@ const Leads = () => {
       try {
         // UPDATED: Added '&sort=order:asc' to the end
         const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/services?populate=icon&sort=order:asc`;
-        
+
         const res = await fetch(apiUrl);
 
         if (!res.ok) {
-           const errorText = await res.text();
-           throw new Error(`API fetch failed: ${res.status}`);
+          const errorText = await res.text();
+          throw new Error(`API fetch failed: ${res.status}`);
         }
 
         const json = await res.json();
@@ -32,7 +32,7 @@ const Leads = () => {
           descriptionBold: item.description_bold || "",
           descriptionEnd: item.description_end || "",
           footerText: item.footer_text || "",
-          description: item.description, 
+          description: item.description,
           buttonText: item.buttonText,
           buttonUrl: item.buttonUrl,
           color: item.color,
@@ -40,13 +40,13 @@ const Leads = () => {
             ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${item.icon.url}`
             : "/images/shape/content.png"
         }));
-        
+
         setLeadItems(formattedServices);
 
       } catch (error) {
         console.error("Error fetching services:", error.message);
         setError(error.message);
-        setLeadItems([]); 
+        setLeadItems([]);
       } finally {
         setIsLoading(false);
       }
@@ -79,46 +79,46 @@ const Leads = () => {
               <div className="service-header">
                 <div className="service-number">0{index + 1}</div>
                 <div className="service-icon-wrapper">
-                   <Image
-                      src={iconUrl}
-                      alt={`${item.title || 'Service'} icon`}
-                      width={80} height={80}
-                      onError={(e) => console.error(`Image load error`, e)}
-                    />
+                  <Image
+                    src={iconUrl}
+                    alt={`${item.title || 'Service'} icon`}
+                    width={80} height={80}
+                    onError={(e) => console.error(`Image load error`, e)}
+                  />
                 </div>
               </div>
-              
+
               {/* CONTENT BODY */}
               <div className="service-content">
                 <h3 className="service-title">{item.title || 'Untitled Service'}</h3>
                 <h4 className="service-subtitle">{item.subtitle || ''}</h4>
-                
+
                 <div className="service-bullet-wrapper">
-                    <div className="bullet-dot"></div>
-                    <p className="service-description-text">
-                        {item.descriptionIntro && (
-                            <>
-                                {item.descriptionIntro} 
-                                {item.descriptionBold && <span className="text-dark fw-bold"> {item.descriptionBold} </span>}
-                                {item.descriptionEnd}
-                            </>
-                        )}
-                        {(!item.descriptionIntro && !item.descriptionBold) && item.description}
-                    </p>
+                  <div className="bullet-dot"></div>
+                  <p className="service-description-text">
+                    {item.descriptionIntro && (
+                      <>
+                        {item.descriptionIntro}
+                        {item.descriptionBold && <span className="text-dark fw-bold"> {item.descriptionBold} </span>}
+                        {item.descriptionEnd}
+                      </>
+                    )}
+                    {(!item.descriptionIntro && !item.descriptionBold) && item.description}
+                  </p>
                 </div>
 
                 {item.footerText && (
-                    <p className="service-footer-text">
-                        {item.footerText} 
-                    </p>
+                  <p className="service-footer-text">
+                    {item.footerText}
+                  </p>
                 )}
               </div>
 
               {/* BUTTON */}
-              <div className="service-footer">
+              <div className="service-footer d-flex justify-content-center">
                 <LetsTalkButton buttonText={item.buttonText || "Learn More"} href={item.buttonUrl || '/services'} showIcon={true} />
               </div>
-              
+
               {/* COLORED ACCENT LINE */}
               <div className="service-accent" style={{ backgroundColor: item.color || '#cccccc' }}></div>
             </div>

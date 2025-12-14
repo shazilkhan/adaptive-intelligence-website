@@ -121,6 +121,12 @@
         "videos",
         "audios"
       ]
+    },
+    "joinUsButtonText": {
+      "type": "string"
+    },
+    "joinUsButtonUrl": {
+      "type": "string"
     }
   }
 }

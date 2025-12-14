@@ -11,7 +11,7 @@ const TermsConditionsPage = () => {
   return (
     <>
       <Header menuTextColor="white" />
-      
+
       {/* Page Header */}
       <div className="content-page-header" style={{ background: '#000000', paddingTop: '180px', paddingBottom: '120px' }}>
         <div className="container">
@@ -21,9 +21,8 @@ const TermsConditionsPage = () => {
                 <h1 className="page-title" style={{ color: 'white', fontSize: '3rem', fontFamily: 'Recoleta, serif', marginBottom: '20px' }}>
                   Terms & Conditions
                 </h1>
-                <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '1.1rem' }}>
-                  Last Updated: August 12, 2024
-                </p>
+                Last Updated: 2025
+
               </div>
             </div>
           </div>
@@ -39,11 +38,11 @@ const TermsConditionsPage = () => {
                 <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '30px', color: '#666' }}>
                   Please read these Terms of Use ("Terms", "Terms of Use") carefully before using the smithyhomecoutre.com website (the "Service") operated by Adaptive Intelligence International ("us", "we", or "our").
                 </p>
-                
+
                 <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '30px', color: '#666' }}>
                   Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users and others who access or use the Service.
                 </p>
-                
+
                 <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '50px', color: '#666' }}>
                   By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the terms then you may not access the Service.
                 </p>
@@ -149,7 +148,7 @@ const TermsConditionsPage = () => {
 
                 <div className="copyright-notice" style={{ background: '#f8f9fa', padding: '20px', borderRadius: '8px', marginTop: '60px', textAlign: 'center' }}>
                   <p style={{ color: '#666', margin: '0', fontSize: '0.9rem' }}>
-                    © 2024 Adaptive Intelligence International. All Rights Reserved.
+                    © 2025 Adaptive Intelligence International. All Rights Reserved.
                   </p>
                 </div>
               </div>

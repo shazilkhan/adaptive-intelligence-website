@@ -4,79 +4,127 @@ import Image from "next/image";
 import Link from "next/link";
 
 const BlockContact5 = ({ settings }) => {
-  // Debug: Check what settings we're receiving
-  console.log("Settings in BlockContact5:", settings);
-  console.log("Address:", settings?.address);
-  console.log("Phone:", settings?.phoneNumber);
-  console.log("Support Email:", settings?.supportEmail);
+  const handleChat = (e) => {
+    e.preventDefault();
+    if (window.Intercom) {
+      window.Intercom('show');
+    } else if (window.Tawk_API) {
+      window.Tawk_API.maximize();
+    } else {
+      alert("Please click the chat icon in the bottom right corner to start a chat.");
+    }
+  };
 
   const addressBlocks = [
     {
       icon: "/images/icon/icon_178.svg",
-      title: settings?.addressTitle || "Our Address",
+      title: settings?.addressTitle || "Address",
       content: settings?.address || "244 5th Ave Suite A269 Floor 2, New York, NY 10001",
+      link: "#contact",
       delay: "100",
     },
     {
-      icon: "/images/icon/icon_179.svg",
-      title: settings?.contactInfoTitle || "Contact Info",
-      content: settings?.contactInfoText || "Open a chat or give us call at",
-      link: `tel:${settings?.phoneNumber || "800.985.7395"}`,
-      linkText: settings?.phoneNumber || "800.985.7395",
+      icon: "/images/icon/icon_132.svg",
+      title: "Chat",
+      content: "Chat with our team",
+      action: handleChat,
       delay: "200",
     },
     {
       icon: "/images/icon/icon_180.svg",
-      title: settings?.emailSupportTitle || "Email Support",
-      content: settings?.emailSupportText || "Drop us a line at",
-      mailto: settings?.supportEmail || "support@aii.agency",
+      title: "Call",
+      content: settings?.phoneNumber || "800.985.7395",
+      link: `tel:${settings?.phoneNumber || "800.985.7395"}`,
       delay: "300",
+    },
+    {
+      icon: "/images/icon/icon_179.svg",
+      title: "Contact",
+      content: "Send us a message",
+      link: "#contact",
+      delay: "400",
     },
   ];
 
   return (
     <>
+      <style jsx global>{`
+        /* 1. Base Icon Style */
+        .address-block-two .icon {
+          transition: all 0.3s ease;
+          background: transparent;
+          border: 1px solid #FFFFFF !important;
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 25px;
+        }
+
+        /* 3. Hover Effect */
+        .address-block-two:hover .icon {
+          background: #FF1292 !important;
+          border-color: #FF1292 !important;
+        }
+
+        .clickable-block {
+          cursor: pointer;
+          display: block;
+          height: 100%;
+          text-decoration: none; 
+        }
+        
+        .title {
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+      `}</style>
       {addressBlocks.map((block, index) => (
         <div
-          className="col-md-4"
+          className="col-lg-3 col-md-6"
           key={index}
           data-aos="fade-up"
           data-aos-delay={block.delay}
         >
-          <div className="address-block-two text-center mb-40">
-            <div className="icon border rounded-circle d-flex align-items-center justify-content-center m-auto">
-              <Image 
-                width={30} 
-                height={30} 
-                src={block.icon} 
-                alt="icon" 
-                style={{
-                  userSelect: 'none',
-                  filter: 'brightness(0) invert(1)'
-                }}
-              />
+          {block.action ? (
+            <div onClick={block.action} className="address-block-two text-center mb-40 clickable-block">
+              <div className="icon border rounded-circle d-flex align-items-center justify-content-center m-auto">
+                <Image
+                  width={30}
+                  height={30}
+                  src={block.icon}
+                  alt="icon"
+                  style={{
+                    color: 'transparent',
+                    userSelect: 'none',
+                    filter: 'brightness(0) invert(1)'
+                  }}
+                />
+              </div>
+              <h5 className="title text-white">{block.title}</h5>
+              <p className="text-white">{block.content}</p>
             </div>
-            <h5 className="title text-white">{block.title}</h5>
-            <p>
-              <span className="text-white">{block.content}</span> <br />
-              {block.link && (
-                <Link
-                  href={block.link}
-                  className="text-white call"
-                >
-                  {block.linkText}
-                </Link>
-              )}
-              {block.mailto && (
-                <Link
-                  href={`mailto:${block.mailto}`}
-                  className="text-white"
-                >
-                  {block.mailto}
-                </Link>
-              )}
-            </p>
-          </div>
+          ) : (
+            <Link href={block.link || "#"} className="address-block-two text-center mb-40 clickable-block">
+              <div className="icon border rounded-circle d-flex align-items-center justify-content-center m-auto">
+                <Image
+                  width={30}
+                  height={30}
+                  src={block.icon}
+                  alt="icon"
+                  style={{
+                    color: 'transparent',
+                    userSelect: 'none',
+                    filter: 'brightness(0) invert(1)'
+                  }}
+                />
+              </div>
+              <h5 className="title text-white">{block.title}</h5>
+              <p className="text-white">{block.content}</p>
+            </Link>
+          )}
         </div>
       ))}
     </>

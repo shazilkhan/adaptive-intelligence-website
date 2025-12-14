@@ -10,13 +10,13 @@ const ServicesGridBullets = () => {
     const fetchData = async () => {
       try {
         // Updated API URL: Added '&sort=order:asc' at the end
-        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/service-lists?populate[0]=icon&populate[1]=features&sort=order:asc`;
-        
+        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/service-lists?populate[0]=icon&populate[1]=features`;
+
         const res = await fetch(apiUrl);
         const json = await res.json();
 
         if (json.data) {
-            setServices(json.data);
+          setServices(json.data);
         }
       } catch (error) {
         console.error("Error fetching Service Lists:", error);
@@ -35,9 +35,9 @@ const ServicesGridBullets = () => {
     <>
       {services.map((item, index) => {
         // Strapi v5 Flat structure
-        const iconUrl = item.icon?.url 
-            ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${item.icon.url}` 
-            : "/images/shape/content.png";
+        const iconUrl = item.icon?.url
+          ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${item.icon.url}`
+          : "/images/shape/content.png";
 
         return (
           <div className="col-lg-4 col-md-6" key={item.id || index}>
@@ -57,41 +57,41 @@ const ServicesGridBullets = () => {
                   />
                 </div>
               </div>
-              
+
               <div className="service-content-dark">
                 <h3 className="service-title-dark">{item.title}</h3>
                 <div className="service-subtitle-dark">{item.subtitle}</div>
-                
+
                 {/* --- BULLET POINTS LOGIC --- */}
                 <div className="service-features-dark">
-                    <ul>
-                        {item.features?.map((bullet, i) => (
-                            <li key={i}>
-                                <span className="feature-dot-dark"></span>
-                                {bullet.text}
-                            </li>
-                        ))}
-                    </ul>
+                  <ul>
+                    {item.features?.map((bullet, i) => (
+                      <li key={i}>
+                        <span className="feature-dot-dark"></span>
+                        {bullet.text}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
                 {/* --- NEW: Footer Text Section --- */}
                 {item.footer_text && (
-                    <p className="service-footer-text mt-4 mb-0">
-                        {item.footer_text}
-                    </p>
+                  <p className="service-footer-text mt-4 mb-0">
+                    {item.footer_text}
+                  </p>
                 )}
                 {/* ------------------------------- */}
 
               </div>
 
-              <div className="mt-auto">
-                <LetsTalkButton 
-                    buttonText={item.buttonText || "Learn More"} 
-                    href={item.buttonUrl || "/contact"} 
-                    showIcon={true} 
+              <div className="mt-auto d-flex justify-content-center">
+                <LetsTalkButton
+                  buttonText={item.buttonText || "Learn More"}
+                  href={item.buttonUrl || "/contact"}
+                  showIcon={true}
                 />
               </div>
-              
+
               <div className="service-accent-dark" style={{ backgroundColor: item.color || '#FF1292' }}></div>
             </div>
           </div>

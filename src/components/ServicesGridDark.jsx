@@ -63,7 +63,7 @@ const ServicesGridDark = () => {
   }
 
   if (error) {
-     return <p className="text-center text-danger">Error loading services.</p>;
+    return <p className="text-center text-danger">Error loading services.</p>;
   }
 
   if (services.length === 0) {
@@ -94,7 +94,7 @@ const ServicesGridDark = () => {
                 <h3 className="service-title-dark">{service.title}</h3>
                 <p className="service-subtitle-dark">{service.subtitle}</p>
                 <p className="service-description-dark">{service.description}</p>
-                <div className="service-cta-dark mt-auto"> {/* Ensure button is at bottom */}
+                <div className="service-cta-dark mt-auto d-flex justify-content-center"> {/* Ensure button is at bottom */}
                   <LetsTalkButton
                     buttonText={service.buttonText || "Learn More"} // Use dynamic text
                     href={service.buttonUrl || `/contact`} // Use dynamic URL
@@ -108,7 +108,7 @@ const ServicesGridDark = () => {
         ))}
       </div>
 
-       {/* Styles specific to this component - Copied from ServicesPage */}
+      {/* Styles specific to this component - Copied from ServicesPage */}
       <style jsx>{`
          .service-card-dark {
            background: rgba(255, 255, 255, 0.05);

@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Header from '@/components/header/Header';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
+import LetsTalkButton from "@/components/LetsTalkButton";
 
 const Creatives = ({ pageData }) => {
 
@@ -18,11 +19,11 @@ const Creatives = ({ pageData }) => {
 
   // --- Background Logic (Video vs Image) ---
   const heroType = pageData.heroBackgroundType || 'Image';
-  const heroVideoUrl = pageData.heroBackgroundVideo?.url 
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundVideo.url}` 
+  const heroVideoUrl = pageData.heroBackgroundVideo?.url
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundVideo.url}`
     : null;
-  const heroImageUrl = pageData.heroBackgroundImage?.url 
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundImage.url}` 
+  const heroImageUrl = pageData.heroBackgroundImage?.url
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundImage.url}`
     : null;
 
   // Fallback images
@@ -37,30 +38,28 @@ const Creatives = ({ pageData }) => {
       {/* --- HERO SECTION --- */}
       <section className="eco-hero">
         <div className="hero-background">
-            {heroType === 'Video' && heroVideoUrl ? (
-                <video autoPlay loop muted playsInline className="hero-video-bg">
-                    <source src={heroVideoUrl} type="video/mp4" />
-                </video>
-            ) : heroImageUrl ? (
-                <Image
-                    src={heroImageUrl}
-                    alt="Hero Background"
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    priority
-                />
-            ) : (
-                <div style={{ width: '100%', height: '100%', background: '#151937' }}></div>
-            )}
-            <div className="hero-overlay" />
+          {heroType === 'Video' && heroVideoUrl ? (
+            <video autoPlay loop muted playsInline className="hero-video-bg">
+              <source src={heroVideoUrl} type="video/mp4" />
+            </video>
+          ) : heroImageUrl ? (
+            <Image
+              src={heroImageUrl}
+              alt="Hero Background"
+              fill
+              style={{ objectFit: 'cover' }}
+              priority
+            />
+          ) : (
+            <div style={{ width: '100%', height: '100%', background: '#151937' }}></div>
+          )}
+          <div className="hero-overlay" />
         </div>
 
         <div className="container">
           <div className="row">
             <div className="col-lg-9 mx-auto text-center">
-              <div className="sc-title" style={{ color: '#FF1292', marginBottom: '20px' }}>
-                {pageData.heroTagline || 'Join Our Team'}
-              </div>
+
               <h1 className="main-title">
                 {pageData.heroTitle || 'Shape the Future'}
               </h1>
@@ -81,6 +80,13 @@ const Creatives = ({ pageData }) => {
                 <h2 className="section-title font-recoleta">{pageData.missionTitle || 'What We Do'}</h2>
                 <p className="mission-text">{pageData.missionParagraph1}</p>
                 <p className="mission-text">{pageData.missionParagraph2}</p>
+
+                <div className="mt-40">
+                  <LetsTalkButton
+                    buttonText={pageData.joinUsButtonText || "Join Us"}
+                    href={pageData.joinUsButtonUrl || "/contact"}
+                  />
+                </div>
               </div>
             </div>
             <div className="col-lg-6">
@@ -174,12 +180,16 @@ const Creatives = ({ pageData }) => {
         <div className="container">
           <div className="row">
             <div className="col-xl-8 m-auto text-center">
+
+              <div className="sc-title" style={{ color: '#FF1292', marginBottom: '20px' }}>
+                {pageData.heroTagline || 'Join Our Team'}
+              </div>
               <h2 className="cta-title">{pageData.ctaTitle || 'Ready to Join Our Team?'}</h2>
               <p className="cta-description">{pageData.ctaDescription}</p>
               <div className="cta-buttons">
-                <a 
-                  href={pageData.applyButtonUrl || 'https://smlof6a6801.typeform.com/to/dBDGwPOT'} 
-                  target="_blank" 
+                <a
+                  href={pageData.applyButtonUrl || 'https://smlof6a6801.typeform.com/to/dBDGwPOT'}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="apply-button"
                 >
@@ -371,10 +381,10 @@ export async function getStaticProps() {
     const pageRes = await fetch(pageUrl);
     const pageJson = await pageRes.json();
     const pageData = pageJson.data || null;
-    
-    return { 
+
+    return {
       props: { pageData },
-      revalidate: 10, 
+      revalidate: 10,
     };
   } catch (error) {
     console.error("Error fetching creatives page data:", error);

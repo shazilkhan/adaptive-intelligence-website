@@ -15,7 +15,7 @@ const ContactV4 = ({ settings }) => {
                 className="title-style-fourteen text-center mb-100 lg-mb-50"
                 data-aos="fade-up"
               >
-                <div className="sc-title">CONTACT US</div>
+
                 <h2 className="main-title font-recoleta fw-normal text-white">
                   Our{" "}
                   <span className="position-relative">

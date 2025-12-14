@@ -11,25 +11,23 @@ const CaseStudies = ({ allCaseStudies }) => {
   const [activeFilter, setActiveFilter] = useState('All');
 
   const categories = ['All', ...new Set(allCaseStudies.map(study => study.category).filter(Boolean))];
-  
-  const filteredCaseStudies = activeFilter === 'All' 
-    ? allCaseStudies 
+
+  const filteredCaseStudies = activeFilter === 'All'
+    ? allCaseStudies
     : allCaseStudies.filter(study => study.category === activeFilter);
-    
+
   const featuredCaseStudies = allCaseStudies.filter(study => study.featured);
 
   return (
     <>
       <Header menuTextColor="white" />
-      
+
       <div className="case-studies-hero pt-200 pb-100 lg-pt-150 lg-pb-80" style={{ background: 'linear-gradient(135deg, #000 0%, #1a1a1a 100%)' }}>
         <div className="container">
           <div className="row">
             <div className="col-xl-8 col-lg-9 m-auto">
               <div className="title-style-ten text-center">
-                <div className="sc-title">
-                  Our Work
-                </div>
+
                 <h1 className="main-title font-recoleta fw-normal">
                   Case
                   <span className="position-relative">
@@ -58,9 +56,7 @@ const CaseStudies = ({ allCaseStudies }) => {
           <div className="row">
             <div className="col-12">
               <div className="title-style-ten text-center mb-5">
-                <div className="sc-title">
-                  Featured Work
-                </div>
+
                 <h2 className="main-title alt_main_title font-recoleta fw-normal tx-dark">
                   Success
                   <span className="position-relative">
@@ -80,8 +76,8 @@ const CaseStudies = ({ allCaseStudies }) => {
 
           <div className="row g-4">
             {featuredCaseStudies.map((study) => {
-              const heroImageUrl = study.heroImage?.url 
-                ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${study.heroImage.url}` 
+              const heroImageUrl = study.heroImage?.url
+                ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${study.heroImage.url}`
                 : '/images/placeholder.png';
 
               return (
@@ -130,7 +126,7 @@ const CaseStudies = ({ allCaseStudies }) => {
                         <Link href={`/case-studies/${study.slug}`} className="case-link">
                           View Details
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                            <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         </Link>
                       </div>
@@ -153,8 +149,8 @@ const CaseStudies = ({ allCaseStudies }) => {
               <p className="cta-description">
                 Let's discuss how we can help transform your brand and achieve exceptional results.
               </p>
-              <LetsTalkButton 
-                buttonText="Start Your Project" 
+              <LetsTalkButton
+                buttonText="Start Your Project"
                 href="/contact"
               />
             </div>

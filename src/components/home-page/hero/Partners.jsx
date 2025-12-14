@@ -9,17 +9,15 @@ import "slick-carousel/slick/slick-theme.css";
 const Partners = () => {
   const partners = [
     { name: "Nike", font: "" },
-    { name: "", font: "" }, 
+    { name: "", font: "" },
     { name: "Verizon", font: "" },
-    { name: "", font: "" }, 
+    { name: "", font: "" },
     { name: "Vimeo", font: "" },
-    { name: "", font: "" }, 
+    { name: "", font: "" },
     { name: "Reebok", font: "" },
-    { name: "", font: "" }, 
-    { name: "Upwork", font: "" },
-    { name: "", font: "" }, 
+    { name: "", font: "" },
     { name: "Vice", font: "" },
-    { name: "", font: "" }, 
+    { name: "", font: "" },
     { name: "Billboard", font: "" },
   ];
 
@@ -50,14 +48,14 @@ const Partners = () => {
 
   return (
     <div className="partner-section-wrapper d-flex flex-column flex-xl-row align-items-center justify-content-between">
-      
+
       {/* 1. Title Section */}
       <div className="title-wrapper mb-4 mb-xl-0 flex-shrink-0">
         {/* CHANGED: Removed custom color classes, used 'tx-dark' to force Black Text */}
         <h3 className="title tx-dark d-flex justify-content-center justify-content-xl-start align-items-center m0">
           <span className="fw-bold">100+</span>
           <span className="font-recoleta ps-2">Trusted Partners</span>
-          
+
           <span className="ms-4 d-none d-sm-inline-block">
             <Image
               src="/images/shape/shape_119.svg"
@@ -73,7 +71,7 @@ const Partners = () => {
       {/* 2. Logos Container */}
       {/* FIX: minWidth: 0 prevents flexbox overflow issues */}
       <div className="logo-container w-100 ps-xl-5" style={{ minWidth: 0 }}>
-        
+
         {/* DESKTOP: Static List */}
         <div className="logo-wrapper fw-500 tx-dark d-none d-xl-flex flex-wrap flex-xl-nowrap justify-content-between">
           {partners.map((partner, index) => (
@@ -103,7 +101,6 @@ const Partners = () => {
         .partner-section-wrapper {
             width: 100%;
             position: relative;
-            /* Ensure no horizontal scroll triggers */
             overflow: hidden; 
         }
 

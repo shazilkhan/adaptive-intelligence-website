@@ -1,9 +1,11 @@
+"use client";
+
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Grid from '@mui/material/Grid';
-import { 
+import {
   TextField,
   Radio,
   RadioGroup,
@@ -129,22 +131,16 @@ const ContactForm4 = () => {
     first_name: "",
     last_name: "",
     email: "",
-    phone: "",
     company_name: "",
-    email_optin: "no",
-    services_needed: [],
-    lead_source: [],
+    message: "",
   };
 
   const contactSchema = yup.object().shape({
     first_name: yup.string().required("First Name is required"),
     last_name: yup.string().required("Last Name is required"),
     email: yup.string().email("Invalid email").required("Email is required"),
-    phone: yup.string().required("Phone Number is required"),
     company_name: yup.string().required("Company Name is required"),
-    email_optin: yup.string().required("Email Optin is required"),
-    services_needed: yup.array().min(1, "Please select at least one service"),
-    lead_source: yup.array().min(1, "Please select at least one lead source"),
+    message: yup.string().required("Message is required"),
   });
 
   const methods = useForm({
@@ -161,10 +157,9 @@ const ContactForm4 = () => {
 
   const onSubmit = async (data) => {
     setSubmitStatus(null);
-    
+
     try {
       // 1. Send data to the dedicated Internal API Route
-      // This route handles both Apollo (List + Contact) and Strapi backup
       const response = await fetch('/api/submit-contact-form', {
         method: 'POST',
         headers: {
@@ -172,15 +167,14 @@ const ContactForm4 = () => {
         },
         body: JSON.stringify({
           data: {
-            // Mapping form values (snake_case) to API expectation (camelCase)
             firstName: data.first_name,
             lastName: data.last_name,
             email: data.email,
-            phone: data.phone,
             companyName: data.company_name,
-            emailOptin: data.email_optin,
-            servicesNeeded: data.services_needed,
-            leadSource: data.lead_source,
+            message: data.message,
+            // Sending default/empty for removed fields to avoid API errors if they are required
+            phone: "N/A",
+            emailOptin: "yes",
           }
         }),
       });
@@ -189,16 +183,16 @@ const ContactForm4 = () => {
         throw new Error('Failed to submit form');
       }
 
-      // 2. Open Apollo Meetings widget (Client-side integration)
+      // 2. Open Apollo Meetings widget
       if (typeof window !== 'undefined' && window.ApolloMeetings) {
         window.ApolloMeetings.submit({
           email: data.email,
           full_name: `${data.first_name} ${data.last_name}`,
-          phone_number: data.phone,
           company_name: data.company_name,
-          consent_approval: data.email_optin,
-          services_needed: data.services_needed,
-          lead_source: data.lead_source,
+          message: data.message,
+          // Defaults
+          phone_number: "N/A",
+          consent_approval: "yes",
         });
       }
 
@@ -221,7 +215,7 @@ const ContactForm4 = () => {
           </Grid>
         )}
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <WhiteTextField
             fullWidth
             label="First Name"
@@ -233,7 +227,7 @@ const ContactForm4 = () => {
           />
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <WhiteTextField
             fullWidth
             label="Last Name"
@@ -245,10 +239,10 @@ const ContactForm4 = () => {
           />
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <WhiteTextField
             fullWidth
-            label="Email"
+            label="Email Address"
             variant="outlined"
             type="email"
             {...register("email")}
@@ -258,19 +252,7 @@ const ContactForm4 = () => {
           />
         </Grid>
 
-        <Grid item xs={12} md={6}>
-          <WhiteTextField
-            fullWidth
-            label="Phone Number"
-            variant="outlined"
-            {...register("phone")}
-            error={!!errors.phone}
-            helperText={errors.phone?.message}
-            required
-          />
-        </Grid>
-
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12}>
           <WhiteTextField
             fullWidth
             label="Company Name"
@@ -281,86 +263,40 @@ const ContactForm4 = () => {
             required
           />
         </Grid>
-        
-        <Grid item xs={12} md={6}></Grid>
 
-        <Grid item xs={12} md={6}>
-          <WhiteFormControl component="fieldset" error={!!errors.services_needed}>
-            <FormLabel component="legend">Services Needed*</FormLabel>
-            <FormGroup>
-              {serviceOptions.map((service) => (
-                <FormControlLabel
-                  key={service.id}
-                  control={
-                    <Checkbox
-                      {...register("services_needed")}
-                      value={service.id}
-                    />
-                  }
-                  label={
-                    <div>
-                      {service.label}
-                      <small style={{ display: 'block', color: 'text.secondary' }}>{service.description}</small>
-                    </div>
-                  }
-                />
-              ))}
-            </FormGroup>
-            {errors.services_needed && (
-              <FormHelperText>{errors.services_needed.message}</FormHelperText>
-            )}
-          </WhiteFormControl>
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <WhiteFormControl component="fieldset" error={!!errors.lead_source}>
-            <FormLabel component="legend">Lead Source*</FormLabel>
-            <FormGroup>
-              {leadSourceOptions.map((leadSource) => (
-                <FormControlLabel
-                  key={leadSource.id}
-                  control={
-                    <Checkbox
-                      {...register("lead_source")}
-                      value={leadSource.id}
-                    />
-                  }
-                  label={
-                    <div>
-                      {leadSource.label}
-                      <small style={{ display: 'block', color: 'text.secondary' }}>{leadSource.description}</small>
-                    </div>
-                  }
-                />
-              ))}
-            </FormGroup>
-            {errors.lead_source && (
-              <FormHelperText>{errors.lead_source.message}</FormHelperText>
-            )}
-          </WhiteFormControl>
+        <Grid item xs={12}>
+          <WhiteTextField
+            fullWidth
+            label="Tell us a little bit more:"
+            variant="outlined"
+            multiline
+            rows={4}
+            {...register("message")}
+            error={!!errors.message}
+            helperText={errors.message?.message}
+            required
+          />
         </Grid>
 
         <Grid item xs={12}>
-          <WhiteFormControl component="fieldset" error={!!errors.email_optin}>
-            <FormLabel component="legend">I agree to receive other communications from Adaptive Intelligence International.*</FormLabel>
-            <RadioGroup row {...register("email_optin")}>
-              <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-              <FormControlLabel value="no" control={<Radio />} label="No" />
-            </RadioGroup>
-            {errors.email_optin && (
-              <FormHelperText>{errors.email_optin.message}</FormHelperText>
-            )}
-          </WhiteFormControl>
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <Button 
-            className="btn-twentyTwo w-100 fw-500 tran3s text-uppercase" 
+          <Button
             type="submit"
             disabled={isSubmitting}
-            aria-label="Send Message"
+            aria-label="Submit"
+            variant="contained"
+            style={{
+              background: 'white',
+              color: 'black',
+              padding: '12px 50px',
+              textTransform: 'none',
+              fontSize: '16px',
+              fontWeight: '500',
+              borderRadius: '0',
+              width: 'auto',
+              minWidth: '150px'
+            }}
           >
-            {isSubmitting ? "Sending..." : "SEND MESSAGE"}
+            {isSubmitting ? "Sending..." : "Submit"}
           </Button>
         </Grid>
       </Grid>

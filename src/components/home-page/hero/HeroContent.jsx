@@ -9,14 +9,14 @@ const HeroContent = ({ heroData }) => {
           {heroData?.heroHighlightedText || "Fueling Creative Innovation™"}
         </span>
       </h1>
-      
+
       <p className="sub-text mt-20 mb-45 lg-mb-30 text-backdrop">
         {heroData?.heroSubtitleStart || ""}
         <b className="text-white"> {heroData?.heroSubtitleBold || ""} </b>
         {heroData?.heroSubtitleEnd || "through innovative strategies and crafting key messages that resonate clearly with a universal audience."}
       </p>
-      
-      <LetsTalkButton buttonText={heroData?.heroButtonText || "Start a project"} href="/contact" />
+
+      <div className="letstalk-btnn d-flex justify-content-center"> <LetsTalkButton buttonText={heroData?.heroButtonText || "Start a project"} href="/contact" /> </div>
 
       <style jsx>{`
         /* Shared style for the dark background boxes */

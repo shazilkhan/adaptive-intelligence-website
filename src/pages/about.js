@@ -22,9 +22,9 @@ export async function getStaticProps() {
 
   try {
     const sheetId = '1ICb8PWttvv0leKmfmJWXSGhXkZz5UAxChmFamV_bh1c';
-    const sheetName = 'Total%20Footprint'; 
+    const sheetName = 'Total%20Footprint';
     const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
-    
+
     const response = await fetch(url);
 
     if (response.ok) {
@@ -53,14 +53,14 @@ export async function getStaticProps() {
             totalAcres += acres;
             totalCarbon += carbon;
             totalBottles += bottles;
-            processedRowCount++; 
+            processedRowCount++;
           }
         }
-        
+
         totalAcres = parseFloat(totalAcres.toFixed(1));
 
         if (processedRowCount > 0) {
-             finalStats = { trees: totalTrees, acres: totalAcres, carbon: totalCarbon, bottles: totalBottles };
+          finalStats = { trees: totalTrees, acres: totalAcres, carbon: totalCarbon, bottles: totalBottles };
         }
       }
     }
@@ -89,19 +89,19 @@ export async function getStaticProps() {
 const About = ({ treeCardStats, pageData }) => {
 
   const [values, setValues] = useState([]);
-  
+
   useEffect(() => {
     const fetchValues = async () => {
       try {
         const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
         const res = await fetch(`${API_URL}/api/values?populate=*&sort=order:asc`);
         const json = await res.json();
-        
+
         // Safety check: Ensure json.data exists and is an array
         if (json && Array.isArray(json.data)) {
-            setValues(json.data);
+          setValues(json.data);
         } else {
-            console.warn("Strapi returned unexpected Values format:", json);
+          console.warn("Strapi returned unexpected Values format:", json);
         }
       } catch (error) {
         console.error("Failed to fetch values:", error);
@@ -109,13 +109,13 @@ const About = ({ treeCardStats, pageData }) => {
     };
     fetchValues();
   }, []);
-  
+
   const heroType = pageData?.heroBackgroundType || 'Image';
-  const heroVideoUrl = pageData?.heroBackgroundVideo?.url 
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundVideo.url}` 
+  const heroVideoUrl = pageData?.heroBackgroundVideo?.url
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundVideo.url}`
     : null;
-  const heroImageUrl = pageData?.heroBackgroundImage?.url 
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundImage.url}` 
+  const heroImageUrl = pageData?.heroBackgroundImage?.url
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundImage.url}`
     : null;
 
   const hasMedia = (heroType === 'Video' && heroVideoUrl) || heroImageUrl;
@@ -130,50 +130,50 @@ const About = ({ treeCardStats, pageData }) => {
 
       {/* --- Hero Section --- */}
       <div className="about-hero-section">
-        
+
         <div className="hero-bg-wrapper">
-            {heroType === 'Video' && heroVideoUrl ? (
-                <video autoPlay loop muted playsInline className="hero-bg-media">
-                    <source src={heroVideoUrl} type="video/mp4" />
-                </video>
-            ) : heroImageUrl ? (
-                <Image 
-                    src={heroImageUrl}
-                    alt="Hero Background"
-                    fill
-                    className="hero-bg-media"
-                    style={{ objectFit: 'cover' }}
-                    priority
-                />
-            ) : (
-                <div className="hero-bg-fallback" />
-            )}
-            <div className="hero-overlay" />
+          {heroType === 'Video' && heroVideoUrl ? (
+            <video autoPlay loop muted playsInline className="hero-bg-media">
+              <source src={heroVideoUrl} type="video/mp4" />
+            </video>
+          ) : heroImageUrl ? (
+            <Image
+              src={heroImageUrl}
+              alt="Hero Background"
+              fill
+              className="hero-bg-media"
+              style={{ objectFit: 'cover' }}
+              priority
+            />
+          ) : (
+            <div className="hero-bg-fallback" />
+          )}
+          <div className="hero-overlay" />
         </div>
 
         <div className="container position-relative z-2">
-            <div className="row">
-                <div className="col-xl-10 m-auto text-center">
-                    <div className="title-style-fourteen" data-aos="fade-up">
-                        <h2 className="main-title font-recoleta fw-normal text-white">
-                            {pageData?.heroTitle || 'About Adaptive Intelligence'}
-                            <span className="position-relative ms-2">
-                                <Image
-                                    width={302}
-                                    height={9}
-                                    src="/images/shape/shape_186.svg"
-                                    alt="shape"
-                                    style={{ filter: 'brightness(0) invert(1)' }} 
-                                    className="hero-shape"
-                                />
-                            </span>
-                        </h2>
-                        <p className="text-lg text-white text-center lh-lg mt-25 md-mt-20" data-aos="fade-up">
-                            {pageData?.heroDescription || "We're in the business of growing your business. At Adaptive Intelligence, we believe creativity is the world's most valuable asset."}
-                        </p>
-                    </div>
-                </div>
+          <div className="row">
+            <div className="col-xl-10 m-auto text-center">
+              <div className="title-style-fourteen" data-aos="fade-up">
+                <h2 className="main-title font-recoleta fw-normal text-white">
+                  {pageData?.heroTitle || 'About Adaptive Intelligence'}
+                  <span className="position-relative ms-2">
+                    <Image
+                      width={302}
+                      height={9}
+                      src="/images/shape/shape_186.svg"
+                      alt="shape"
+                      style={{ filter: 'brightness(0) invert(1)' }}
+                      className="hero-shape"
+                    />
+                  </span>
+                </h2>
+                <p className="text-lg text-white text-center lh-lg mt-25 md-mt-20" data-aos="fade-up">
+                  {pageData?.heroDescription || "We're in the business of growing your business. At Adaptive Intelligence, we believe creativity is the world's most valuable asset."}
+                </p>
+              </div>
             </div>
+          </div>
         </div>
       </div>
 
@@ -262,21 +262,21 @@ const About = ({ treeCardStats, pageData }) => {
       <div className="who-we-are-section position-relative pt-180 pb-180 lg-pt-120 lg-pb-120 md-pt-80 md-pb-80" style={{ background: 'white' }}>
         <div className="container">
           <div className="row align-items-center">
-            
+
             {/* 1. TEXT COLUMN (Left) */}
             <div className="col-lg-6 order-lg-1 mb-50 lg-mb-0" data-aos="fade-right">
               <div className="text-content-wrapper pe-xxl-5 me-xxl-4">
-                
+
                 {/* Pink Tagline */}
                 <div className="text-uppercase fw-bold mb-20" style={{ color: '#FF1292', letterSpacing: '1px', fontSize: '13px' }}>
                   {pageData?.whoWeAreTagline || 'INNOVATIVE AND SUSTAINABLE'}
                 </div>
-                
+
                 {/* Title */}
                 <h2 className="main-title font-recoleta fw-normal tx-dark mb-40 lg-mb-30">
                   {pageData?.whoWeAreTitle || 'Who We Are'}
                 </h2>
-                
+
                 {/* Paragraphs */}
                 <p className="text-lg tx-dark lh-lg mb-30" style={{ opacity: 0.9 }}>
                   {pageData?.whoWeAreParagraph1}
@@ -287,13 +287,13 @@ const About = ({ treeCardStats, pageData }) => {
                 <p className="text-lg tx-dark lh-lg mb-40 lg-mb-30" style={{ opacity: 0.9 }}>
                   {pageData?.whoWeAreParagraph3}
                 </p>
-                
+
                 {/* Reusable Component Button */}
-                <div className="mt-40 lg-mt-30">
-                    <LetsTalkButton 
-                        text="View Our Services"
-                        href="/services" 
-                    />
+                <div className="mt-40 lg-mt-30 d-flex justify-content-center">
+                  <LetsTalkButton
+                    text="View Our Services"
+                    href="/services"
+                  />
                 </div>
 
               </div>
@@ -310,7 +310,7 @@ const About = ({ treeCardStats, pageData }) => {
                     src={whoWeAreImageUrl}
                     alt={pageData?.whoWeAreTitle || "Who We Are"}
                     className="w-100 h-auto"
-                    style={{ objectFit: 'cover' }} 
+                    style={{ objectFit: 'cover' }}
                   />
                 )}
               </div>
@@ -320,7 +320,7 @@ const About = ({ treeCardStats, pageData }) => {
         </div>
       </div>
 
-{/* ============================================== */}
+      {/* ============================================== */}
       {/* --- Adaptive Intelligence Section (Aligned) --- */}
       {/* ============================================== */}
       {(() => {
@@ -330,10 +330,10 @@ const About = ({ treeCardStats, pageData }) => {
         // 2. Data Access
         const title = pageData?.adaptiveIntelligenceTitle || "Ad·ap·tive In·tel·li·gence";
         const features = pageData?.adaptiveIntelligenceFeatures || [];
-        
+
         // 3. Construct URLs using the same logic as your "What We Do" section
         // We handle the check: "Does the URL exist? If yes, add API_URL to front."
-        
+
         const rawVideo = pageData?.adaptiveIntelligenceBgVideo?.data?.attributes?.url || pageData?.adaptiveIntelligenceBgVideo?.url;
         const videoUrl = rawVideo ? `${API_URL}${rawVideo}` : null;
 
@@ -342,46 +342,46 @@ const About = ({ treeCardStats, pageData }) => {
 
         return (
           <div className="adaptive-section">
-             
+
             {/* Background Layer */}
             <div className="bg-layer">
-                {videoUrl ? (
-                    <video autoPlay muted loop playsInline className="bg-media">
-                        <source src={videoUrl} type="video/mp4" />
-                    </video>
-                ) : imageUrl ? (
-                    <Image 
-                        src={imageUrl} 
-                        alt="Background" 
-                        fill 
-                        className="bg-media"
-                        priority 
-                    />
-                ) : (
-                    // Fallback if nothing uploaded
-                    <div className="bg-media" style={{background: '#121212'}}></div>
-                )}
-                
-                <div className="bg-overlay"></div>
+              {videoUrl ? (
+                <video autoPlay muted loop playsInline className="bg-media">
+                  <source src={videoUrl} type="video/mp4" />
+                </video>
+              ) : imageUrl ? (
+                <Image
+                  src={imageUrl}
+                  alt="Background"
+                  fill
+                  className="bg-media"
+                  priority
+                />
+              ) : (
+                // Fallback if nothing uploaded
+                <div className="bg-media" style={{ background: '#121212' }}></div>
+              )}
+
+              <div className="bg-overlay"></div>
             </div>
 
             {/* Content Box */}
             <div className="content-box" data-aos="fade-up">
-                <h2 className="section-title font-recoleta text-white">
-                    {title}
-                </h2>
+              <h2 className="section-title font-recoleta text-white">
+                {title}
+              </h2>
 
-                {features.length > 0 && (
-                    <ol className="custom-numbered-list text-white">
-                        {features.map((item, index) => (
-                            <li key={index}>
-                                {item.text || item.attributes?.text}
-                            </li>
-                        ))}
-                    </ol>
-                )}
+              {features.length > 0 && (
+                <ol className="custom-numbered-list text-white">
+                  {features.map((item, index) => (
+                    <li key={index}>
+                      {item.text || item.attributes?.text}
+                    </li>
+                  ))}
+                </ol>
+              )}
             </div>
-            
+
           </div>
         );
       })()}
@@ -423,7 +423,7 @@ const About = ({ treeCardStats, pageData }) => {
                 </div>
               )}
               {/* ... (Repeat for other cards, keeping structure same but ensuring columns have spacing) ... */}
-              {/* Simplified for brevity, assume cards 2-6 follow same pattern *
+      {/* Simplified for brevity, assume cards 2-6 follow same pattern *
                {pageData?.whatWeDoCard2_Title && (
                   <div className="col-lg-4 col-sm-6" data-aos="fade-up" data-aos-delay="100">
                     <div className="card-style-twentySix text-center h-100">
@@ -459,21 +459,22 @@ const About = ({ treeCardStats, pageData }) => {
         </div>
       </div> */}
 
-{/* ============================================== */}
+      {/* ============================================== */}
       {/* --- Our Values & Mission Section (Final) --- */}
       {/* ============================================== */}
       <div className="our-values-section position-relative pt-120 pb-120 md-pt-80 md-pb-80">
         <div className="container">
-          
+
           {/* 1. MISSION SECTION (Top) */}
           <div className="row justify-content-center mb-80 lg-mb-60">
             <div className="col-lg-8 text-center" data-aos="fade-up">
-              
+
               {/* Mission Label */}
-              <div className="mission-heading text-uppercase fw-bold mb-20" style={{ color: 'white', letterSpacing: '2px', fontSize: '22px', borderBottom: '2px solid #FF1292', display: 'inline-block', paddingBottom: '5px' }}>
+              {/* Mission Label */}
+              <div className="mission-heading fw-normal text-white display-4 mb-20 font-recoleta" style={{ borderBottom: '2px solid #FF1292', display: 'inline-block', paddingBottom: '5px' }}>
                 {pageData?.valuesSectionMissionHeading || "Our Mission"}
               </div>
-              
+
               {/* Mission Text */}
               <h3 className="text-white fw-normal lh-base mt-20 mb-0" style={{ fontSize: '24px', opacity: 0.95 }}>
                 {pageData?.valuesSectionDescription || "We're expanding into new markets, developing proprietary creative technology, and committing to measurable environmental action."}
@@ -484,77 +485,98 @@ const About = ({ treeCardStats, pageData }) => {
 
           {/* 2. VALUES INTRO (Middle) */}
           <div className="row justify-content-center mb-50">
-             <div className="col-lg-8 text-center" data-aos="fade-up">
-                
-                {/* Values Main Title */}
-                <h2 className="font-recoleta fw-normal text-white display-4 mb-20">
-                    {pageData?.valuesSectionMainHeading || "Our Values"}
-                </h2>
+            <div className="col-lg-8 text-center" data-aos="fade-up">
 
-                {/* Values Main Description (NEW) */}
-                <p className="text-lg text-white opacity-75 lh-lg mb-0">
-                    {pageData?.valuesSectionMainDescription}
-                </p>
+              {/* Values Main Title */}
+              <h2 className="font-recoleta fw-normal text-white display-4 mb-20">
+                <span style={{ borderBottom: '2px solid #FF1292', display: 'inline-block', paddingBottom: '5px' }}>
+                  {pageData?.valuesSectionMainHeading || "Our Values"}
+                </span>
+              </h2>
 
-             </div>
+              {/* Values Main Description (NEW) */}
+              <p className="text-lg text-white opacity-75 lh-lg mb-0">
+                {pageData?.valuesSectionMainDescription}
+              </p>
+
+            </div>
           </div>
 
           {/* 3. VALUES GRID (Bottom) */}
           <div className="row justify-content-center g-4">
-            
+
             {values.length === 0 && (
-                <div className="text-center text-white opacity-25 py-5">Loading values...</div>
+              <div className="text-center text-white opacity-25 py-5">Loading values...</div>
             )}
 
             {values.map((item, index) => {
-                const data = item.attributes || item; 
-                if (!data) return null; 
+              const data = item.attributes || item;
+              if (!data) return null;
 
-                const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
-                
-                const rawIcon = data.icon?.data?.attributes?.url || data.icon?.url;
-                const iconUrl = rawIcon ? (rawIcon.startsWith('http') ? rawIcon : `${API_URL}${rawIcon}`) : null;
+              const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
 
-                return (
-                  <div 
-                    key={item.id || index} 
-                    className="col-lg-10" 
-                    data-aos="fade-up" 
-                    data-aos-delay={index * 100}
-                  >
-                    <div className="value-card">
-                      
-                      {/* Icon */}
-                      <div className="value-icon-wrapper">
-                         {iconUrl && (
-                             <Image 
-                               src={iconUrl} 
-                               width={35} height={35} 
-                               alt={data.title} 
-                               className="w-100 h-100 object-fit-contain"
-                             />
-                         )}
-                      </div>
+              const rawIcon = data.icon?.data?.attributes?.url || data.icon?.url;
+              const iconUrl = rawIcon ? (rawIcon.startsWith('http') ? rawIcon : `${API_URL}${rawIcon}`) : null;
 
-                      {/* Text */}
-                      <div className="text-content">
-                        <h4 className="value-title font-recoleta">
-                          {data.title}
-                        </h4>
-                        <p className="value-desc">
-                          {data.description}
-                        </p>
-                      </div>
+              return (
+                <div
+                  key={item.id || index}
+                  className="col-lg-10"
+                  data-aos="fade-up"
+                  data-aos-delay={index * 100}
+                >
+                  <div className="value-card">
 
+                    {/* Icon */}
+                    <div className="value-icon-wrapper">
+                      {iconUrl && (
+                        <Image
+                          src={iconUrl}
+                          width={35} height={35}
+                          alt={data.title}
+                          className="w-100 h-100 object-fit-contain"
+                        />
+                      )}
                     </div>
+
+                    {/* Text */}
+                    <div className="text-content">
+                      <h4 className="value-title font-recoleta">
+                        {data.title}
+                      </h4>
+                      <p className="value-desc">
+                        {data.description}
+                      </p>
+                    </div>
+
                   </div>
-                );
+                </div>
+              );
             })}
           </div>
 
         </div>
       </div>
-   {/*
+
+
+      <style jsx>{`
+        .value-card {
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid transparent; /* Match industries base border logic */
+            transition: all 0.3s ease;
+        }
+
+        /* Hover Effect - Matching IndustriesGrid */
+        .value-card:hover {
+            background: #242954; 
+            border-color: #FF1292;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+      `}</style>
+
+      {/*
     {/* Our Values Section *
       <section className="values-section fancy-feature-thirtyTwo mt-140 lg-mt-120 md-mt-80" id="vision">
         <div className="container">
@@ -655,10 +677,12 @@ const About = ({ treeCardStats, pageData }) => {
               <p className="text-lg tx-dark lh-lg mt-35 mb-45">
                 {pageData?.sustainabilityDescription}
               </p>
-              <LetsTalkButton 
-                buttonText={pageData?.sustainabilityButtonText || 'Explore Our Eco Initiatives'} 
-                href={pageData?.sustainabilityButtonUrl || '/eco'} 
-              />
+              <div className="d-flex justify-content-center">
+                <LetsTalkButton
+                  buttonText={pageData?.sustainabilityButtonText || 'Explore Our Eco Initiatives'}
+                  href={pageData?.sustainabilityButtonUrl || '/eco'}
+                />
+              </div>
             </div>
             <div className="col-lg-6 col-md-8 ms-auto" data-aos="fade-left">
               <div className="row">
@@ -690,16 +714,16 @@ const About = ({ treeCardStats, pageData }) => {
             </div>
           </div>
         </div>
-      </section> 
+      </section>
 
- {/* ============================================== */}
+      {/* ============================================== */}
       {/* --- CTA Section (Direct Implementation) --- */}
       {/* ============================================== */}
       {(() => {
         // 1. Data Source (Uses existing pageData or defaults)
         // This means if you add fields like 'ctaBgTitle' to your About Page later, 
         // it will pick them up automatically without changing the query.
-        const ctaData = pageData || {}; 
+        const ctaData = pageData || {};
 
         // 2. Text Logic
         const title = ctaData.ctaBgTitle || ctaData.ctaTitle || "Feeling Inspired Yet?";
@@ -709,29 +733,29 @@ const About = ({ treeCardStats, pageData }) => {
 
         // 3. Smart Image Logic (Handles Strapi v4/v5 & Local Fallbacks)
         const getBgUrl = (obj) => {
-           if (!obj) return null;
-           const imgField = obj.ctaBgImage || obj['cta-bg']; // Checks both naming conventions
-           if (!imgField) return null;
-           
-           // Deep checks for various Strapi formats
-           return imgField.data?.attributes?.url || imgField.url || imgField.data?.url || null;
+          if (!obj) return null;
+          const imgField = obj.ctaBgImage || obj['cta-bg']; // Checks both naming conventions
+          if (!imgField) return null;
+
+          // Deep checks for various Strapi formats
+          return imgField.data?.attributes?.url || imgField.url || imgField.data?.url || null;
         };
 
         const rawUrl = getBgUrl(ctaData);
-        const fullUrl = rawUrl 
-            ? (rawUrl.startsWith('http') ? rawUrl : `${process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'}${rawUrl}`) 
-            : null;
+        const fullUrl = rawUrl
+          ? (rawUrl.startsWith('http') ? rawUrl : `${process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'}${rawUrl}`)
+          : null;
 
         return (
           <div className="cta-hardcoded-wrapper">
-            
+
             {/* Background Image Container */}
             <div className="bg-image-holder">
               {fullUrl ? (
-                <Image 
-                  src={fullUrl} 
-                  alt="Background" 
-                  fill 
+                <Image
+                  src={fullUrl}
+                  alt="Background"
+                  fill
                   className="cta-cover-image"
                   sizes="100vw"
                   priority
@@ -740,7 +764,7 @@ const About = ({ treeCardStats, pageData }) => {
                 // Fallback Purple Background if no image uploaded
                 <div className="fallback-bg"></div>
               )}
-              
+
               {/* The Purple/Pink Gradient Overlay */}
               <div className="overlay"></div>
             </div>
@@ -748,24 +772,24 @@ const About = ({ treeCardStats, pageData }) => {
             <div className="container position-relative z-2">
               <div className="row">
                 <div className="col-lg-10 m-auto text-center">
-                  
+
                   <h2 className="main-title" data-aos="fade-up">
                     {title}
                   </h2>
-                  
+
                   <p className="subtitle" data-aos="fade-up" data-aos-delay="100">
                     {subtitle}
                   </p>
 
                   <div className="btn-holder" data-aos="fade-up" data-aos-delay="200">
                     <div className="d-inline-block">
-                        {/* Ensure LetsTalkButton is imported at top of file */}
-                        <LetsTalkButton 
-                            buttonText={btnText}
-                            href={btnUrl}
-                            showIcon={false}
-                            className="custom-cta-button"
-                        />
+                      {/* Ensure LetsTalkButton is imported at top of file */}
+                      <LetsTalkButton
+                        buttonText={btnText}
+                        href={btnUrl}
+                        showIcon={false}
+                        className="custom-cta-button"
+                      />
                     </div>
                   </div>
 
@@ -777,7 +801,7 @@ const About = ({ treeCardStats, pageData }) => {
       })()}
 
 
-      
+
       <FooterWithSettings />
 
       <style jsx>{`

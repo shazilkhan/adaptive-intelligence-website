@@ -867,6 +867,8 @@ export interface ApiCreativesPageCreativesPage extends Struct.SingleTypeSchema {
     heroTagline: Schema.Attribute.String;
     heroTitle: Schema.Attribute.String;
     hrEmail: Schema.Attribute.Email;
+    joinUsButtonText: Schema.Attribute.String;
+    joinUsButtonUrl: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1114,6 +1116,7 @@ export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
+    order: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
