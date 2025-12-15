@@ -490,7 +490,7 @@ const About = ({ treeCardStats, pageData }) => {
               {/* Values Main Title */}
               <h2 className="font-recoleta fw-normal text-white display-4 mb-20">
                 <span style={{ borderBottom: '2px solid #FF1292', display: 'inline-block', paddingBottom: '5px' }}>
-                  {pageData?.valuesSectionMainHeading || "Our Values"}
+                  {pageData?.valuesSectionMainHeading || "Values"}
                 </span>
               </h2>
 

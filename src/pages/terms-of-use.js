@@ -11,7 +11,7 @@ const TermsOfUsePage = () => {
   return (
     <>
       <Header menuTextColor="white" />
-      
+
       {/* Page Header */}
       <div className="content-page-header" style={{ background: '#000000', paddingTop: '180px', paddingBottom: '120px' }}>
         <div className="container">
@@ -39,11 +39,11 @@ const TermsOfUsePage = () => {
                 <h2 style={{ color: '#FF1292', fontSize: '1.5rem', fontWeight: '600', marginBottom: '20px', textTransform: 'uppercase', letterSpacing: '1px' }}>
                   Read Carefully
                 </h2>
-                
+
                 <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '30px', color: '#666', fontWeight: '600' }}>
                   PLEASE READ THE FOLLOWING TERMS AND CONDITIONS OF USE CAREFULLY BEFORE USING THIS WEBSITE
                 </p>
-                
+
                 <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '50px', color: '#666' }}>
                   All users of this site agree that access to and use of this site is subject to the following terms and conditions and other applicable law. If you do not agree to these terms and conditions, please do not use this site.
                 </p>
@@ -89,7 +89,7 @@ const TermsOfUsePage = () => {
                     The entire content included in this site, including but not limited to text, graphics or code is copyrighted as a collective work under the United States and other international copyright laws, and is the property of https://adaptiveintelligence.online/. The collective work includes works that are licensed to https://adaptiveintelligence.online/.
                   </p>
                   <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '20px', color: '#666' }}>
-                    Copyright 2024, https://adaptiveintelligence.online/ ALL RIGHTS RESERVED. Permission is granted to electronically copy and print hard copy portions of this site for the sole purpose of placing an order with https://adaptiveintelligence.online/ or purchasing our products.
+                    Copyright 2025, https://adaptiveintelligence.online/ ALL RIGHTS RESERVED. Permission is granted to electronically copy and print hard copy portions of this site for the sole purpose of placing an order with https://adaptiveintelligence.online/ or purchasing our products.
                   </p>
                   <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '40px', color: '#666' }}>
                     Any other use, including but not limited to the reproduction, distribution, display or transmission of the content of this site is strictly prohibited, unless authorized by https://adaptiveintelligence.online/. You further agree not to change or delete any proprietary notices from materials downloaded from the site.
@@ -206,7 +206,7 @@ const TermsOfUsePage = () => {
 
                 <div className="copyright-notice" style={{ background: '#f8f9fa', padding: '20px', borderRadius: '8px', marginTop: '60px', textAlign: 'center' }}>
                   <p style={{ color: '#666', margin: '0', fontSize: '0.9rem' }}>
-                    © 2024 Adaptive Intelligence International. All Rights Reserved.
+                    © 2025 Adaptive Intelligence International. All Rights Reserved.
                   </p>
                 </div>
               </div>
@@ -215,7 +215,7 @@ const TermsOfUsePage = () => {
         </div>
       </div>
 
-     <FooterWithSettings />
+      <FooterWithSettings />
 
       <style jsx>{`
         /* White Header Menu Fix */

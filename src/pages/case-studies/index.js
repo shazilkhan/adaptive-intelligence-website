@@ -13,56 +13,53 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
 
   // --- Hero Background Logic ---
   const heroType = data.heroBackgroundType || 'Image';
-  
-  const heroVideoUrl = data.heroBackgroundVideo?.url 
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data.heroBackgroundVideo.url}` 
+
+  const heroVideoUrl = data.heroBackgroundVideo?.url
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data.heroBackgroundVideo.url}`
     : null;
-  const heroImageUrl = data.heroBackgroundImage?.url 
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data.heroBackgroundImage.url}` 
-    : null; 
+  const heroImageUrl = data.heroBackgroundImage?.url
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data.heroBackgroundImage.url}`
+    : null;
 
   const isVideo = heroType === 'Video' || heroType === 'video' || heroType === 'heroBackgroundVideo';
 
   return (
     <>
       <Header menuTextColor="white" />
-      
+
       {/* --- HERO SECTION --- */}
       <div className="case-studies-hero">
-        
+
         <div className="hero-bg-wrapper">
-            {isVideo && heroVideoUrl ? (
-                <video 
-                  autoPlay 
-                  loop 
-                  muted 
-                  playsInline 
-                  className="hero-bg-media"
-                >
-                    <source src={heroVideoUrl} type="video/mp4" />
-                </video>
-            ) : heroImageUrl ? (
-                <Image 
-                    src={heroImageUrl}
-                    alt="Hero Background"
-                    fill
-                    className="hero-bg-media"
-                    style={{ objectFit: 'cover' }}
-                    priority
-                />
-            ) : (
-                <div className="hero-bg-fallback" />
-            )}
-            <div className="hero-overlay" />
+          {isVideo && heroVideoUrl ? (
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="hero-bg-media"
+            >
+              <source src={heroVideoUrl} type="video/mp4" />
+            </video>
+          ) : heroImageUrl ? (
+            <Image
+              src={heroImageUrl}
+              alt="Hero Background"
+              fill
+              className="hero-bg-media"
+              style={{ objectFit: 'cover' }}
+              priority
+            />
+          ) : (
+            <div className="hero-bg-fallback" />
+          )}
+          <div className="hero-overlay" />
         </div>
 
         <div className="container position-relative">
           <div className="row">
             <div className="col-xl-8 col-lg-9 m-auto">
               <div className="title-style-ten text-center">
-                <div className="sc-title" style={{ color: '#FF1292' }}>
-                    {data.heroTagline || 'Our Work'}
-                </div>
                 <h1 className="main-title font-recoleta fw-normal">
                   {data.heroTitle || 'Case Studies'}
                   <span className="position-relative d-inline-block ms-2">
@@ -119,59 +116,59 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
                       Added 'd-block h-100 text-decoration-none' to maintain layout and remove blue links.
                   */}
                   <Link href={`/case-studies/${study.slug}`} className="d-block h-100 text-decoration-none card-link-wrapper">
-                      <div className="featured-case-card">
-                        <div className="case-image">
-                          <Image
-                            src={studyHeroUrl}
-                            alt={study.title}
-                            width={600}
-                            height={400}
-                            className="case-img"
-                            style={{ objectFit: 'cover' }}
-                          />
-                          <div className="case-overlay">
-                            <div className="case-category">{study.category}</div>
-                            {study.metrics && (
-                              <div className="case-metrics">
-                                {Object.entries(study.metrics).map(([key, value], idx) => (
-                                  <div key={idx} className="metric-item">
-                                    <span className="metric-value">{value}</span>
-                                    <span className="metric-label">{key}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        <div className="case-content">
-                          <div className="case-meta">
-                            <span className="client-name">{study.client}</span>
-                            <span className="industry">{study.industry}</span>
-                          </div>
-                          <h3 className="case-title">{study.title}</h3>
-                          <p className="case-description">{study.description}</p>
-                          <div className="case-tags">
-                            {study.tags?.map((tag, i) => (
-                              <span key={tag.id || i} className="tag">{tag.text}</span>
-                            ))}
-                          </div>
-                          <div className="case-results">
-                            <div className="result-highlight">
-                              <span className="result-number">{study.results}</span>
-                              <span className="result-label">Key Result</span>
+                    <div className="featured-case-card">
+                      <div className="case-image">
+                        <Image
+                          src={studyHeroUrl}
+                          alt={study.title}
+                          width={600}
+                          height={400}
+                          className="case-img"
+                          style={{ objectFit: 'cover' }}
+                        />
+                        <div className="case-overlay">
+                          <div className="case-category">{study.category}</div>
+                          {study.metrics && (
+                            <div className="case-metrics">
+                              {Object.entries(study.metrics).map(([key, value], idx) => (
+                                <div key={idx} className="metric-item">
+                                  <span className="metric-value">{value}</span>
+                                  <span className="metric-label">{key}</span>
+                                </div>
+                              ))}
                             </div>
-                            {/* FIX: Changed from Link to span to prevent illegal nested links.
-                                The parent Link handles the click now.
-                            */}
-                            <span className="case-link">
-                              View Details
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                              </svg>
-                            </span>
-                          </div>
+                          )}
                         </div>
                       </div>
+                      <div className="case-content">
+                        <div className="case-meta">
+                          <span className="client-name">{study.client}</span>
+                          <span className="industry">{study.industry}</span>
+                        </div>
+                        <h3 className="case-title">{study.title}</h3>
+                        <p className="case-description">{study.description}</p>
+                        <div className="case-tags">
+                          {study.tags?.map((tag, i) => (
+                            <span key={tag.id || i} className="tag">{tag.text}</span>
+                          ))}
+                        </div>
+                        <div className="case-results">
+                          <div className="result-highlight">
+                            <span className="result-number">{study.results}</span>
+                            <span className="result-label">Key Result</span>
+                          </div>
+                          {/* FIX: Changed from Link to span to prevent illegal nested links.
+                                The parent Link handles the click now.
+                            */}
+                          <span className="case-link">
+                            View Details
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                              <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </Link>
                 </div>
               );
@@ -294,8 +291,8 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
 export async function getStaticProps() {
   try {
     const [casesRes, pageRes] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies?populate=*`),
-        fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies-page?populate=*`)
+      fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies?populate=*`),
+      fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies-page?populate=*`)
     ]);
 
     const casesJson = casesRes.ok ? await casesRes.json() : { data: [] };
@@ -304,10 +301,10 @@ export async function getStaticProps() {
     const pageJson = pageRes.ok ? await pageRes.json() : { data: null };
     const pageData = pageJson.data || null;
 
-    return { 
-      props: { 
+    return {
+      props: {
         allCaseStudies,
-        pageData 
+        pageData
       },
       revalidate: 10,
     };

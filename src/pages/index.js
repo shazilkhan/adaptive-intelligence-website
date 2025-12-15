@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import Head from "next/head"; 
+import Head from "next/head";
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 
 // Component imports
@@ -19,11 +19,11 @@ import Link from "next/link";
 import TreeStats from "@/components/home-page/TreeStats";
 
 const HomePage = ({ homepageData }) => {
-  
+
   // --- 1. Correct Logic for Strapi v5 (Flat Data) ---
   // We check if the user selected 'Video' or 'Image' AND if the file actually exists.
   const heroType = homepageData?.heroBackgroundType || 'Shapes'; // Default fallback
-  
+
   // Access fields directly (Flat structure)
   const heroVideoUrl = homepageData?.heroBackgroundVideo?.url;
   const heroImageUrl = homepageData?.heroBackgroundImage?.url;
@@ -46,7 +46,7 @@ const HomePage = ({ homepageData }) => {
 
       <Feedback feedbackData={homepageData} />
 
-  <Feature featureData={homepageData} />
+      <Feature featureData={homepageData} />
 
       {/* Services Section */}
       <div className="fancy-feature-thirtyOne position-relative zn2 pt-140 pb-140 lg-pt-100 lg-pb-70 md-pt-80 md-pb-80">
@@ -129,75 +129,76 @@ const HomePage = ({ homepageData }) => {
       </div>
 
       {/* Testimonials Section */}
-<div className="feedback-section-ten position-relative pt-100 lg-pt-100 pb-100 lg-pb-100">
-  
-  {/* --- 1. Background Image & Overlay --- */}
-  <div className="section-bg-wrapper">
-     {homepageData?.testimonialsBackgroundImage?.url ? (
-        <Image 
-           src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${homepageData.testimonialsBackgroundImage.url}`}
-           alt="Testimonial Background"
-           fill
-           className="hero-bg-media"
-           style={{ objectFit: 'cover' }}
-        />
-     ) : (
-        /* Fallback Dark Background */
-        <div className="hero-bg-fallback" style={{ background: '#2c003e', width: '100%', height: '100%' }} />
-     )}
-     
-     {/* Purple Overlay (Adjust opacity to match your image) */}
-     <div 
-        className="hero-overlay" 
-        style={{ 
-            background: 'linear-gradient(135deg, rgba(74, 10, 77, 0.9) 0%, rgba(200, 15, 120, 0.85) 100%)', 
-            position: 'absolute', 
-            top:0, 
-            left:0, 
-            width:'100%', 
-            height:'100%', 
-            zIndex: 1 
-        }}
-     ></div>
-  </div>
+      <div className="feedback-section-ten position-relative pt-100 lg-pt-100 pb-100 lg-pb-100">
 
-  <div className="container position-relative z-2">
-    <div className="row">
-      <div className="col-lg-8 m-auto">
-        <div
-          className="title-style-ten text-center mb-80 lg-mb-40"
-          data-aos="fade-up"
-        >
-          <div className="sc-title" style={{ color: '#FF1292' }}>
-            {homepageData?.testimonialsTagline || "Client Testimonials"}
+        {/* --- 1. Background Image & Overlay --- */}
+        <div className="section-bg-wrapper">
+          {homepageData?.testimonialsBackgroundImage?.url ? (
+            <Image
+              src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${homepageData.testimonialsBackgroundImage.url}`}
+              alt="Testimonial Background"
+              fill
+              className="hero-bg-media"
+              style={{ objectFit: 'cover' }}
+            />
+          ) : (
+            /* Fallback Dark Background */
+            <div className="hero-bg-fallback" style={{ background: '#2c003e', width: '100%', height: '100%' }} />
+          )}
+
+          {/* Purple Overlay (Adjust opacity to match your image) */}
+          <div
+            className="hero-overlay"
+            style={{
+              background: 'linear-gradient(135deg, rgba(74, 10, 77, 0.9) 0%, rgba(200, 15, 120, 0.85) 100%)',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              zIndex: 1
+            }}
+          ></div>
+        </div>
+
+        <div className="container position-relative z-2">
+          <div className="row">
+            <div className="col-lg-8 m-auto">
+              <div
+                className="title-style-ten text-center mb-80 lg-mb-40"
+                data-aos="fade-up"
+              >
+                <div className="sc-title" style={{ color: '#FF1292' }}>
+                  {homepageData?.testimonialsTagline || "Client Testimonials"}
+                </div>
+                <h2 className="main-title font-recoleta fw-normal text-white">
+                  {homepageData?.testimonialsTitle || "Trusted By"}{" "}
+                  <span className="position-relative">
+                    Leading
+                    <Image
+                      src="/images/shape/shape_129.svg"
+                      alt=""
+                      width={160}
+                      height={6}
+                      style={{ position: 'absolute', bottom: '-10px', left: '50%', transform: 'translateX(-50%)', width: '100%' }}
+                    />
+                  </span>{" "}
+                  Brands
+                </h2>
+              </div>
+            </div>
           </div>
-          <h2 className="main-title font-recoleta fw-normal text-white">
-            {homepageData?.testimonialsTitle || "Trusted By"}{" "}
-            <span className="position-relative">
-              {homepageData?.testimonialsTitleHighlight || "Leading Brands"}
-              <Image
-                src="/images/shape/shape_129.svg"
-                alt=""
-                width={160}
-                height={6}
-                style={{ position: 'absolute', bottom: '-10px', left: '0', width: '100%' }}
-              />
-            </span>
-          </h2>
-        </div>
-      </div>
-    </div>
 
-    {/* --- Testimonial Component --- */}
-    {/* We don't restrict columns here, we let the component handle the width */}
-    <div className="row">
-        <div className="col-12">
-            <Testimonial />
+          {/* --- Testimonial Component --- */}
+          {/* We don't restrict columns here, we let the component handle the width */}
+          <div className="row">
+            <div className="col-12">
+              <Testimonial />
+            </div>
+          </div>
         </div>
-    </div>
-  </div>
 
-  <style jsx>{`
+        <style jsx>{`
     .section-bg-wrapper {
         position: absolute;
         top: 0;
@@ -208,7 +209,7 @@ const HomePage = ({ homepageData }) => {
     }
     .z-2 { z-index: 2; }
   `}</style>
-</div>
+      </div>
 
 
       {/* CTA Section */}
@@ -238,16 +239,16 @@ const HomePage = ({ homepageData }) => {
               >
                 {homepageData?.ctaDescription || "We're ready to help you. Our experts are here, just send a message."}
               </p>
-              
+
               {/* Button Group Container */}
               {/* FIXED: Removed data-aos="fade-up" so buttons are always visible without animation delay */}
-              <div 
+              <div
                 className="d-flex align-items-center justify-content-center gap-3"
               >
                 {/* Button 1 (Primary) */}
-                <LetsTalkButton 
-                  buttonText={homepageData?.ctaButtonText || "Send Message"} 
-                  href={homepageData?.ctaButtonUrl || "/contact"} 
+                <LetsTalkButton
+                  buttonText={homepageData?.ctaButtonText || "Send Message"}
+                  href={homepageData?.ctaButtonUrl || "/contact"}
                   size="large"
                 />
               </div>
@@ -257,42 +258,42 @@ const HomePage = ({ homepageData }) => {
         </div>
       </div>
 
-            {/* FAQ */}
+      {/* FAQ */}
       {/* FAQ Section */}
-<div className="fancy-feature-thirtyThree mt-100 lg-mt-100 mb-100 lg-mb-100">
-  <div className="container">
-    <div className="title-style-ten text-center" data-aos="fade-up">
-      <div className="sc-title">{homepageData?.faqTagline || "FAQs"}</div>
-      <h2 className="main-title font-recoleta fw-normal tx-dark">
-        {homepageData?.faqTitle || "Answers to your most"} &amp;{" "}
-        <span className="position-relative">
-          {homepageData?.faqTitleHighlight || "frequently"}{" "}
-          <Image
-            width={219}
-            height={7}
-            src="/images/shape/shape_132.svg"
-            alt=""
-          />
-          {homepageData?.faqTitleEnd || " asked questions."}
-        </span>
-      </h2>
-    </div>
+      <div className="fancy-feature-thirtyThree mt-100 lg-mt-100 mb-100 lg-mb-100">
+        <div className="container">
+          <div className="title-style-ten text-center" data-aos="fade-up">
+            <div className="sc-title">{homepageData?.faqTagline || "FAQs"}</div>
+            <h2 className="main-title font-recoleta fw-normal tx-dark">
+              {homepageData?.faqTitle || "Answers to your most"} &amp;{" "}
+              <span className="position-relative">
+                {homepageData?.faqTitleHighlight || "frequently"}{" "}
+                <Image
+                  width={219}
+                  height={7}
+                  src="/images/shape/shape_132.svg"
+                  alt=""
+                />
+                {homepageData?.faqTitleEnd || " asked questions."}
+              </span>
+            </h2>
+          </div>
 
-    {/* FIX: Added inline style to override the default grey background of .bg-wrapper */}
-    <div
-      className="bg-wrapper position-relative mt-80 lg-mt-40"
-      data-aos="fade-up"
-      style={{ 
-        background: 'transparent', 
-        padding: '0', 
-        boxShadow: 'none',
-        borderRadius: '0' 
-      }}
-    >
-      <Faq />
-    </div>
-  </div>
-</div>
+          {/* FIX: Added inline style to override the default grey background of .bg-wrapper */}
+          <div
+            className="bg-wrapper position-relative mt-80 lg-mt-40"
+            data-aos="fade-up"
+            style={{
+              background: 'transparent',
+              padding: '0',
+              boxShadow: 'none',
+              borderRadius: '0'
+            }}
+          >
+            <Faq />
+          </div>
+        </div>
+      </div>
       <FooterWithSettings />
 
       {/* --- 3. Apply CSS Overrides ONLY if media background exists --- */}
@@ -346,10 +347,10 @@ export async function getStaticProps() {
     const res = await fetch(apiUrl);
     if (!res.ok) throw new Error(`API fetch failed: ${res.status}`);
     const data = await res.json();
-    
+
     // Flatten the response if needed (handling Strapi v5 structure)
     const homepageData = data?.data?.attributes || data?.data || null;
-    
+
     return { props: { homepageData }, revalidate: 10 };
   } catch (error) {
     console.error("Error in getStaticProps:", error);
