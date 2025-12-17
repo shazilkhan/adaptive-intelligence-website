@@ -15,7 +15,7 @@ const Testimonial = () => {
           `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/testimonials?sort=order:asc`
         );
         const data = await res.json();
-        
+
         if (data?.data && Array.isArray(data.data)) {
           const formattedData = data.data.map(item => {
             const attrs = item.attributes || item;
@@ -49,11 +49,11 @@ const Testimonial = () => {
       text: "Gifted brand and content strategists. They will work with you to understand your business and your core philosophy at its deepest levels.",
     },
     {
-        company: "Advantage Benefit Solutions",
-        position: "Chief Operating Officer",
-        name: "Alexandra",
-        text: "I came looking to get fantastic copy and I got just that and so much more. Not only did the agency provide outstanding copy and clarity, they also helped me put together a marketing strategy.",
-      },
+      company: "Advantage Benefit Solutions",
+      position: "Chief Operating Officer",
+      name: "Alexandra",
+      text: "I came looking to get fantastic copy and I got just that and so much more. Not only did the agency provide outstanding copy and clarity, they also helped me put together a marketing strategy.",
+    },
   ];
 
   const settings = {
@@ -63,7 +63,7 @@ const Testimonial = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: false,
-    fade: true, 
+    fade: true,
   };
 
   const handlePrev = () => sliderRef.current?.slickPrev();
@@ -73,12 +73,12 @@ const Testimonial = () => {
 
   return (
     <div className="testimonial-section-wrapper">
-      
+
       {/* Flex container to keep arrows and slider aligned */}
       <div className="d-flex align-items-center justify-content-center gap-4 gap-xl-5">
-        
+
         {/* Left Arrow */}
-        <button 
+        <button
           onClick={handlePrev}
           className="arrow-btn d-none d-lg-flex"
           aria-label="Previous Testimonial"
@@ -94,9 +94,9 @@ const Testimonial = () => {
                 <div className="glass-card text-center mx-auto">
                   {/* Company */}
                   <div className="mb-4">
-                      <h3 className="company-name font-recoleta fw-normal text-white mb-1">
-                          {testimonial.company}
-                      </h3>
+                    <h3 className="company-name font-recoleta fw-normal text-white mb-1">
+                      {testimonial.company}
+                    </h3>
                   </div>
 
                   {/* Text */}
@@ -120,7 +120,7 @@ const Testimonial = () => {
         </div>
 
         {/* Right Arrow */}
-        <button 
+        <button
           onClick={handleNext}
           className="arrow-btn d-none d-lg-flex"
           aria-label="Next Testimonial"

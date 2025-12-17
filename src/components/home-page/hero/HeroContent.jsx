@@ -16,7 +16,7 @@ const HeroContent = ({ heroData }) => {
         {heroData?.heroSubtitleEnd || "through innovative strategies and crafting key messages that resonate clearly with a universal audience."}
       </p>
 
-      <div className="letstalk-btnn d-flex justify-content-center"> <LetsTalkButton buttonText={heroData?.heroButtonText || "Start a project"} href="/contact" /> </div>
+      <div className="letstalk-btnn d-flex justify-content-center"> <LetsTalkButton buttonText={heroData?.heroButtonText || "Start a project"} href="/contact" size="large" /> </div>
 
       <style jsx>{`
         /* Shared style for the dark background boxes */

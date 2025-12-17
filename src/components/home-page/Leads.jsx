@@ -116,7 +116,7 @@ const Leads = () => {
 
               {/* BUTTON */}
               <div className="service-footer d-flex justify-content-center">
-                <LetsTalkButton buttonText={item.buttonText || "Learn More"} href={item.buttonUrl || '/services'} showIcon={true} />
+                <LetsTalkButton buttonText={item.buttonText || "Learn More"} href={item.buttonUrl || '/services'} showIcon={true} size="large" />
               </div>
 
               {/* COLORED ACCENT LINE */}

@@ -5,13 +5,13 @@ const SuccessStory = ({ successStoryData }) => {
   const story1Image = successStoryData?.successStory1Image?.url
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${successStoryData.successStory1Image.url}`
     : "/images/assets/krakenimages-Y5bvRlcCx8k-unsplash.jpg";
-  
+
   const story1ImageAlt = successStoryData?.successStory1Image?.alternativeText || "Customer story";
   const story1QuoteStart = successStoryData?.successStory1QuoteStart || "WordPress has been a great success—with";
   const story1QuoteHighlight = successStoryData?.successStory1QuoteHighlight || "WordPress VIP";
   const story1QuoteEnd = successStoryData?.successStory1QuoteEnd || "giving us that enterprise";
-  const story1AuthorName = successStoryData?.successStory1AuthorName || "Hasan Jannat.";
-  const story1AuthorCompany = successStoryData?.successStory1AuthorCompany || "Pran inc.";
+  const story1AuthorName = successStoryData?.successStory1AuthorName || "Eric D. Garcia";
+  const story1AuthorCompany = successStoryData?.successStory1AuthorCompany || "";
 
   // Rating data
   const ratingValue = successStoryData?.successStoriesRatingValue || "4.8";
@@ -42,7 +42,13 @@ const SuccessStory = ({ successStoryData }) => {
                   "{story1QuoteStart} <span style={{ color: "#FF1292" }}>{story1QuoteHighlight}</span> {story1QuoteEnd}"
                 </p>
                 <h4 className="text-white fw-normal m0">
-                  {story1AuthorName} <span className="opacity-75">{story1AuthorCompany}</span>
+                  {story1AuthorName === "Eric Garcia" || story1AuthorName === "Eric D. Garcia" ? (
+                    <a href="http://ericgarciafl.com/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>
+                      Eric D. Garcia
+                    </a>
+                  ) : (
+                    story1AuthorName
+                  )} <span className="opacity-75">{story1AuthorCompany}</span>
                 </h4>
               </div>
               <div className="col-xl-6 col-lg-5 col-md-6 m-auto order-lg-first success-image">

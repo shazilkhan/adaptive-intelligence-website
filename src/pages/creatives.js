@@ -81,10 +81,11 @@ const Creatives = ({ pageData }) => {
                 <p className="mission-text">{pageData.missionParagraph1}</p>
                 <p className="mission-text">{pageData.missionParagraph2}</p>
 
-                <div className="mt-40">
+                <div className="mt-40 text-center">
                   <LetsTalkButton
                     buttonText={pageData.joinUsButtonText || "Join Us"}
                     href={pageData.joinUsButtonUrl || "/contact"}
+                    size="large"
                   />
                 </div>
               </div>
@@ -181,9 +182,7 @@ const Creatives = ({ pageData }) => {
           <div className="row">
             <div className="col-xl-8 m-auto text-center">
 
-              <div className="sc-title" style={{ color: '#FF1292', marginBottom: '20px' }}>
-                {pageData.heroTagline || 'Join Our Team'}
-              </div>
+
               <h2 className="cta-title">{pageData.ctaTitle || 'Ready to Join Our Team?'}</h2>
               <p className="cta-description">{pageData.ctaDescription}</p>
               <div className="cta-buttons">

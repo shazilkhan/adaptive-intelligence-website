@@ -71,7 +71,7 @@ const HomePage = ({ homepageData }) => {
                   </span>
                 </h2>
                 <p className="fs-20 mt-20">
-                  {homepageData?.servicesSubtitle || "Powered by Innovation."}
+                  {homepageData?.servicesSubtitle || "Powered by Adaptive Intelligence."}
                 </p>
               </div>
             </div>
@@ -168,9 +168,7 @@ const HomePage = ({ homepageData }) => {
                 className="title-style-ten text-center mb-80 lg-mb-40"
                 data-aos="fade-up"
               >
-                <div className="sc-title" style={{ color: '#FF1292' }}>
-                  {homepageData?.testimonialsTagline || "Client Testimonials"}
-                </div>
+
                 <h2 className="main-title font-recoleta fw-normal text-white">
                   {homepageData?.testimonialsTitle || "Trusted By"}{" "}
                   <span className="position-relative">

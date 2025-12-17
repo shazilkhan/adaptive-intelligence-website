@@ -87,11 +87,11 @@ const ServicesPage = ({ servicesPageData }) => {
                 <div className="sc-title" style={{ color: '#FF1292', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '14px', fontWeight: '600', marginBottom: '20px' }}>
                   {servicesPageData?.servicesSectionTagline || "Our Services"}
                 </div>
-                <h2 className="main-title font-recoleta fw-normal" style={{ color: 'white' }}>
-                  {servicesPageData?.servicesSectionTitle || "Powered by"}
+                <h2 className="main-title font-recoleta fw-normal" style={{ color: 'white', textTransform: 'none' }}>
+                  {(servicesPageData?.servicesSectionTitle || "Powered by").replace("Powered By", "Powered by")}
                   <span className="position-relative">
                     {" "}
-                    {servicesPageData?.servicesSectionTitleHighlight || "Innovation"}
+                    {servicesPageData?.servicesSectionTitleHighlight || "Adaptive Intelligence"}
                     <Image
                       src="/images/shape/shape_122.svg"
                       alt="icon shape"

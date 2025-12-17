@@ -81,7 +81,7 @@ const FeaturesBlock = ({ featuresData }) => {
             </div>
           </div>
           <div className="letstalk-btnn d-flex justify-content-center">
-            <LetsTalkButton buttonText={featuresData?.whyUsButtonText || "More Details?"} href={featuresData?.whyUsButtonUrl || "/contact"} />
+            <LetsTalkButton buttonText={featuresData?.whyUsButtonText || "More Details?"} href={featuresData?.whyUsButtonUrl || "/contact"} size="large" />
           </div>
         </div>
       </div>
