@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import "aos/dist/aos.css";
 import ScrollToTop from "@/components/common/ScrollToTop";
 import Header from "@/components/header/MainMenu";
-import { SettingsProvider } from "@/context/SettingsContext";
 
 const LayoutWrapper = styled('div')({
   height: '100%',
@@ -30,12 +29,10 @@ const BaseLayout = ({ children }) => {
   }, []);
   return (
     <LayoutWrapper>
-      <SettingsProvider>
       <LayoutContent className="main-page-wrapper">
         {children}
         <ScrollToTop />
       </LayoutContent>
-      </SettingsProvider>
     </LayoutWrapper>
   )
 }

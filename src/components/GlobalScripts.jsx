@@ -1,45 +1,54 @@
-"use client";
-
 import { useEffect, useState } from 'react';
 import Script from 'next/script';
+import { useRouter } from 'next/router';
+import { useSettings } from '@/context/SettingsContext';
 
 const GlobalScripts = () => {
+  const { settings } = useSettings();
   const [ids, setIds] = useState({ gaId: null, gtmId: null });
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/setting`); 
-        const json = await res.json();
-        const data = json.data?.attributes || {};
+    if (!ids.gaId) return;
 
-        // --- SMART EXTRACTION LOGIC ---
-        
-        // 1. Find GA4 ID (Looks like 'G-XXXXXXXX')
-        let foundGaId = null;
-        if (data.googleAnalyticsCode) {
-            // Regex to find "G-..." inside the messy text
-            const match = data.googleAnalyticsCode.match(/(G-[A-Z0-9]+)/);
-            if (match) foundGaId = match[0];
-        }
-
-        // 2. Find GTM ID (Looks like 'GTM-XXXXXX')
-        let foundGtmId = null;
-        if (data.googleTagManagerCode) {
-            // Regex to find "GTM-..." inside the messy text
-            const match = data.googleTagManagerCode.match(/(GTM-[A-Z0-9]+)/);
-            if (match) foundGtmId = match[0];
-        }
-
-        setIds({ gaId: foundGaId, gtmId: foundGtmId });
-
-      } catch (error) {
-        console.error("Failed to fetch settings:", error);
+    const handleRouteChange = (url) => {
+      if (window.gtag) {
+        window.gtag('config', ids.gaId, {
+          page_path: url,
+        });
       }
     };
 
-    fetchSettings();
-  }, []);
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events, ids.gaId]);
+
+  useEffect(() => {
+    if (!settings) return;
+
+    console.log("GlobalScripts: Using settings from context:", settings);
+
+    // 1. Find GA4 ID (Looks like 'G-XXXXXXXX')
+    let foundGaId = null;
+    if (settings.googleAnalyticsCode) {
+      // Regex to find "G-..." inside the messy text
+      const match = settings.googleAnalyticsCode.match(/(G-[A-Z0-9]+)/i);
+      if (match) foundGaId = match[0];
+    }
+
+    // 2. Find GTM ID (Looks like 'GTM-XXXXXX')
+    let foundGtmId = null;
+    if (settings.googleTagManagerCode) {
+      // Regex to find "GTM-..." inside the messy text
+      const match = settings.googleTagManagerCode.match(/(GTM-[A-Z0-9]+)/i);
+      if (match) foundGtmId = match[0];
+    }
+
+    console.log("GlobalScripts: Extracted IDs:", { foundGaId, foundGtmId });
+    setIds({ gaId: foundGaId, gtmId: foundGtmId });
+  }, [settings]);
 
   return (
     <>

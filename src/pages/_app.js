@@ -9,8 +9,31 @@ import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
 import { useRouter } from 'next/router';
 import "@/styles/index.scss";
 import GlobalScripts from '@/components/GlobalScripts';
+import { SettingsProvider } from '@/context/SettingsContext';
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
+
+function App({ Component, pageProps, emotionCache = clientSideEmotionCache }) {
+  const contentHeightFixed = Component.contentHeightFixed ?? false
+  const getLayout = Component.getLayout ?? (page => <BaseLayout contentHeightFixed={contentHeightFixed}>{page}</BaseLayout>)
+  const tawkMessengerRef = useRef();
+  const router = useRouter();
+
+
+
+  return (
+    <CacheProvider value={emotionCache}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <SettingsProvider>
+          <GlobalScripts />
+          {getLayout(<Component {...pageProps} />)}
+          <TawkMessengerReact ref={tawkMessengerRef} propertyId="67d06a8394256e190a48045e" widgetId="1im3204h5" customStyle={customStyle} />
+        </SettingsProvider>
+      </ThemeProvider>
+    </CacheProvider>
+  );
+}
 
 const customStyle = {
   visibility: {
@@ -27,35 +50,5 @@ const customStyle = {
     }
   }
 };
-
-function App({ Component, pageProps, emotionCache = clientSideEmotionCache }) {
-  const contentHeightFixed = Component.contentHeightFixed ?? false
-  const getLayout = Component.getLayout ?? (page => <BaseLayout contentHeightFixed={contentHeightFixed}>{page}</BaseLayout>)
-  const tawkMessengerRef = useRef();
-  const router = useRouter();
-
-  useEffect(() => {
-    const handleRouteChange = (url) => {
-      window.gtag('config', 'G-NGNNZQRXLN', {
-        page_path: url,
-      });
-    };
-    router.events.on('routeChangeComplete', handleRouteChange);
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-    };
-  }, [router.events]);
-
-  return (
-    <CacheProvider value={emotionCache}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <GlobalScripts />
-        {getLayout(<Component {...pageProps} />)}
-        <TawkMessengerReact ref={tawkMessengerRef} propertyId="67d06a8394256e190a48045e" widgetId="1im3204h5" customStyle={customStyle} />
-      </ThemeProvider>
-    </CacheProvider>
-  );
-}
 
 export default App;
