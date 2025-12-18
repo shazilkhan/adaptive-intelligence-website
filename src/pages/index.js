@@ -334,20 +334,33 @@ const HomePage = ({ homepageData }) => {
 };
 
 export async function getStaticProps() {
-  // Revert to standard populate=* to ensure all fields (including shapes and nested components) are fetched correctly
   const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/homepage?populate=*`;
   try {
     const res = await fetch(apiUrl);
     if (!res.ok) throw new Error(`API fetch failed: ${res.status}`);
     const data = await res.json();
 
-    // Flatten the response if needed (handling Strapi v5 structure)
+    // Standardize data extraction for Strapi v5 / v4 compatibility
     const homepageData = data?.data?.attributes || data?.data || null;
 
-    return { props: { homepageData }, revalidate: 10 };
+    if (!homepageData) {
+      console.warn("Homepage: No data received from API");
+    }
+
+    return {
+      props: {
+        homepageData
+      },
+      revalidate: 10
+    };
   } catch (error) {
     console.error("Error in getStaticProps:", error);
-    return { props: { homepageData: null } };
+    return {
+      props: {
+        homepageData: null
+      },
+      revalidate: 60 // Longer revalidate on error
+    };
   }
 }
 
