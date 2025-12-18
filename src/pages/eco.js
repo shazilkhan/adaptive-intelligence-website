@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/header/Header';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
+import SEO from '@/components/SEO';
 
 // Icon mapping function for hub cards
 const getHubIconByType = (iconType) => {

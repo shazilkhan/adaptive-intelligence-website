@@ -5,6 +5,7 @@ import Header from '@/components/header/Header';
 import LetsTalkButton from '@/components/LetsTalkButton';
 import { resourceDatabase } from '@/data/resources';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
+import SEO from "@/components/SEO";
 
 const DownloadPage = () => {
   const router = useRouter();
