@@ -7,9 +7,12 @@ import Link from "next/link";
 import Image from "next/image";
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 
+import SEO from '@/components/SEO';
+
 const PrivacyPolicyPage = () => {
   return (
     <>
+      <SEO pageTitle="Privacy Policy" />
       <Header menuTextColor="white" />
 
       {/* Page Header */}

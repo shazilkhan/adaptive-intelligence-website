@@ -18,25 +18,16 @@ import LetsTalkButton from "@/components/LetsTalkButton";
 import Link from "next/link";
 import TreeStats from "@/components/home-page/TreeStats";
 
+import SEO from "@/components/SEO";
+
 const HomePage = ({ homepageData }) => {
-
-  // --- 1. Correct Logic for Strapi v5 (Flat Data) ---
-  // We check if the user selected 'Video' or 'Image' AND if the file actually exists.
-  const heroType = homepageData?.heroBackgroundType || 'Shapes'; // Default fallback
-
-  // Access fields directly (Flat structure)
-  const heroVideoUrl = homepageData?.heroBackgroundVideo?.url;
-  const heroImageUrl = homepageData?.heroBackgroundImage?.url;
-
-  // Determine if we should force white text (Only for Video or Image backgrounds)
-  const hasMediaBackground = (heroType === 'Video' && heroVideoUrl) || (heroType === 'Image' && heroImageUrl);
-
   return (
     <>
-      <Head>
-        <title>Adaptive Intelligence | Homepage</title>
-        <meta name="description" content="Fueling Creative Innovation and Digital Growth." />
-      </Head>
+      <SEO
+        pageTitle={homepageData?.pageTitle || "Homepage"}
+        metaDescription={homepageData?.metaDescription}
+        ogImage={homepageData?.pagePreviewImage}
+      />
 
       {/* --- 2. Pass the calculated boolean to Header --- */}
       <Header menuTextColor={hasMediaBackground ? "white" : "dark"} />

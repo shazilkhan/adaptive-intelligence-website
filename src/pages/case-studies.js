@@ -7,6 +7,8 @@ import Subscribe from '@/components/footer/Subscribe';
 import CopyrightFooter from '@/components/footer/CopyrightFooter';
 import LetsTalkButton from '@/components/LetsTalkButton';
 
+import SEO from '@/components/SEO';
+
 const CaseStudies = ({ allCaseStudies }) => {
   const [activeFilter, setActiveFilter] = useState('All');
 
@@ -20,6 +22,10 @@ const CaseStudies = ({ allCaseStudies }) => {
 
   return (
     <>
+      <SEO
+        pageTitle="Case Studies"
+        metaDescription="Explore how we've helped leading brands transform their digital presence and achieve exceptional results."
+      />
       <Header menuTextColor="white" />
 
       <div className="case-studies-hero pt-200 pb-100 lg-pt-150 lg-pb-80" style={{ background: 'linear-gradient(135deg, #000 0%, #1a1a1a 100%)' }}>

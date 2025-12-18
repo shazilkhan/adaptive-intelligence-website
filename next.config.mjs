@@ -4,7 +4,7 @@ const nextConfig = {
   // distDir: 'build',
   reactStrictMode: true,
   images: {
-  unoptimized: true,
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'http',
@@ -19,6 +19,21 @@ const nextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true,
+  },
+  async redirects() {
+    return [
+      {
+        source: '/home', // Common old path
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/old-site/:path*',
+        destination: '/',
+        permanent: true,
+      },
+      // Add more specific redirects here as needed
+    ];
   },
 };
 

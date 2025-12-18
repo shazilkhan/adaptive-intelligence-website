@@ -10,6 +10,8 @@ import Container from '@mui/material/Container';
 import { useSettings } from '@/context/SettingsContext';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 
+import SEO from '@/components/SEO';
+
 const Contact = ({ settings: propSettings, contactPageData }) => {
   const { settings: contextSettings } = useSettings();
 
@@ -26,7 +28,11 @@ const Contact = ({ settings: propSettings, contactPageData }) => {
 
   return (
     <div className="contact-page-wrapper">
-
+      <SEO
+        pageTitle={contactPageData?.pageTitle || "Contact Us"}
+        metaDescription={contactPageData?.metaDescription || "Reach out to Adaptive Intelligence. We're ready to help you grow your business."}
+        ogImage={contactPageData?.pagePreviewImage}
+      />
       {/* Header receives the prop, but we will force styles below just in case */}
       <Header menuTextColor={hasMediaBackground ? "white" : "dark"} />
 

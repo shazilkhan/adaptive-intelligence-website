@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Header from '@/components/header/Header';
 import LetsTalkButton from '@/components/LetsTalkButton';
-import { resourceDatabase } from '@/data/resources'; 
+import { resourceDatabase } from '@/data/resources';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 
 const DownloadPage = () => {
@@ -12,24 +12,24 @@ const DownloadPage = () => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadComplete, setDownloadComplete] = useState(false);
   const [isReady, setIsReady] = useState(false);
-  
+
   // Use a ref to prevent double tracking in React Strict Mode
   const hasTrackedRef = useRef(false);
 
   // --- 1. TRACKING FUNCTION ---
   const trackDownload = async (email, slug, title) => {
     if (!email || hasTrackedRef.current) return;
-    
+
     try {
       hasTrackedRef.current = true; // Mark as tracked
       console.log(`Tracking download for ${email}...`);
-      
+
       await fetch('/api/track-download', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, slug, title })
       });
-      
+
     } catch (error) {
       console.error("Tracking failed", error);
     }
@@ -44,7 +44,7 @@ const DownloadPage = () => {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       const downloadUrl = resource.downloadUrl;
-      
+
       if (!downloadUrl) throw new Error("No download URL found");
 
       // Trigger Download
@@ -52,12 +52,12 @@ const DownloadPage = () => {
       link.href = downloadUrl;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
-      link.download = resource.fileName || 'download'; 
-      
+      link.download = resource.fileName || 'download';
+
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
     } catch (error) {
       console.error('Download error:', error);
     } finally {
@@ -72,13 +72,13 @@ const DownloadPage = () => {
       // Fetch file data from Strapi
       const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies?filters[slug][$eq]=${slug}&populate=downloadFile`);
       const json = await res.json();
-      const caseStudy = json.data?.[0]; 
-      
+      const caseStudy = json.data?.[0];
+
       if (caseStudy && caseStudy.downloadFile?.url) {
         // Prepare Resource Object
         const localData = resourceDatabase[slug] || {};
         const resource = {
-          ...localData, 
+          ...localData,
           title: caseStudy.title || localData.title || "Case Study",
           description: caseStudy.description || localData.description,
           downloadUrl: `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${caseStudy.downloadFile.url}`,
@@ -91,12 +91,12 @@ const DownloadPage = () => {
 
         // --- FIRE TRACKING HERE ---
         if (email) {
-            trackDownload(email, slug, resource.title);
+          trackDownload(email, slug, resource.title);
         }
 
         // Start Download Process
         handleDownload(resource);
-        
+
       } else {
         // Fallback or Redirect
         console.error('Resource not found in Strapi:', slug);
@@ -113,7 +113,7 @@ const DownloadPage = () => {
     if (!router.isReady) return;
 
     const { email, slug } = router.query;
-    
+
     if (slug) {
       fetchCaseStudyFile(slug, email);
       setIsReady(true);
@@ -154,29 +154,33 @@ const DownloadPage = () => {
 
   return (
     <>
+      <SEO
+        pageTitle={resourceData?.title ? `Download ${resourceData.title}` : "Download Resource"}
+        metaDescription="Access exclusive marketing resources and tools from Adaptive Intelligence."
+      />
       <Header />
-      
+
       <div className="download-page pt-200 pb-150 lg-pt-150 lg-pb-120">
         <div className="container">
           <div className="row">
             <div className="col-lg-8 mx-auto text-center">
-              
+
               {isDownloading ? (
                 <div className="download-processing">
                   <div className="download-spinner"></div>
                   <h2>Preparing Your Download...</h2>
                   <p>Your <strong>{resourceData.title}</strong> will begin downloading shortly.</p>
-                  
+
                   <div className="download-benefits">
                     {resourceData.benefits && resourceData.benefits.length > 0 && (
-                        <>
-                            <h4>What's included:</h4>
-                            <ul>
-                            {resourceData.benefits.map((benefit, index) => (
-                                <li key={index}>{benefit}</li>
-                            ))}
-                            </ul>
-                        </>
+                      <>
+                        <h4>What's included:</h4>
+                        <ul>
+                          {resourceData.benefits.map((benefit, index) => (
+                            <li key={index}>{benefit}</li>
+                          ))}
+                        </ul>
+                      </>
                     )}
                   </div>
                 </div>
@@ -185,7 +189,7 @@ const DownloadPage = () => {
                   <div className="success-icon">✓</div>
                   <h2>Download Complete!</h2>
                   <p>Check your downloads folder for the file.</p>
-                  
+
                   <div className="resource-summary">
                     <h3>{resourceData.title}</h3>
                     <p className="resource-description">{resourceData.description}</p>
@@ -194,9 +198,9 @@ const DownloadPage = () => {
                   <div className="download-confirmation">
                     <p className="confirmation-text">
                       If the download didn't start automatically,{' '}
-                      <a 
-                        href={resourceData.downloadUrl || '#'} 
-                        download={resourceData.fileName} 
+                      <a
+                        href={resourceData.downloadUrl || '#'}
+                        download={resourceData.fileName}
                         target="_blank"
                         rel="noreferrer"
                         className="download-link"
@@ -210,10 +214,10 @@ const DownloadPage = () => {
                     <h4>Ready to get started?</h4>
                     <p>Let's discuss how to apply these strategies to your specific business.</p>
                     <div className="d-flex justify-content-center">
-                        <LetsTalkButton 
-                        buttonText="Schedule a Strategy Call" 
+                      <LetsTalkButton
+                        buttonText="Schedule a Strategy Call"
                         href="/contact"
-                        />
+                      />
                     </div>
                   </div>
                 </div>

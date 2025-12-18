@@ -4,11 +4,14 @@ import Header from '@/components/header/Header';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 import LetsTalkButton from "@/components/LetsTalkButton";
 
+import SEO from '@/components/SEO';
+
 const Creatives = ({ pageData }) => {
 
   if (!pageData) {
     return (
       <>
+        <SEO pageTitle="Our Creatives" />
         <Header />
         <div style={{ minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <p>Loading...</p>
@@ -33,6 +36,11 @@ const Creatives = ({ pageData }) => {
 
   return (
     <>
+      <SEO
+        pageTitle={pageData?.pageTitle || "Our Creatives"}
+        metaDescription={pageData?.metaDescription || "Meet the global team of creatives behind Adaptive Intelligence."}
+        ogImage={pageData?.pagePreviewImage}
+      />
       <Header menuTextColor="white" />
 
       {/* --- HERO SECTION --- */}

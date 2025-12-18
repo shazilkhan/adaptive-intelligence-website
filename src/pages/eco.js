@@ -27,14 +27,17 @@ const getHubIconByType = (iconType) => {
       </svg>
     )
   };
-  
+
   return icons[iconType] || icons.tools;
 };
+
+import SEO from '@/components/SEO';
 
 const EcoPage = ({ treeCardStats, pageData }) => {
   if (!pageData) {
     return (
       <>
+        <SEO pageTitle="Sustainability" />
         <Header />
         <div style={{ minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <p>Loading...</p>
@@ -45,9 +48,9 @@ const EcoPage = ({ treeCardStats, pageData }) => {
 
   // --- Hero Background Logic ---
   const heroType = pageData.heroBackgroundType || 'Image';
-  
-  const heroVideoUrl = pageData.heroBackgroundVideo?.url 
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundVideo.url}` 
+
+  const heroVideoUrl = pageData.heroBackgroundVideo?.url
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundVideo.url}`
     : null;
 
   const heroImageUrl = pageData.heroBackgroundImage?.url
@@ -64,26 +67,31 @@ const EcoPage = ({ treeCardStats, pageData }) => {
 
   return (
     <>
+      <SEO
+        pageTitle={pageData?.pageTitle || "Sustainability"}
+        metaDescription={pageData?.metaDescription || "Our commitment to sustainability and environmental impact."}
+        ogImage={pageData?.pagePreviewImage}
+      />
       <Header />
 
       {/* Section 1: Hero */}
       <section className="eco-hero">
         <div className="hero-background">
-            {/* Conditional Render: Video or Image */}
-            {heroType === 'Video' && heroVideoUrl ? (
-                <video autoPlay loop muted playsInline className="hero-bg-media">
-                    <source src={heroVideoUrl} type="video/mp4" />
-                </video>
-            ) : (
-                <Image
-                    src={heroImageUrl}
-                    alt="Lush green landscape"
-                    layout="fill"
-                    objectFit="cover"
-                    quality={80}
-                    priority
-                />
-            )}
+          {/* Conditional Render: Video or Image */}
+          {heroType === 'Video' && heroVideoUrl ? (
+            <video autoPlay loop muted playsInline className="hero-bg-media">
+              <source src={heroVideoUrl} type="video/mp4" />
+            </video>
+          ) : (
+            <Image
+              src={heroImageUrl}
+              alt="Lush green landscape"
+              layout="fill"
+              objectFit="cover"
+              quality={80}
+              priority
+            />
+          )}
           <div className="hero-overlay" />
         </div>
         <div className="container">
@@ -97,7 +105,7 @@ const EcoPage = ({ treeCardStats, pageData }) => {
                     alt="underline"
                     width={400}
                     height={8}
-                    style={{position: 'absolute', bottom: -5, left: '50%', transform: 'translateX(-50%)' }}
+                    style={{ position: 'absolute', bottom: -5, left: '50%', transform: 'translateX(-50%)' }}
                   />
                 </span>
               </h1>
@@ -152,12 +160,12 @@ const EcoPage = ({ treeCardStats, pageData }) => {
         <div className="container">
           <div className="row">
             <div className="col-12 text-center">
-              <Image 
-                src="/images/logo/62fbf4327b17746206b87f63_white logo.svg" 
-                alt="TreeCard Logo" 
-                width={150} 
-                height={50} 
-                style={{ margin: '0 auto 20px auto' }} 
+              <Image
+                src="/images/logo/62fbf4327b17746206b87f63_white logo.svg"
+                alt="TreeCard Logo"
+                width={150}
+                height={50}
+                style={{ margin: '0 auto 20px auto' }}
               />
               <h2 className="section-title text-white">{pageData.impactTitle}</h2>
               <p className="section-description text-white-70">
@@ -193,15 +201,15 @@ const EcoPage = ({ treeCardStats, pageData }) => {
           </div>
           <div className="row">
             <div className="col-12 text-center cta-container">
-              <a 
-                href={pageData.treeCardButtonUrl || 'https://www.treecard.org/#getcard'} 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                href={pageData.treeCardButtonUrl || 'https://www.treecard.org/#getcard'}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="eco-button"
               >
                 <span>{pageData.treeCardButtonText || 'Join TreeCard'}</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </a>
             </div>
@@ -213,7 +221,7 @@ const EcoPage = ({ treeCardStats, pageData }) => {
       <section className="noaa-section pt-150 pb-150 lg-pt-120 lg-pb-120 md-pt-80 md-pb-80">
         <div className="container">
           <div className="row align-items-center">
-            
+
             {/* Image Column: Added mb-50 for mobile separation */}
             <div className="col-lg-6 mb-50 lg-mb-0">
               <Image
@@ -223,11 +231,11 @@ const EcoPage = ({ treeCardStats, pageData }) => {
                 height={500}
                 className="noaa-image"
                 // FIX: width 100% + height auto prevents stretching
-                style={{ 
-                    width: '100%', 
-                    height: 'auto', 
-                    objectFit: 'cover',
-                    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15)'
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  objectFit: 'cover',
+                  boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15)'
                 }}
               />
             </div>
@@ -238,16 +246,16 @@ const EcoPage = ({ treeCardStats, pageData }) => {
                 <h2 className="section-title">{pageData.noaaTitle}</h2>
                 <p className="mb-30">{pageData.noaaParagraph1}</p>
                 <p className="mb-40">{pageData.noaaParagraph2}</p>
-                <a 
-                    href={pageData.noaaDownloadUrl || 'https://we.tl/t-v5QlQl4Kao'} 
-                    className="download-button" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
+                <a
+                  href={pageData.noaaDownloadUrl || 'https://we.tl/t-v5QlQl4Kao'}
+                  className="download-button"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                    {pageData.noaaDownloadButtonText || 'Download NOAA Papers'}
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="ms-2">
-                    <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                  {pageData.noaaDownloadButtonText || 'Download NOAA Papers'}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="ms-2">
+                    <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </a>
               </div>
             </div>
@@ -385,7 +393,7 @@ export async function getStaticProps() {
             const acres = parseFloat(columns[2]?.trim().replace(/,/g, '')) || 0;
             const carbon = parseFloat(columns[3]?.trim().replace(/,/g, '')) || 0;
             const bottles = parseFloat(columns[4]?.trim().replace(/,/g, '')) || 0;
-            
+
             totalTrees += trees;
             totalAcres += acres;
             totalCarbon += carbon;
@@ -393,11 +401,11 @@ export async function getStaticProps() {
             processedRowCount++;
           }
         }
-        
-        totalAcres = parseFloat(totalAcres.toFixed(1)); 
+
+        totalAcres = parseFloat(totalAcres.toFixed(1));
 
         if (processedRowCount > 0) {
-             finalStats = { trees: totalTrees, acres: totalAcres, carbon: totalCarbon, bottles: totalBottles };
+          finalStats = { trees: totalTrees, acres: totalAcres, carbon: totalCarbon, bottles: totalBottles };
         }
       }
     }
@@ -416,7 +424,7 @@ export async function getStaticProps() {
       const pageJson = await pageRes.json();
       // Handle Strapi v5 flat structure
       strapiPageData = pageJson.data || null;
-    } 
+    }
 
   } catch (error) {
     console.error("❌ Error fetching/processing Strapi eco page data:", error.message);
@@ -425,7 +433,7 @@ export async function getStaticProps() {
   return {
     props: {
       treeCardStats: finalStats,
-      pageData: strapiPageData 
+      pageData: strapiPageData
     },
     revalidate: 60,
   };

@@ -1,9 +1,4 @@
-import React, { useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import Header from '@/components/header/Header';
-import LetsTalkButton from '@/components/LetsTalkButton';
-import FooterWithSettings from "@/components/footer/FooterWithSettings";
+import SEO from '@/components/SEO';
 
 const CaseStudies = ({ allCaseStudies, pageData }) => {
   const [activeFilter, setActiveFilter] = useState('All');
@@ -25,6 +20,11 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
 
   return (
     <>
+      <SEO
+        pageTitle={data.pageTitle || "Case Studies"}
+        metaDescription={data.metaDescription || "Explore how we've helped leading brands transform their digital presence."}
+        ogImage={data.pagePreviewImage}
+      />
       <Header menuTextColor="white" />
 
       {/* --- HERO SECTION --- */}

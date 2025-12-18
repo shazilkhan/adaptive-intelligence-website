@@ -8,16 +8,19 @@ import Subscribe from '@/components/footer/Subscribe';
 import CopyrightFooter from '@/components/footer/CopyrightFooter';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 
+import SEO from '@/components/SEO';
+
 const SingleCaseStudyPage = ({ resource, relatedResources, pageSettings }) => {
   const [expandedFaq, setExpandedFaq] = useState(null);
 
   const toggleFaq = (index) => {
     setExpandedFaq(expandedFaq === index ? null : index);
   };
-  
+
   if (!resource) {
     return (
       <>
+        <SEO pageTitle="Case Study" />
         <Header />
         <div className="not-found-section" style={{ textAlign: 'center', padding: '100px 0' }}>
           <h1>404 - Case Study Not Found</h1>
@@ -27,15 +30,20 @@ const SingleCaseStudyPage = ({ resource, relatedResources, pageSettings }) => {
       </>
     );
   }
-  
-  const heroImageUrl = resource.heroImage?.url 
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${resource.heroImage.url}` 
+
+  const heroImageUrl = resource.heroImage?.url
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${resource.heroImage.url}`
     : '/images/placeholder.png';
 
   return (
     <>
+      <SEO
+        pageTitle={resource.title || "Case Study"}
+        metaDescription={resource.description || "Creative work and digital results by Adaptive Intelligence."}
+        ogImage={resource.heroImage}
+      />
       <Header />
-      
+
       <div className="resource-hero pt-200 pb-100 lg-pt-150 lg-pb-80" style={{ background: '#f8f9fa' }}>
         <div className="container">
           <div className="row">
@@ -48,8 +56,8 @@ const SingleCaseStudyPage = ({ resource, relatedResources, pageSettings }) => {
                   <cite>— {resource.testimonialAuthor}, {resource.testimonialPosition}</cite>
                 </div>
                 <div className="hero-cta">
-                  <LetsTalkButton 
-                    buttonText="Download for free" 
+                  <LetsTalkButton
+                    buttonText="Download for free"
                     usePopup={true}
                     popupTitle={`Get Your Free ${resource.type === 'report' ? 'Report' : 'Case Study'}`}
                     popupDescription={`Enter your email to access the ${resource.badge}`}
@@ -63,44 +71,44 @@ const SingleCaseStudyPage = ({ resource, relatedResources, pageSettings }) => {
       </div>
 
       <div className="resource-preview pt-150 pb-100 lg-pt-120 lg-pb-80 md-pt-80 md-pb-60" style={{ background: 'white' }}>
-  <div className="container">
-    <div className="row align-items-center">
-      
-      {/* Image Column: Added mb-50 to separate from text on mobile */}
-      <div className="col-lg-6 mb-50 lg-mb-0">
-        <div className="resource-mockup">
-          <Image
-            src={heroImageUrl}
-            alt={`${resource.badge} Preview`}
-            width={400}
-            height={500}
-            className="mockup-image"
-            // FIX: width 100% + height auto ensures the image scales without stretching
-            style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
-          />
+        <div className="container">
+          <div className="row align-items-center">
+
+            {/* Image Column: Added mb-50 to separate from text on mobile */}
+            <div className="col-lg-6 mb-50 lg-mb-0">
+              <div className="resource-mockup">
+                <Image
+                  src={heroImageUrl}
+                  alt={`${resource.badge} Preview`}
+                  width={400}
+                  height={500}
+                  className="mockup-image"
+                  // FIX: width 100% + height auto ensures the image scales without stretching
+                  style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                />
+              </div>
+            </div>
+
+            {/* Text Column: Added ps-lg-5 for desktop spacing */}
+            <div className="col-lg-6">
+              <div className="insights-content ps-lg-5">
+                <h2 className="insights-title">
+                  This {resource.type} includes insights on:
+                </h2>
+                <ul className="insights-list">
+                  {resource.insights?.map((insight) => (
+                    <li key={insight.id}>
+                      <div className="insight-icon">✓</div>
+                      <span>{insight.text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
-
-      {/* Text Column: Added ps-lg-5 for desktop spacing */}
-      <div className="col-lg-6">
-        <div className="insights-content ps-lg-5">
-          <h2 className="insights-title">
-            This {resource.type} includes insights on:
-          </h2>
-          <ul className="insights-list">
-            {resource.insights?.map((insight) => (
-              <li key={insight.id}>
-                <div className="insight-icon">✓</div>
-                <span>{insight.text}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
 
       <div className="benefits-section pt-100 pb-150 lg-pt-80 lg-pb-120" style={{ background: '#f8f9fa' }}>
         <div className="container">
@@ -112,25 +120,25 @@ const SingleCaseStudyPage = ({ resource, relatedResources, pageSettings }) => {
               <div className="benefits-grid">
                 <div className="benefit-item">
                   <div className="benefit-icon">
-                    <Image src="/images/icon/icon_94.svg" alt="Spark ideas" width={40} height={40}/>
+                    <Image src="/images/icon/icon_94.svg" alt="Spark ideas" width={40} height={40} />
                   </div>
                   <h4>Spark ideas for brand positioning and market entry</h4>
                 </div>
                 <div className="benefit-item">
                   <div className="benefit-icon">
-                    <Image src="/images/icon/icon_95.svg" alt="Learn storytelling" width={40} height={40}/>
+                    <Image src="/images/icon/icon_95.svg" alt="Learn storytelling" width={40} height={40} />
                   </div>
                   <h4>Learn how storytelling drives investor confidence</h4>
                 </div>
                 <div className="benefit-item">
                   <div className="benefit-icon">
-                    <Image src="/images/icon/icon_96.svg" alt="Avoid pitfalls" width={40} height={40}/>
+                    <Image src="/images/icon/icon_96.svg" alt="Avoid pitfalls" width={40} height={40} />
                   </div>
                   <h4>Avoid common pitfalls when scaling in competitive industries</h4>
                 </div>
               </div>
               <div className="cta-section">
-                <LetsTalkButton 
+                <LetsTalkButton
                   buttonText={`Download Free ${resource.type === 'report' ? 'Report' : 'Case Study'}`}
                   usePopup={true}
                   popupTitle={`Get Your Free ${resource.type === 'report' ? 'Report' : 'Case Study'}`}
@@ -211,8 +219,8 @@ const SingleCaseStudyPage = ({ resource, relatedResources, pageSettings }) => {
             </div>
             <div className="row g-4">
               {relatedResources.map((related) => {
-                const relatedImgUrl = related.heroImage?.url 
-                  ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${related.heroImage.url}` 
+                const relatedImgUrl = related.heroImage?.url
+                  ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${related.heroImage.url}`
                   : '/images/placeholder.png';
                 return (
                   <div key={related.id} className="col-lg-4 col-md-6">
@@ -242,14 +250,14 @@ const SingleCaseStudyPage = ({ resource, relatedResources, pageSettings }) => {
               <div className="faq-list">
                 {pageSettings?.faqs?.map((faq, index) => (
                   <div key={faq.id} className="faq-item">
-                    <button 
+                    <button
                       className="faq-question"
                       onClick={() => toggleFaq(index)}
                       aria-expanded={expandedFaq === index}
                     >
                       <span>{faq.question}</span>
                       <svg className={`faq-arrow ${expandedFaq === index ? 'expanded' : ''}`} width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </button>
                     <div className={`faq-answer ${expandedFaq === index ? 'expanded' : ''}`}>
@@ -262,7 +270,7 @@ const SingleCaseStudyPage = ({ resource, relatedResources, pageSettings }) => {
           </div>
         </div>
       </div>
-      
+
       <FooterWithSettings />
 
       <style jsx>{`
@@ -351,11 +359,11 @@ export async function getStaticPaths() {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies`);
     const json = await res.json();
-    
+
     const paths = (json.data || []).map(item => ({
       params: { slug: item.slug },
     })).filter(p => p.params.slug);
-    
+
     return { paths, fallback: 'blocking' };
   } catch (error) {
     console.error("Error in getStaticPaths:", error);
@@ -365,7 +373,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const { slug } = params;
-  
+
   try {
     // Fetch the specific case study
     const resourceUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies?filters[slug][$eq]=${slug}&populate=*`;
@@ -387,11 +395,11 @@ export async function getStaticProps({ params }) {
     const pageSettingsRes = await fetch(pageSettingsUrl);
     const pageSettingsJson = await pageSettingsRes.json();
     const pageSettings = pageSettingsJson.data || null;
-    
+
     if (!resource) {
       return { notFound: true };
     }
-    
+
     return {
       props: { resource, relatedResources, pageSettings },
     };

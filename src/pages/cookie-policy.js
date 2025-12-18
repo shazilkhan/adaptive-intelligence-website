@@ -7,9 +7,12 @@ import Link from "next/link";
 import Image from "next/image";
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 
+import SEO from '@/components/SEO';
+
 const CookiePolicyPage = () => {
   return (
     <>
+      <SEO pageTitle="Cookie Policy" />
       <Header menuTextColor="white" />
 
       {/* Page Header */}

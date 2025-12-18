@@ -10,20 +10,16 @@ import IndustriesGrid from '@/components/IndustriesGrid';
 import ServicesGridBullets from "@/components/ServicesGridBullets";
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 import Link from "next/link";
+import SEO from "@/components/SEO";
+
 const ServicesPage = ({ servicesPageData }) => {
-
-  const heroType = servicesPageData?.heroBackgroundType || 'Image';
-
-  const heroVideoUrl = servicesPageData?.heroBackgroundVideo?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.heroBackgroundVideo.url}`
-    : null;
-
-  const heroImageUrl = servicesPageData?.heroBackgroundImage?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.heroBackgroundImage.url}`
-    : null;
-
   return (
     <>
+      <SEO
+        pageTitle={servicesPageData?.pageTitle || "Our Services"}
+        metaDescription={servicesPageData?.metaDescription}
+        ogImage={servicesPageData?.pagePreviewImage}
+      />
       <Header menuTextColor="white" />
 
       {/* --- Hero Section --- */}

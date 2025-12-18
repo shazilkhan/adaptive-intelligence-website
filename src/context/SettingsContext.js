@@ -13,16 +13,16 @@ export const SettingsProvider = ({ children }) => {
       try {
         const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/setting?populate=*`;
         console.log("Fetching settings from:", apiUrl);
-        
+
         const res = await fetch(apiUrl);
         console.log("Response status:", res.status);
-        
+
         const data = await res.json();
         console.log("Settings API Response:", data);
-        
+
         const settingsData = data?.data?.attributes || data?.data || null;
         console.log("Extracted settings:", settingsData);
-        
+
         setSettings(settingsData);
       } catch (error) {
         console.error("Error fetching settings:", error);

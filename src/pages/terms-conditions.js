@@ -7,9 +7,12 @@ import Link from "next/link";
 import Image from "next/image";
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 
+import SEO from '@/components/SEO';
+
 const TermsConditionsPage = () => {
   return (
     <>
+      <SEO pageTitle="Terms & Conditions" />
       <Header menuTextColor="white" />
 
       {/* Page Header */}

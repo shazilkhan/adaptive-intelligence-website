@@ -17,13 +17,13 @@ export async function getStaticProps() {
     }
 
     try {
-        const pageRes = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/team-page?populate=*`);
-        if (pageRes.ok) {
-            const json = await pageRes.json();
-            pageData = json.data || null;
-        }
+      const pageRes = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/team-page?populate=*`);
+      if (pageRes.ok) {
+        const json = await pageRes.json();
+        pageData = json.data || null;
+      }
     } catch (e) {
-        console.warn("Team Page Single Type not found:", e);
+      console.warn("Team Page Single Type not found:", e);
     }
 
   } catch (error) {
@@ -43,11 +43,11 @@ export async function getStaticProps() {
 const TeamMemberCard = ({ member }) => {
   const imageUrl = member.headshot?.url
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${member.headshot.url}`
-    : '/images/placeholder-headshot.png'; 
+    : '/images/placeholder-headshot.png';
 
   let displayBio = member.bio_short || '';
   if (!displayBio && member.bio_long) {
-      displayBio = member.bio_long.replace(/<[^>]*>?/gm, ''); 
+    displayBio = member.bio_long.replace(/<[^>]*>?/gm, '');
   }
 
   return (
@@ -58,33 +58,33 @@ const TeamMemberCard = ({ member }) => {
       <div className="card-content">
         {/* Image Wrapper: Styled Circle */}
         <div className="headshot-frame mx-auto">
-            <Image
+          <Image
             src={imageUrl}
             alt={`Headshot of ${member.name}`}
-            width={180} 
-            height={180} 
+            width={180}
+            height={180}
             className="headshot-img"
-            unoptimized={true} 
-            />
+            unoptimized={true}
+          />
         </div>
-        
+
         {/* Text Content */}
         <div className="text-center mt-4 d-flex flex-column flex-grow-1">
-            <h3 className="member-name">{member.name}</h3>
-            <div className="member-title-wrapper">
-                <span className="member-title">{member.title}</span>
-            </div>
-            
-            <div className="member-bio">
-                <p>{displayBio}</p>
-            </div>
-            
-            {member.linkedin_url && (
+          <h3 className="member-name">{member.name}</h3>
+          <div className="member-title-wrapper">
+            <span className="member-title">{member.title}</span>
+          </div>
+
+          <div className="member-bio">
+            <p>{displayBio}</p>
+          </div>
+
+          {member.linkedin_url && (
             <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer" className="connect-link mt-auto">
-                <span>LinkedIn</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+              <span>LinkedIn</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M17 7H7M17 7V17" /></svg>
             </a>
-            )}
+          )}
         </div>
       </div>
     </div>
@@ -92,66 +92,69 @@ const TeamMemberCard = ({ member }) => {
 };
 
 
-const TeamPage = ({ teamMembers, pageData }) => { 
+import SEO from '@/components/SEO';
+
+const TeamPage = ({ teamMembers, pageData }) => {
 
   const executives = teamMembers?.filter(m => m.group === 'Executive') || [];
   const creatives = teamMembers?.filter(m => m.group === 'Creative') || [];
 
   // --- HERO LOGIC ---
   const heroType = pageData?.heroBackgroundType || 'Image';
-  const heroVideoUrl = pageData?.heroBackgroundVideo?.url 
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundVideo.url}` 
+  const heroVideoUrl = pageData?.heroBackgroundVideo?.url
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundVideo.url}`
     : null;
-  const heroImageUrl = pageData?.heroBackgroundImage?.url 
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundImage.url}` 
+  const heroImageUrl = pageData?.heroBackgroundImage?.url
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundImage.url}`
     : null;
 
   const hasMediaBackground = (heroType === 'Video') || (heroType === 'Image');
 
   return (
     <>
-      <Head>
-        <title>Team | Adaptive Intelligence</title>
-        <meta name="description" content="Meet the executive team and creatives behind Adaptive Intelligence." />
-      </Head>
+      <SEO
+        pageTitle={pageData?.pageTitle || "Our Team"}
+        metaDescription={pageData?.metaDescription || "Meet the executive team and creatives behind Adaptive Intelligence."}
+        ogImage={pageData?.pagePreviewImage}
+      />
 
       <Header menuTextColor={hasMediaBackground ? "white" : "dark"} />
 
       {/* --- CINEMATIC HERO --- */}
       <div className="team-hero-section">
         <div className="hero-bg-wrapper">
-            {heroType === 'Video' && heroVideoUrl ? (
-                <video autoPlay loop muted playsInline className="hero-bg-media">
-                    <source src={heroVideoUrl} type="video/mp4" />
-                </video>
-            ) : heroImageUrl ? (
-                <Image 
-                    src={heroImageUrl}
-                    alt="Hero Background"
-                    fill
-                    className="hero-bg-media"
-                    style={{ objectFit: 'cover' }}
-                    priority
-                />
-            ) : (
-                <div className="hero-bg-fallback" />
-            )}
-            <div className="hero-overlay" />
+          {heroType === 'Video' && heroVideoUrl ? (
+            <video autoPlay loop muted playsInline className="hero-bg-media">
+              <source src={heroVideoUrl} type="video/mp4" />
+            </video>
+          ) : heroImageUrl ? (
+            <Image
+              src={heroImageUrl}
+              alt="Hero Background"
+              fill
+              className="hero-bg-media"
+              style={{ objectFit: 'cover' }}
+              priority
+            />
+          ) : (
+            <div className="hero-bg-fallback" />
+          )}
+          <div className="hero-overlay" />
         </div>
 
         <div className="container position-relative z-2">
-            <div className="row">
-                <div className="col-xl-10 m-auto text-center">
-                    <div className="title-style-fourteen" data-aos="fade-up">
-                        <h1 className="main-title font-recoleta fw-normal text-white">
-                           {pageData?.heroTitle || "Meet the team behind Adaptive Intelligence"}
-                        </h1>
-                        <p className="text-lg text-white text-center lh-lg mt-25 md-mt-20" data-aos="fade-up">
-                           {pageData?.heroDescription || "We’re a collective of strategists, technologists, and creatives who believe the world runs on great ideas and responsible execution."}
-                        </p>
-                    </div>
-                </div>
+          <div className="row">
+            <div className="col-xl-10 m-auto text-center">
+              <div className="title-style-fourteen" data-aos="fade-up">
+                <h1 className="main-title font-recoleta fw-normal text-white">
+                  {pageData?.heroTitle || "Meet the team behind Adaptive Intelligence"}
+                </h1>
+                <p className="text-lg text-white text-center lh-lg mt-25 md-mt-20" data-aos="fade-up">
+                  {pageData?.heroDescription || "We’re a collective of strategists, technologists, and creatives who believe the world runs on great ideas and responsible execution."}
+                </p>
+              </div>
             </div>
+          </div>
         </div>
       </div>
 
@@ -159,7 +162,7 @@ const TeamPage = ({ teamMembers, pageData }) => {
       {/* Added md-pt-80 md-pb-80 for mobile spacing */}
       <section className="team-grid-section pb-150 lg-pb-120 pt-150 lg-pt-120 md-pt-80 md-pb-80" style={{ background: '#fcfcfc' }}>
         <div className="container">
-          
+
           {/* Executive Team */}
           {executives.length > 0 && (
             // Added md-mb-60
@@ -170,7 +173,7 @@ const TeamPage = ({ teamMembers, pageData }) => {
               </div>
               <div className="row g-4 justify-content-center">
                 {executives.map(member => (
-                  <div key={member.id} className="col-lg-4 col-md-6 d-flex"> 
+                  <div key={member.id} className="col-lg-4 col-md-6 d-flex">
                     <TeamMemberCard member={member} />
                   </div>
                 ))}
@@ -182,8 +185,8 @@ const TeamPage = ({ teamMembers, pageData }) => {
           {creatives.length > 0 && (
             <div className="team-group">
               <div className="text-center mb-60 md-mb-40">
-                  <div className="sc-title-pink">EXPERTS</div>
-                  <h2 className="group-title font-recoleta">Creative & Strategy</h2>
+                <div className="sc-title-pink">EXPERTS</div>
+                <h2 className="group-title font-recoleta">Creative & Strategy</h2>
               </div>
               <div className="row g-4 justify-content-center">
                 {creatives.map(member => (
@@ -195,9 +198,9 @@ const TeamPage = ({ teamMembers, pageData }) => {
             </div>
           )}
 
-           {(!teamMembers || teamMembers.length === 0) && ( 
-               <p className="text-center fs-20">Team member information is currently unavailable.</p>
-           )}
+          {(!teamMembers || teamMembers.length === 0) && (
+            <p className="text-center fs-20">Team member information is currently unavailable.</p>
+          )}
         </div>
       </section>
 

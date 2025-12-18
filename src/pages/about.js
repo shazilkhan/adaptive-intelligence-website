@@ -11,10 +11,7 @@ import AdaptiveIntelligence from '@/components/AdaptiveIntelligence';
 import OurValues from '@/components/OurValues';
 import { useState, useEffect } from 'react';
 
-export const metadata = {
-  title: "About Adaptive Intelligence | About Our Agency",
-  description: "Learn about Adaptive Intelligence and why we're committed to sustainable, innovative marketing efforts.",
-};
+import SEO from '@/components/SEO';
 
 export async function getStaticProps() {
   const fallbackData = { trees: 311, acres: 1.2, carbon: 328, bottles: 1674 };
@@ -126,6 +123,11 @@ const About = ({ treeCardStats, pageData }) => {
 
   return (
     <>
+      <SEO
+        pageTitle={pageData?.pageTitle || "About"}
+        metaDescription={pageData?.metaDescription || "Learn about Adaptive Intelligence and why we're committed to sustainable, innovative marketing efforts."}
+        ogImage={pageData?.pagePreviewImage}
+      />
       <Header menuTextColor={hasMedia ? "white" : "dark"} />
 
       {/* --- Hero Section --- */}
