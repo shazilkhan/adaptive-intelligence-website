@@ -1,4 +1,12 @@
 import SEO from '@/components/SEO';
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import Header from '@/components/header/Header';
+import FooterWithSettings from "@/components/footer/FooterWithSettings";
+
+import LetsTalkButton from "@/components/LetsTalkButton";
+
 
 const CaseStudies = ({ allCaseStudies, pageData }) => {
   const [activeFilter, setActiveFilter] = useState('All');
