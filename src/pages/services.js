@@ -13,6 +13,15 @@ import Link from "next/link";
 import SEO from "@/components/SEO";
 
 const ServicesPage = ({ servicesPageData }) => {
+  // --- Hero Background Logic ---
+  const heroType = servicesPageData?.heroBackgroundType || 'Image';
+  const heroVideoUrl = servicesPageData?.heroBackgroundVideo?.url
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.heroBackgroundVideo.url}`
+    : null;
+  const heroImageUrl = servicesPageData?.heroBackgroundImage?.url
+    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.heroBackgroundImage.url}`
+    : null;
+
   return (
     <>
       <SEO

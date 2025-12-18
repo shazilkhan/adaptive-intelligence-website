@@ -21,6 +21,10 @@ import TreeStats from "@/components/home-page/TreeStats";
 import SEO from "@/components/SEO";
 
 const HomePage = ({ homepageData }) => {
+  // --- Background Logic (Video vs Image) ---
+  const heroType = homepageData?.heroBackgroundType || 'Video';
+  const hasMediaBackground = (heroType === 'Video') || (heroType === 'Image');
+
   return (
     <>
       <SEO
