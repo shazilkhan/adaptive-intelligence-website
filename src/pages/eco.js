@@ -32,8 +32,6 @@ const getHubIconByType = (iconType) => {
   return icons[iconType] || icons.tools;
 };
 
-import SEO from '@/components/SEO';
-
 const EcoPage = ({ treeCardStats, pageData }) => {
   if (!pageData) {
     return (
