@@ -32,6 +32,26 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      {
+        source: '/about-us',
+        destination: '/about',
+        permanent: true,
+      },
+      {
+        source: '/contact-us',
+        destination: '/contact',
+        permanent: true,
+      },
+      {
+        source: '/faqs',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/resources',
+        destination: '/case-studies',
+        permanent: true,
+      },
       // Add more specific redirects here as needed
     ];
   },
