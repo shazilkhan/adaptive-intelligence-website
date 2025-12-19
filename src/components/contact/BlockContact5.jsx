@@ -31,7 +31,7 @@ const BlockContact5 = ({ settings }) => {
       delay: "200",
     },
     {
-      icon: "/images/icon/icon_180.svg",
+      icon: "/images/icon/phone-call.png",
       title: "Call",
       content: settings?.phoneNumber || "800.985.7395",
       link: `tel:${settings?.phoneNumber || "800.985.7395"}`,

@@ -17,14 +17,18 @@ export const SettingsProvider = ({ children }) => {
         const res = await fetch(apiUrl);
 
         if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+          console.warn(`Settings API returned status: ${res.status}. Check your Strapi permissions or content state.`);
+          setLoading(false);
+          return;
         }
 
         const data = await res.json();
         const settingsData = data?.data?.attributes || data?.data || null;
 
         if (!settingsData && retries > 0) {
-          throw new Error("No settings data found in response");
+          console.log("No data content; retrying...");
+          setTimeout(() => fetchSettings(retries - 1, delay), delay);
+          return;
         }
 
         setSettings(settingsData);

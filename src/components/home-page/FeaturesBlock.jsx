@@ -53,7 +53,7 @@ const FeaturesBlock = ({ featuresData }) => {
                       src={infoBox1IconUrl}
                       alt="logo"
                       className="lazy-img"
-                      width={43} height={43}
+                      width={120} height={60}
                       style={{ cursor: 'pointer' }} // Adds a hand cursor on hover
                     />
                   </Link>
@@ -70,7 +70,7 @@ const FeaturesBlock = ({ featuresData }) => {
                       src={infoBox2Icon1Url}
                       alt="logo"
                       className="lazy-img me-4"
-                      width={43} height={43}
+                      width={70} height={70}
                       style={{ cursor: 'pointer' }}
                     />
                   </Link>

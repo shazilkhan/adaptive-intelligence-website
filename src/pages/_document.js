@@ -16,21 +16,6 @@ export default function AdaptiveDocument(props) {
 
 
 
-        <script
-          type="text/javascript"
-          src="https://assets.apollo.io/js/meetings/meetings-widget.js"
-          defer
-          data-appid="671a95320431f502ce274b0d"
-          data-scheduling-link="mkq-h23-4je"
-          strategy="afterInteractive"
-          onLoad={() => {
-            window.ApolloMeetings.initWidget({
-              appId: "671a95320431f502ce274b0d",
-              schedulingLink: "mkq-h23-4je",
-              domElement: document.getElementById("apollo-meetings-widget"),
-            });
-          }}
-        />
       </Head>
       <body>
 

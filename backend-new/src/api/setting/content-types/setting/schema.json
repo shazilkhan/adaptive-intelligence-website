@@ -112,6 +112,22 @@
     },
     "googleTagManagerCode": {
       "type": "text"
+    },
+    "facebookPixelCode": {
+      "type": "text"
+    },
+    "linkedInInsightTagCode": {
+      "type": "text"
+    },
+    "sitePreviewImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

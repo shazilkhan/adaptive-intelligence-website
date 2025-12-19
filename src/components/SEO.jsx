@@ -5,11 +5,11 @@ const SEO = ({ pageTitle, metaDescription, ogImage, canonicalUrl }) => {
     const { settings } = useSettings();
 
     // 1. Resolve Title
-    const siteName = settings?.siteName || 'Adaptive Intelligence';
-    const fullTitle = pageTitle ? `${pageTitle} | ${siteName}` : siteName;
+    const siteName = settings?.siteTitle || 'Adaptive Intelligence';
+    const fullTitle = pageTitle ? `${pageTitle} | ${siteName}` : (settings?.siteTagline ? `${siteName} | ${settings.siteTagline}` : siteName);
 
     // 2. Resolve Description
-    const defaultDesc = settings?.defaultMetaDescription || 'Fueling Creative Innovation and Digital Growth.';
+    const defaultDesc = settings?.siteDescription || 'Fueling Creative Innovation and Digital Growth.';
     const description = metaDescription || defaultDesc;
 
     // 3. Resolve Media URL (Stapi v5 structure)

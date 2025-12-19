@@ -293,6 +293,22 @@
     },
     "whyUsDescription2": {
       "type": "text"
+    },
+    "pageTitle": {
+      "type": "string"
+    },
+    "metaDescription": {
+      "type": "text"
+    },
+    "pagePreviewImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

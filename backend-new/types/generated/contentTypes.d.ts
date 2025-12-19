@@ -486,6 +486,7 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
       'api::about-page.about-page'
     > &
       Schema.Attribute.Private;
+    metaDescription: Schema.Attribute.String;
     missionAuthorName: Schema.Attribute.String;
     missionAuthorTitle: Schema.Attribute.String;
     missionCustomerCount: Schema.Attribute.String;
@@ -505,6 +506,10 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
     missionQuote: Schema.Attribute.Text;
     missionQuoteHighlight: Schema.Attribute.String;
     missionRating: Schema.Attribute.Decimal;
+    pagePreviewImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    pageTitle: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     statsSubtitle: Schema.Attribute.String;
     sustainabilityButtonText: Schema.Attribute.String;
@@ -640,6 +645,11 @@ export interface ApiCaseStudiesPageCaseStudiesPage
       'api::case-studies-page.case-studies-page'
     > &
       Schema.Attribute.Private;
+    metaDescription: Schema.Attribute.Text;
+    pagePreviewImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    pageTitle: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     strategyCta: Schema.Attribute.String;
     strategyParagraph1: Schema.Attribute.Text;
@@ -824,6 +834,11 @@ export interface ApiContactPageContactPage extends Struct.SingleTypeSchema {
       'api::contact-page.contact-page'
     > &
       Schema.Attribute.Private;
+    metaDescription: Schema.Attribute.Text;
+    pagePreviewImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    pageTitle: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -875,12 +890,17 @@ export interface ApiCreativesPageCreativesPage extends Struct.SingleTypeSchema {
       'api::creatives-page.creatives-page'
     > &
       Schema.Attribute.Private;
+    metaDescription: Schema.Attribute.Text;
     missionImage: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
     >;
     missionParagraph1: Schema.Attribute.Text;
     missionParagraph2: Schema.Attribute.Text;
     missionTitle: Schema.Attribute.String;
+    pagePreviewImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    pageTitle: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -934,12 +954,17 @@ export interface ApiEcoPageEcoPage extends Struct.SingleTypeSchema {
       'api::eco-page.eco-page'
     > &
       Schema.Attribute.Private;
+    metaDescription: Schema.Attribute.Text;
     noaaDownloadButtonText: Schema.Attribute.String;
     noaaDownloadUrl: Schema.Attribute.String;
     noaaImage: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     noaaParagraph1: Schema.Attribute.Text;
     noaaParagraph2: Schema.Attribute.Text;
     noaaTitle: Schema.Attribute.String;
+    pagePreviewImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    pageTitle: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     treeCardButtonText: Schema.Attribute.String;
     treeCardButtonUrl: Schema.Attribute.String;
@@ -1044,6 +1069,11 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
       'api::homepage.homepage'
     > &
       Schema.Attribute.Private;
+    metaDescription: Schema.Attribute.Text;
+    pagePreviewImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    pageTitle: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     services: Schema.Attribute.Relation<'oneToMany', 'api::service.service'>;
     servicesSubtitle: Schema.Attribute.String;
@@ -1336,6 +1366,11 @@ export interface ApiServicesPageServicesPage extends Struct.SingleTypeSchema {
       'api::services-page.services-page'
     > &
       Schema.Attribute.Private;
+    metaDescription: Schema.Attribute.Text;
+    pagePreviewImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    pageTitle: Schema.Attribute.String;
     processImage: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
     >;
@@ -1385,12 +1420,14 @@ export interface ApiSettingSetting extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     emailSupportText: Schema.Attribute.String;
     emailSupportTitle: Schema.Attribute.String;
+    facebookPixelCode: Schema.Attribute.Text;
     facebookUrl: Schema.Attribute.String;
     favicon: Schema.Attribute.Media<'images'>;
     googleAnalyticsCode: Schema.Attribute.Text;
     googleTagManagerCode: Schema.Attribute.Text;
     googleUrl: Schema.Attribute.String;
     instagramUrl: Schema.Attribute.String;
+    linkedInInsightTagCode: Schema.Attribute.Text;
     linkedinUrl: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -1405,6 +1442,9 @@ export interface ApiSettingSetting extends Struct.SingleTypeSchema {
     phoneNumber: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     siteDescription: Schema.Attribute.Text;
+    sitePreviewImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
     siteTagline: Schema.Attribute.String;
     siteTitle: Schema.Attribute.String;
     spotifyUrl: Schema.Attribute.String;
@@ -1482,6 +1522,11 @@ export interface ApiTeamPageTeamPage extends Struct.SingleTypeSchema {
       'api::team-page.team-page'
     > &
       Schema.Attribute.Private;
+    metaDescription: Schema.Attribute.Text;
+    pagePreviewImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    pageTitle: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

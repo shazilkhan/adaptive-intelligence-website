@@ -431,6 +431,22 @@
     },
     "valuesSectionMainDescription": {
       "type": "text"
+    },
+    "pageTitle": {
+      "type": "string"
+    },
+    "metaDescription": {
+      "type": "string"
+    },
+    "pagePreviewImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }
