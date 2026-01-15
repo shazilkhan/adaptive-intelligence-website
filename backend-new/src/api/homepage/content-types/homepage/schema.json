@@ -309,6 +309,12 @@
         "videos",
         "audios"
       ]
+    },
+    "heroButtonText2": {
+      "type": "string"
+    },
+    "heroButtonUrl2": {
+      "type": "string"
     }
   }
 }

@@ -24,7 +24,7 @@ const TermsConditionsPage = () => {
                 <h1 className="page-title" style={{ color: 'white', fontSize: '3rem', fontFamily: 'Recoleta, serif', marginBottom: '20px' }}>
                   Terms & Conditions
                 </h1>
-                Last Updated: 2025
+                Last Updated: 2026
 
               </div>
             </div>
@@ -151,7 +151,7 @@ const TermsConditionsPage = () => {
 
                 <div className="copyright-notice" style={{ background: '#f8f9fa', padding: '20px', borderRadius: '8px', marginTop: '60px', textAlign: 'center' }}>
                   <p style={{ color: '#666', margin: '0', fontSize: '0.9rem' }}>
-                    © 2025 Adaptive Intelligence International. All Rights Reserved.
+                    © 2026 Adaptive Intelligence International. All Rights Reserved.
                   </p>
                 </div>
               </div>

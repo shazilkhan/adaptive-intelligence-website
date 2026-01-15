@@ -25,7 +25,7 @@ const CookiePolicyPage = () => {
                   Cookie Policy
                 </h1>
                 <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '1.1rem' }}>
-                  Last Updated: 2025
+                  Last Updated: 2026
                 </p>
               </div>
             </div>
@@ -171,13 +171,13 @@ const CookiePolicyPage = () => {
                     More information about cookies
                   </h2>
                   <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '20px', color: '#666' }}>
-                    Useful information about cookies, including information about deleting or blocking cookies, can be found at: http://www.allaboutcookies.org
+                    Useful information about cookies, including information about deleting or blocking cookies, can be found at: <a href="http://www.allaboutcookies.org" target="_blank" rel="noopener noreferrer" style={{ color: '#FF1292' }}>http://www.allaboutcookies.org</a>
                   </p>
                   <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '20px', color: '#666' }}>
-                    A guide to behavioral advertising and online privacy has been produced by the internet advertising industry which can be found at: http://www.youronlinechoices.eu
+                    A guide to behavioral advertising and online privacy has been produced by the internet advertising industry which can be found at: <a href="http://www.youronlinechoices.eu" target="_blank" rel="noopener noreferrer" style={{ color: '#FF1292' }}>http://www.youronlinechoices.eu</a>
                   </p>
                   <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '40px', color: '#666' }}>
-                    Information on the ICC (UK) UK cookie guide can be found on the ICC website section: http://www.international-chamber.co.uk/our-expertise/digitaleconomy
+                    Information on the ICC (UK) UK cookie guide can be found on the ICC website section: <a href="http://www.international-chamber.co.uk/our-expertise/digitaleconomy" target="_blank" rel="noopener noreferrer" style={{ color: '#FF1292' }}>http://www.international-chamber.co.uk/our-expertise/digitaleconomy</a>
                   </p>
                 </div>
 
@@ -192,7 +192,7 @@ const CookiePolicyPage = () => {
 
                 <div className="copyright-notice" style={{ background: '#f8f9fa', padding: '20px', borderRadius: '8px', marginTop: '60px', textAlign: 'center' }}>
                   <p style={{ color: '#666', margin: '0', fontSize: '0.9rem' }}>
-                    © 2025 Adaptive Intelligence International. All Rights Reserved.
+                    © 2026 Adaptive Intelligence International. All Rights Reserved.
                   </p>
                 </div>
               </div>

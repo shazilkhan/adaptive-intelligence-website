@@ -12,6 +12,7 @@ const LetsTalkButton = ({
   popupDescription = "Enter your email to access the download",
   resourceSlug = "infstones-case-study",
   size = "medium", // Options: "small", "medium", "large"
+  variant = "default", // Options: "default" (White->Pink), "pink" (Pink->White)
   className = "custom-button"   // Allow passing extra classes
 }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -47,10 +48,37 @@ const LetsTalkButton = ({
   // ===================================================================
   // 2. Style Definitions
   // ===================================================================
-  const buttonStyle = {
+
+  // DEFAULT VARIANT (White Bg -> Pink Hover)
+  const defaultBaseStyle = {
     background: 'white',
     color: 'black',
     border: '1px solid #ff1292',
+  };
+  const defaultHoverStyle = {
+    background: '#ff1292',
+    borderColor: '#ff1292',
+    color: 'white'
+  };
+
+  // PINK VARIANT (Pink Bg -> White Hover)
+  const pinkBaseStyle = {
+    background: '#ff1292',
+    color: 'white',
+    border: '1px solid #ff1292',
+  };
+  const pinkHoverStyle = {
+    background: 'white',
+    borderColor: '#ff1292',
+    color: 'black'
+  };
+
+  // Select styles based on variant
+  const activeBase = variant === 'pink' ? pinkBaseStyle : defaultBaseStyle;
+  const activeHover = variant === 'pink' ? pinkHoverStyle : defaultHoverStyle;
+
+  const buttonStyle = {
+    ...activeBase,
     borderRadius: '0',
     textDecoration: 'none',
     display: 'inline-flex',
@@ -61,12 +89,6 @@ const LetsTalkButton = ({
     padding: currentSize.padding,
     fontSize: currentSize.fontSize,
     gap: currentSize.gap
-  };
-
-  const hoverStyle = {
-    background: '#ff1292',
-    borderColor: '#ff1292',
-    color: 'white'
   };
 
   // Helper for dynamic arrow icon
@@ -100,7 +122,7 @@ const LetsTalkButton = ({
     }
 
     setIsSubmitting(true);
-    
+
     try {
       // Store email locally
       const emailData = {
@@ -111,11 +133,11 @@ const LetsTalkButton = ({
         referrer: document.referrer,
         url: window.location.href
       };
-      
+
       const existingEmails = JSON.parse(localStorage.getItem('downloadRequests') || '[]');
       existingEmails.push(emailData);
       localStorage.setItem('downloadRequests', JSON.stringify(existingEmails));
-      
+
       console.log('New Download Request:', emailData);
 
       // Simulate API delay
@@ -124,7 +146,7 @@ const LetsTalkButton = ({
       // Redirect to download page with slug parameter
       const redirectUrl = `/download?email=${encodeURIComponent(email)}&slug=${resourceSlug}`;
       window.location.href = redirectUrl;
-      
+
     } catch (error) {
       console.error('Error processing request:', error);
       alert('There was an error processing your request. Please try again.');
@@ -155,13 +177,13 @@ const LetsTalkButton = ({
         console.log('No download requests found');
         return;
       }
-      
+
       const csvHeaders = 'Email,Resource Slug,Timestamp,URL,User Agent';
-      const csvRows = data.map(item => 
+      const csvRows = data.map(item =>
         `"${item.email}","${item.resourceSlug || item.downloadType}","${item.timestamp}","${item.url}","${item.userAgent}"`
       );
       const csvContent = [csvHeaders, ...csvRows].join('\n');
-      
+
       const blob = new Blob([csvContent], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -171,7 +193,7 @@ const LetsTalkButton = ({
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      
+
       console.log(`Exported ${data.length} download requests as CSV`);
     };
 
@@ -195,13 +217,13 @@ const LetsTalkButton = ({
           className={className}
           style={buttonStyle}
           onMouseEnter={(e) => {
-            e.target.style.background = hoverStyle.background;
-            e.target.style.borderColor = hoverStyle.borderColor;
-            e.target.style.color = hoverStyle.color;
+            e.target.style.background = activeHover.background;
+            e.target.style.borderColor = activeHover.borderColor;
+            e.target.style.color = activeHover.color;
           }}
           onMouseLeave={(e) => {
             e.target.style.background = buttonStyle.background;
-            e.target.style.borderColor = '#ff1292';
+            e.target.style.borderColor = buttonStyle.border.split(' ')[2]; // Extract color from border string
             e.target.style.color = buttonStyle.color;
           }}
         >
@@ -215,7 +237,7 @@ const LetsTalkButton = ({
             if (e.target === e.currentTarget && !isSubmitting) closePopup();
           }}>
             <div className="popup-modal">
-              <button 
+              <button
                 className="popup-close"
                 onClick={closePopup}
                 type="button"
@@ -223,11 +245,11 @@ const LetsTalkButton = ({
               >
                 &times;
               </button>
-              
+
               <div className="popup-content">
                 <h3>{popupTitle}</h3>
                 <p>{popupDescription}</p>
-                
+
                 <form onSubmit={handlePopupSubmit} className="popup-form">
                   <div className="form-group">
                     <input
@@ -240,9 +262,9 @@ const LetsTalkButton = ({
                       disabled={isSubmitting}
                     />
                   </div>
-                  
-                  <button 
-                    type="submit" 
+
+                  <button
+                    type="submit"
                     className="submit-button"
                     disabled={isSubmitting || !email}
                   >
@@ -256,7 +278,7 @@ const LetsTalkButton = ({
                     )}
                   </button>
                 </form>
-                
+
                 <p className="privacy-note">
                   We respect your privacy. Your email will only be used to send you valuable resources and insights.
                 </p>
@@ -463,13 +485,13 @@ const LetsTalkButton = ({
       className={className}
       style={buttonStyle}
       onMouseEnter={(e) => {
-        e.target.style.background = hoverStyle.background;
-        e.target.style.borderColor = hoverStyle.borderColor;
-        e.target.style.color = hoverStyle.color;
+        e.target.style.background = activeHover.background;
+        e.target.style.borderColor = activeHover.borderColor;
+        e.target.style.color = activeHover.color;
       }}
       onMouseLeave={(e) => {
         e.target.style.background = buttonStyle.background;
-        e.target.style.borderColor = '#ff1292';
+        e.target.style.borderColor = buttonStyle.border.split(' ')[2];
         e.target.style.color = buttonStyle.color;
       }}
     >

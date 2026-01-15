@@ -382,29 +382,30 @@ export async function getStaticProps() {
         let totalBottles = 0;
         let processedRowCount = 0;
 
+        // Updated Logic: Find the "TOTALS" row directly instead of summing manually.
+        // The user confirmed the spreadsheet "TOTALS" row (yellow cells) has the correct data.
+        let totalsFound = false;
+
         for (let i = 1; i < rows.length; i++) {
           const rowText = rows[i].trim();
           if (rowText === '') continue;
 
           const columns = rowText.split(',');
-          if (columns.length >= 5 && columns[0]?.toLowerCase().trim() !== 'totals') {
-            const trees = parseFloat(columns[1]?.trim().replace(/,/g, '')) || 0;
-            const acres = parseFloat(columns[2]?.trim().replace(/,/g, '')) || 0;
-            const carbon = parseFloat(columns[3]?.trim().replace(/,/g, '')) || 0;
-            const bottles = parseFloat(columns[4]?.trim().replace(/,/g, '')) || 0;
+          // Remove quotes and whitespace for comparison
+          const firstCol = columns[0]?.replace(/"/g, '').trim().toUpperCase();
 
-            totalTrees += trees;
-            totalAcres += acres;
-            totalCarbon += carbon;
-            totalBottles += bottles;
-            processedRowCount++;
+          if (firstCol === 'TOTALS') {
+            // Found the TOTALS row!
+            // Columns: 0=Name, 1=Trees, 2=Acres, 3=Carbon, 4=Bottles
+            const trees = parseFloat(columns[1]?.replace(/"/g, '').replace(/,/g, '').trim()) || 0;
+            const acres = parseFloat(columns[2]?.replace(/"/g, '').replace(/,/g, '').trim()) || 0;
+            const carbon = parseFloat(columns[3]?.replace(/"/g, '').replace(/,/g, '').trim()) || 0;
+            const bottles = parseFloat(columns[4]?.replace(/"/g, '').replace(/,/g, '').trim()) || 0;
+
+            finalStats = { trees, acres, carbon, bottles };
+            totalsFound = true;
+            break;
           }
-        }
-
-        totalAcres = parseFloat(totalAcres.toFixed(1));
-
-        if (processedRowCount > 0) {
-          finalStats = { trees: totalTrees, acres: totalAcres, carbon: totalCarbon, bottles: totalBottles };
         }
       }
     }

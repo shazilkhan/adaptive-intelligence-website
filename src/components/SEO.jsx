@@ -22,6 +22,18 @@ const SEO = ({ pageTitle, metaDescription, ogImage, canonicalUrl }) => {
 
     const previewImage = getImageUrl(ogImage) || getImageUrl(settings?.sitePreviewImage);
 
+    const structuredData = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": siteName,
+        "url": process.env.NEXT_PUBLIC_SITE_URL || "https://adaptiveintelligence.online",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": `${process.env.NEXT_PUBLIC_SITE_URL || "https://adaptiveintelligence.online"}/?q={search_term_string}`,
+            "query-input": "required name=search_term_string"
+        }
+    };
+
     return (
         <Head>
             <title>{fullTitle}</title>
@@ -30,6 +42,7 @@ const SEO = ({ pageTitle, metaDescription, ogImage, canonicalUrl }) => {
 
             {/* Open Graph / Facebook */}
             <meta property="og:type" content="website" />
+            <meta property="og:site_name" content={siteName} />
             <meta property="og:title" content={fullTitle} />
             <meta property="og:description" content={description} />
             {previewImage && <meta property="og:image" content={previewImage} />}
@@ -40,6 +53,12 @@ const SEO = ({ pageTitle, metaDescription, ogImage, canonicalUrl }) => {
             <meta name="twitter:title" content={fullTitle} />
             <meta name="twitter:description" content={description} />
             {previewImage && <meta name="twitter:image" content={previewImage} />}
+
+            {/* Schema.org Structured Data */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+            />
         </Head>
     );
 };

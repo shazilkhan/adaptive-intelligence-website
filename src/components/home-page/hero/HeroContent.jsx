@@ -16,7 +16,24 @@ const HeroContent = ({ heroData }) => {
         {heroData?.heroSubtitleEnd || "through innovative strategies and crafting key messages that resonate clearly with a universal audience."}
       </p>
 
-      <div className="letstalk-btnn d-flex justify-content-center"> <LetsTalkButton buttonText={heroData?.heroButtonText || "Start a project"} href="/contact" size="large" /> </div>
+      <div className="d-flex justify-content-center align-items-center flex-wrap gap-3">
+        {/* Button 1: Start Project (Typeform) */}
+        <LetsTalkButton
+          buttonText={heroData?.heroButtonText || "Start Project"}
+          href={heroData?.heroButtonUrl || "https://smlof6a6801.typeform.com/to/dwEeKVkb"}
+          size="large"
+        />
+
+        {/* Button 2: Apply Now (Creatives) - Only shows if text is provided or defaults are desired */}
+        {/* Button 2: Apply Now (Creatives) - Uses new "pink" variant for inverted styling */}
+        <LetsTalkButton
+          buttonText={heroData?.heroButtonText2 || "Apply Now"}
+          href={heroData?.heroButtonUrl2 || "/creatives"}
+          size="large"
+          variant="pink"
+          className="custom-button"
+        />
+      </div>
 
       <style jsx>{`
         /* Shared style for the dark background boxes */

@@ -1055,6 +1055,8 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
       'images' | 'files' | 'videos' | 'audios'
     >;
     heroButtonText: Schema.Attribute.String;
+    heroButtonText2: Schema.Attribute.String;
+    heroButtonUrl2: Schema.Attribute.String;
     heroHighlightedText: Schema.Attribute.String;
     heroSubtitleBold: Schema.Attribute.String;
     heroSubtitleEnd: Schema.Attribute.Text &

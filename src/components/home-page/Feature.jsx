@@ -97,13 +97,14 @@ const Feature = ({ featureData }) => {
               {/* CTA SECTION */}
               {/* CTA SECTION */}
               <div className="btn-eighteen position-relative d-inline-block tx-dark mt-30 lg-mt-30">
-                {linkText}{" "}
                 <Link
-                  href={buttonUrl}
-                  className="fw-500 tran3s"
-                  style={{ fontSize: '1.25rem', padding: '15px 35px' }}
+                  href={buttonUrl === "#" ? "/about" : buttonUrl}
+                  className="fw-500 tran3s d-flex align-items-center"
+                  style={{ fontSize: '1.25rem', textDecoration: 'none', color: 'inherit' }}
                 >
-                  {buttonText} <i className="bi bi-arrow-right ms-2" />
+                  <span className="me-2">{linkText}</span>
+                  <span style={{ color: '#FF1292', textDecoration: 'underline' }}>{buttonText}</span>
+                  <i className="bi bi-arrow-right ms-2" style={{ color: '#FF1292' }} />
                 </Link>
               </div>
 

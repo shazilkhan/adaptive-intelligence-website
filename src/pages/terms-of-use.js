@@ -92,7 +92,7 @@ const TermsOfUsePage = () => {
                     The entire content included in this site, including but not limited to text, graphics or code is copyrighted as a collective work under the United States and other international copyright laws, and is the property of https://adaptiveintelligence.online/. The collective work includes works that are licensed to https://adaptiveintelligence.online/.
                   </p>
                   <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '20px', color: '#666' }}>
-                    Copyright 2025, https://adaptiveintelligence.online/ ALL RIGHTS RESERVED. Permission is granted to electronically copy and print hard copy portions of this site for the sole purpose of placing an order with https://adaptiveintelligence.online/ or purchasing our products.
+                    Copyright 2026, https://adaptiveintelligence.online/ ALL RIGHTS RESERVED. Permission is granted to electronically copy and print hard copy portions of this site for the sole purpose of placing an order with https://adaptiveintelligence.online/ or purchasing our products.
                   </p>
                   <p style={{ fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '40px', color: '#666' }}>
                     Any other use, including but not limited to the reproduction, distribution, display or transmission of the content of this site is strictly prohibited, unless authorized by https://adaptiveintelligence.online/. You further agree not to change or delete any proprietary notices from materials downloaded from the site.
@@ -209,7 +209,7 @@ const TermsOfUsePage = () => {
 
                 <div className="copyright-notice" style={{ background: '#f8f9fa', padding: '20px', borderRadius: '8px', marginTop: '60px', textAlign: 'center' }}>
                   <p style={{ color: '#666', margin: '0', fontSize: '0.9rem' }}>
-                    © 2025 Adaptive Intelligence International. All Rights Reserved.
+                    © 2026 Adaptive Intelligence International. All Rights Reserved.
                   </p>
                 </div>
               </div>

@@ -36,7 +36,7 @@ const Feedback = ({ feedbackData }) => {
   const avatarUrl = feedbackData?.feedbackAvatar?.url
     ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${feedbackData.feedbackAvatar.url}`
     : "/images/team/adam.jpeg";
-  
+
   const avatarAlt = feedbackData?.feedbackAvatar?.alternativeText || "Founder and CEO";
   const quoteStart = feedbackData?.feedbackQuoteStart || "Adaptive Intelligence is pushing the";
   const quoteHighlight = feedbackData?.feedbackQuoteHighlight || "boundaries";
@@ -66,6 +66,53 @@ const Feedback = ({ feedbackData }) => {
                   <p className="font-recoleta tx-dark mt-60 mb-65 lg-mt-40 lg-mb-40 quote-text">
                     &quot;{quoteStart} <span style={{ color: "#FF1292" }}>{quoteHighlight}</span> {quoteEnd}&quot;
                   </p>
+
+                  {/* LinkedIn Badge - Styled to match "Connect with me on LinkedIn" reference */}
+                  <div className="d-flex justify-content-center mb-4">
+                    <a
+                      href={feedbackData?.feedbackAuthorLinkedIn || "https://www.linkedin.com/in/adam-isaac-itkoff/"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="linkedin-badge d-inline-flex align-items-center gap-3"
+                      style={{
+                        background: '#0077B5', // Official LinkedIn Blue
+                        color: 'white',
+                        padding: '8px 20px',
+                        borderRadius: '4px', // Slightly more square radius like the badge
+                        textDecoration: 'none',
+                        border: '1px solid #006097',
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#006097';
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = '#0077B5';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                      }}
+                    >
+                      {/* Logo Box */}
+                      <div style={{
+                        background: 'white',
+                        borderRadius: '2px',
+                        width: '32px',
+                        height: '32px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        <i className="fab fa-linkedin-in" style={{ fontSize: '22px', color: '#0077B5' }}></i>
+                      </div>
+
+                      {/* Stacked Text */}
+                      <div className="d-flex flex-column align-items-start" style={{ lineHeight: '1.1' }}>
+                        <span style={{ fontSize: '11px', fontWeight: '400', opacity: '0.9' }}>Connect with me on</span>
+                        <span style={{ fontSize: '19px', fontWeight: '700', letterSpacing: '0.5px' }}>LinkedIn</span>
+                      </div>
+                    </a>
+                  </div>
+
                   <h6 className="fw-normal fs-20 d-inline-block fst-italic position-relative ps-4">
                     {authorName}, {authorTitle}
                   </h6>
