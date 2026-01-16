@@ -24,7 +24,7 @@ const TermsOfUsePage = () => {
                 <h1 className="page-title" style={{ color: 'white', fontSize: '3rem', fontFamily: 'Recoleta, serif', marginBottom: '20px' }}>
                   Terms of Use
                 </h1>
-                <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '1.1rem' }}>
+                <p style={{ color: 'white', fontSize: '1.1rem' }}>
                   Terms of Use of adaptiveintelligence.online
                 </p>
               </div>

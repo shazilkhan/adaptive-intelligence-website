@@ -24,7 +24,7 @@ const CookiePolicyPage = () => {
                 <h1 className="page-title" style={{ color: 'white', fontSize: '3rem', fontFamily: 'Recoleta, serif', marginBottom: '20px' }}>
                   Cookie Policy
                 </h1>
-                <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '1.1rem' }}>
+                <p style={{ color: 'white', fontSize: '1.1rem' }}>
                   Last Updated: 2026
                 </p>
               </div>

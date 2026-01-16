@@ -24,7 +24,7 @@ const TermsConditionsPage = () => {
                 <h1 className="page-title" style={{ color: 'white', fontSize: '3rem', fontFamily: 'Recoleta, serif', marginBottom: '20px' }}>
                   Terms & Conditions
                 </h1>
-                Last Updated: 2026
+                <p style={{ color: 'white', marginTop: '10px' }}>Last Updated: 2026</p>
 
               </div>
             </div>
