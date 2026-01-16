@@ -1,21 +1,4 @@
 User-agent: *
-# Disallow everything by default
-Disallow: /
-
-# Allow only current pages
 Allow: /
-Allow: /about
-Allow: /ai
-Allow: /case-studies
-Allow: /contact
-Allow: /cookie-policy
-Allow: /creatives
-Allow: /download
-Allow: /eco
-Allow: /privacy-policy
-Allow: /services
-Allow: /team
-Allow: /terms-conditions
-Allow: /terms-of-use
 
-Sitemap: https://adaptiveintelligence.io/sitemap.xml
+Sitemap: https://adaptiveintelligence.online/sitemap.xml
