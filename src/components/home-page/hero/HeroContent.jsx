@@ -22,6 +22,7 @@ const HeroContent = ({ heroData }) => {
           buttonText={heroData?.heroButtonText || "Start Project"}
           href={heroData?.heroButtonUrl || "https://smlof6a6801.typeform.com/to/dwEeKVkb"}
           size="large"
+          className="custom-button hero-cta-btn"
         />
 
         {/* Button 2: Apply Now (Creatives) - Only shows if text is provided or defaults are desired */}
@@ -31,7 +32,7 @@ const HeroContent = ({ heroData }) => {
           href={heroData?.heroButtonUrl2 || "/creatives"}
           size="large"
           variant="pink"
-          className="custom-button"
+          className="custom-button hero-cta-btn"
         />
       </div>
 
@@ -42,6 +43,12 @@ const HeroContent = ({ heroData }) => {
           border-radius: 10px;
           padding: 40px 20px;
           user-select: none;
+        }
+
+        /* Ensure both buttons have the exact same width */
+        :global(.hero-cta-btn) {
+          min-width: 200px;
+          justify-content: center;
         }
 
         .sub-text {

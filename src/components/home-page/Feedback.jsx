@@ -67,13 +67,18 @@ const Feedback = ({ feedbackData }) => {
                     &quot;{quoteStart} <span style={{ color: "#FF1292" }}>{quoteHighlight}</span> {quoteEnd}&quot;
                   </p>
 
-                  {/* LinkedIn Badge - Styled to match "Connect with me on LinkedIn" reference */}
-                  <div className="d-flex justify-content-center mb-4">
+                  {/* Wrapped Container for Name + Button to share width */}
+                  <div className="d-inline-flex flex-column align-items-stretch mt-4">
+                    <h6 className="fw-normal fs-20 fst-italic position-relative ps-4 mb-3 text-start">
+                      {authorName}, {authorTitle}
+                    </h6>
+
+                    {/* LinkedIn Badge - Styled to match "Connect with me on LinkedIn" reference */}
                     <a
-                      href={feedbackData?.feedbackAuthorLinkedIn || "https://www.linkedin.com/in/adam-isaac-itkoff/"}
+                      href={feedbackData?.feedbackAuthorLinkedIn || "https://www.linkedin.com/company/adaptiveintelligenceinternational/"}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="linkedin-badge d-inline-flex align-items-center gap-3"
+                      className="linkedin-badge d-flex align-items-center justify-content-center gap-3"
                       style={{
                         background: '#0077B5', // Official LinkedIn Blue
                         color: 'white',
@@ -112,10 +117,6 @@ const Feedback = ({ feedbackData }) => {
                       </div>
                     </a>
                   </div>
-
-                  <h6 className="fw-normal fs-20 d-inline-block fst-italic position-relative ps-4">
-                    {authorName}, {authorTitle}
-                  </h6>
                 </div>
               </div>
             </div>

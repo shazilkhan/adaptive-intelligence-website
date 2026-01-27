@@ -63,7 +63,7 @@ const FeaturesBlock = ({ featuresData }) => {
 
               {/* --- Icon 2 --- */}
               <div className="col-sm-6">
-                <div className="icon d-flex mt-30">
+                <div className="icon d-flex justify-content-center mt-30">
                   {/* REPLACE href WITH YOUR LINK */}
                   <Link href="https://clutch.co/profile/adaptive-intelligence-international" target="_blank" rel="noopener noreferrer">
                     <Image
@@ -87,7 +87,10 @@ const FeaturesBlock = ({ featuresData }) => {
       </div>
 
       <div className="col-lg-7 col-md-9 m-auto">
-        <div className="illustration-holder md-mt-60 position-relative">
+        <div
+          className="illustration-holder md-mt-60 position-relative"
+          style={{ overflow: 'hidden', borderRadius: '20px' }}
+        >
           <Image
             src={mainImageUrl}
             alt={featuresData?.whyUsMainImage?.alternativeText || "media"}
