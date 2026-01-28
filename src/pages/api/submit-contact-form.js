@@ -74,11 +74,12 @@ export default async function handler(req, res) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             data: {
-              firstName, lastName, email, phone, companyName,
-              emailOptin: bodyData.emailOptin ? 'yes' : 'no',
-              servicesNeeded: bodyData.servicesNeeded,
-              leadSource: bodyData.leadSource,
-              submittedAt: new Date().toISOString(),
+              firstName,
+              lastName,
+              email,
+              companyName,
+              // Removed extra fields that were causing Strapi 400 errors
+              // message, phone, emailOptin, servicesNeeded, leadSource are excluded based on user request
             }
           }),
         });

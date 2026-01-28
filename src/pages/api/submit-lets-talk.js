@@ -35,9 +35,7 @@ export default async function handler(req, res) {
       // Add to List (Label)
       label_ids: listId ? [listId] : [],
       // Note: If 'initial_message' custom field doesn't exist in Apollo, this might be ignored, which is fine.
-      custom_fields: {
-        "initial_message": message || "No message provided"
-      }
+      // custom_fields removed as Apollo configuration does not accept message field
     };
 
     console.log("📤 Sending payload to Apollo...");
@@ -55,12 +53,12 @@ export default async function handler(req, res) {
     if (!apolloResponse.ok) {
       console.error("❌ Apollo API FAILED. Response:");
       console.error(JSON.stringify(contactData, null, 2));
-      
+
       // Return error to frontend so we know it failed
-      return res.status(400).json({ 
-        success: false, 
-        message: "Apollo rejected the entry", 
-        details: contactData 
+      return res.status(400).json({
+        success: false,
+        message: "Apollo rejected the entry",
+        details: contactData
       });
     }
 
@@ -69,7 +67,7 @@ export default async function handler(req, res) {
     // 5. Save to Strapi (Backup)
     try {
       if (process.env.NEXT_PUBLIC_STRAPI_API_URL) {
-        await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/lets-talk-submissions`, {
+        await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/contact-form-submissions`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
