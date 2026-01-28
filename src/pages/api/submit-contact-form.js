@@ -6,79 +6,70 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  // 2. Debug: Log that the server was hit
   console.log("API Route Hit: /api/submit-contact-form");
 
-  // 3. Check for API Key
-  if (!process.env.APOLLO_API_KEY) {
-    console.error("❌ Error: APOLLO_API_KEY is missing in .env.local");
-    return res.status(500).json({ message: "Server Error: Missing API Key" });
-  }
-
   try {
-    // 4. Safely extract data
     const bodyData = req.body.data || {};
-
+    // Extract fields
     const firstName = bodyData.firstName || "";
     const lastName = bodyData.lastName || "";
     const email = bodyData.email || "";
     const phone = bodyData.phone || "";
     const companyName = bodyData.companyName || "";
-
     const services = Array.isArray(bodyData.servicesNeeded) ? bodyData.servicesNeeded.join(', ') : "None";
     const sources = Array.isArray(bodyData.leadSource) ? bodyData.leadSource.join(', ') : "None";
     const userMessage = bodyData.message || "";
 
     console.log("👉 Processing submission for:", email);
 
-    // --- 5. Prepare Apollo Payload ---
-    // CHANGED: We now pull the specific list ID for this form
-    const targetListId = process.env.APOLLO_LIST_ID_CONTACT_FORM;
+    let apolloSuccess = false;
+    let strapiSuccess = false;
+    let errorDetails = [];
 
-    const apolloPayload = {
-      api_key: process.env.APOLLO_API_KEY,
-      first_name: firstName,
-      last_name: lastName,
-      email: email,
-      organization_name: companyName,
-      phone_numbers: phone ? [{ value: phone, type: "work" }] : [],
-      // FIX: Add to specific list immediately
-      label_ids: targetListId ? [targetListId] : [],
-      custom_fields: {
-        "initial_message": `Message: ${userMessage} | Services: ${services} | Source: ${sources}`
+    // --- 3. Attempt Apollo Submission (Optional) ---
+    if (process.env.APOLLO_API_KEY) {
+      try {
+        const targetListId = process.env.APOLLO_LIST_ID_CONTACT_FORM;
+        const apolloPayload = {
+          api_key: process.env.APOLLO_API_KEY,
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          organization_name: companyName,
+          phone_numbers: phone ? [{ value: phone, type: "work" }] : [],
+          label_ids: targetListId ? [targetListId] : [],
+          custom_fields: {
+            "initial_message": `Message: ${userMessage} | Services: ${services} | Source: ${sources}`
+          }
+        };
+
+        const apolloResponse = await fetch('https://api.apollo.io/v1/contacts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+          body: JSON.stringify(apolloPayload),
+        });
+
+        const contactData = await apolloResponse.json();
+
+        if (!apolloResponse.ok) {
+          console.error("❌ Apollo API Error:", JSON.stringify(contactData, null, 2));
+          errorDetails.push("Apollo API rejected request");
+        } else {
+          console.log("✅ Apollo Contact Created. ID:", contactData.contact?.id);
+          apolloSuccess = true;
+        }
+      } catch (apolloErr) {
+        console.error("❌ Apollo Exception:", apolloErr);
+        errorDetails.push("Apollo logic failed");
       }
-    };
-
-    console.log("📤 Sending to Apollo...");
-
-    // --- 6. Send to Apollo (Create Contact) ---
-    const apolloResponse = await fetch('https://api.apollo.io/v1/contacts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache'
-      },
-      body: JSON.stringify(apolloPayload),
-    });
-
-    const contactData = await apolloResponse.json();
-
-    // --- 7. Check for Apollo Errors ---
-    if (!apolloResponse.ok) {
-      console.error("❌ Apollo API Error Response:", JSON.stringify(contactData, null, 2));
-      return res.status(400).json({
-        success: false,
-        message: "Apollo Rejected the Request",
-        details: contactData
-      });
+    } else {
+      console.warn("⚠️ Skipping Apollo: APOLLO_API_KEY not set");
     }
 
-    console.log("✅ Apollo Contact Created & Added to List. ID:", contactData.contact.id);
-
-    // --- 8. Save to Strapi (Backup) ---
-    try {
-      if (process.env.NEXT_PUBLIC_STRAPI_API_URL) {
-        await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/contact-form-submissions`, {
+    // --- 4. Attempt Strapi Submission (Backup) ---
+    if (process.env.NEXT_PUBLIC_STRAPI_API_URL) {
+      try {
+        const strapiRes = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/contact-form-submissions`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -91,21 +82,44 @@ export default async function handler(req, res) {
             }
           }),
         });
-        console.log("✅ Saved to Strapi");
+
+        if (strapiRes.ok) {
+          strapiSuccess = true;
+          console.log("✅ Saved to Strapi Database");
+        } else {
+          console.error("⚠️ Strapi Error:", await strapiRes.text());
+          errorDetails.push("Strapi save failed");
+        }
+      } catch (strapiErr) {
+        console.error("⚠️ Strapi Exception:", strapiErr);
+        errorDetails.push("Strapi connection failed");
       }
-    } catch (strapiErr) {
-      console.error("⚠️ Strapi Backup Failed (Non-critical):", strapiErr);
+    } else {
+      console.warn("⚠️ Skipping Strapi: NEXT_PUBLIC_STRAPI_API_URL not set");
     }
 
-    // 9. Final Success
-    return res.status(200).json({ success: true, message: 'Submitted successfully to Apollo' });
+    // --- 5. Return Success if At Least One Succeeded ---
+    if (apolloSuccess || strapiSuccess) {
+      return res.status(200).json({ success: true, message: 'Submitted successfully' });
+    }
+
+    // --- 6. Fallback Success for "No Config" Case (Local Dev) ---
+    // If NO keys are set, we don't want to crash. We just log and return 200 mock.
+    if (!process.env.APOLLO_API_KEY && !process.env.NEXT_PUBLIC_STRAPI_API_URL) {
+      console.warn("⚠️ no backend keys configured. Mocking success.");
+      return res.status(200).json({ success: true, message: 'Mock Success (No keys configured)' });
+    }
+
+    // If we had keys but both failed:
+    console.error("❌ form submission failed completely.");
+    return res.status(500).json({
+      success: false,
+      message: 'Submission failed. System configuration issue.',
+      details: errorDetails
+    });
 
   } catch (error) {
     console.error('❌ CRITICAL SERVER ERROR:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Internal Server Error',
-      error: error.message
-    });
+    return res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
   }
 }

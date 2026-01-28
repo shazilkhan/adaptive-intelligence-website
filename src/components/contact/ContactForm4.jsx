@@ -180,7 +180,15 @@ const ContactForm4 = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit form');
+        let errorMessage = 'Failed to submit form';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          console.error("Failed to parse error response:", e);
+          errorMessage = `Server Error: ${response.status} ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
 
       // 2. Open Apollo Meetings widget
@@ -191,7 +199,7 @@ const ContactForm4 = () => {
           company_name: data.company_name,
           message: data.message,
           // Defaults
-          phone_number: "N/A",
+          phone_number: "",
           consent_approval: "yes",
         });
       }
@@ -200,7 +208,7 @@ const ContactForm4 = () => {
       reset();
     } catch (error) {
       console.error("Error submitting form:", error);
-      setSubmitStatus({ type: 'error', message: 'Failed to submit form. Please try again.' });
+      setSubmitStatus({ type: 'error', message: error.message || 'Failed to submit form. Please try again.' });
     }
   };
 
