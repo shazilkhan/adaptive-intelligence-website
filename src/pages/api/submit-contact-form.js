@@ -75,7 +75,7 @@ export default async function handler(req, res) {
           body: JSON.stringify({
             data: {
               firstName, lastName, email, phone, companyName,
-              emailOptin: bodyData.emailOptin,
+              emailOptin: bodyData.emailOptin ? 'yes' : 'no',
               servicesNeeded: bodyData.servicesNeeded,
               leadSource: bodyData.leadSource,
               submittedAt: new Date().toISOString(),
