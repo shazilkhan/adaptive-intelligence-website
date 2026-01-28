@@ -89,7 +89,16 @@ export default async function handler(req, res) {
         } else {
           const errorText = await strapiRes.text();
           console.error("⚠️ Strapi Error:", errorText);
-          errorDetails.push(`Strapi save failed (${strapiRes.status})`);
+          let strapiErrorMessage = `Strapi save failed (${strapiRes.status})`;
+          try {
+            const strapiJson = JSON.parse(errorText);
+            if (strapiJson.error && strapiJson.error.message) {
+              strapiErrorMessage += `: ${strapiJson.error.message}`;
+            }
+          } catch (e) {
+            if (errorText.length < 200) strapiErrorMessage += `: ${errorText}`;
+          }
+          errorDetails.push(strapiErrorMessage);
         }
       } catch (strapiErr) {
         console.error("⚠️ Strapi Exception:", strapiErr);
