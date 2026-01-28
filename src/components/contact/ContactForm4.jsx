@@ -184,6 +184,10 @@ const ContactForm4 = () => {
         try {
           const errorData = await response.json();
           errorMessage = errorData.message || errorMessage;
+          if (errorData.details) {
+            const detailsStr = Array.isArray(errorData.details) ? errorData.details.join('; ') : JSON.stringify(errorData.details);
+            errorMessage += ` [Details: ${detailsStr}]`;
+          }
         } catch (e) {
           console.error("Failed to parse error response:", e);
           errorMessage = `Server Error: ${response.status} ${response.statusText}`;
