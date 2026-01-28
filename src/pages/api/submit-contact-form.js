@@ -87,8 +87,9 @@ export default async function handler(req, res) {
           strapiSuccess = true;
           console.log("✅ Saved to Strapi Database");
         } else {
-          console.error("⚠️ Strapi Error:", await strapiRes.text());
-          errorDetails.push("Strapi save failed");
+          const errorText = await strapiRes.text();
+          console.error("⚠️ Strapi Error:", errorText);
+          errorDetails.push(`Strapi save failed (${strapiRes.status})`);
         }
       } catch (strapiErr) {
         console.error("⚠️ Strapi Exception:", strapiErr);
