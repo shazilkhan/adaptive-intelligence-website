@@ -173,8 +173,8 @@ const ContactForm4 = () => {
             companyName: data.company_name,
             message: data.message,
             // Sending default/empty for removed fields to avoid API errors if they are required
-            phone: "N/A",
-            emailOptin: "yes",
+            phone: "",
+            emailOptin: true,
           }
         }),
       });
