@@ -1,0 +1,25 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - yarn install --frozen-lockfile
+    build:
+      commands:
+        # Make selected env vars available to Next.js SSR/API at runtime.
+        # This is the AWS Amplify Hosting documented approach:
+        # https://docs.aws.amazon.com/amplify/latest/userguide/ssr-environment-variables.html
+        #
+        # NOTE: output is redirected to file (not to logs).
+        - rm -f .env.production
+        - printenv | grep -E '^(APOLLO_|REVALIDATION_SECRET=|NEXT_PUBLIC_STRAPI_API_URL=)' >> .env.production || true
+        - yarn build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+      - .next/cache/**/*
+
