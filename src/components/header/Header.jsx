@@ -75,9 +75,9 @@ const Header = ({ style, menuTextColor }) => {
 
       if (!response.ok) {
         // Try to parse error message if available
-        const errorData = await response.json().catch(() => ({})); 
+        const errorData = await response.json().catch(() => ({}));
         console.error("Submission Failed:", errorData);
-        throw new Error('Failed to submit form');
+        throw new Error(errorData.message || 'Failed to submit form');
       }
       
       setSubmitStatus({ type: 'success', message: 'Thank you! We\'ll be in touch soon.' });

@@ -3,27 +3,40 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  console.log("🚀 API Route Hit: /api/submit-lets-talk");
+  // Minimal logging: keep errors actionable without noisy debug output
 
   // 1. Debug Env Vars
   const apiKey = process.env.APOLLO_API_KEY;
   const listId = process.env.APOLLO_LIST_ID_LETS_TALK;
 
   if (!apiKey) {
-    console.error("❌ CRITICAL: APOLLO_API_KEY is missing in .env.local");
     return res.status(500).json({ message: "Server configuration error" });
   }
   if (!listId) {
-    console.warn("⚠️ WARNING: APOLLO_LIST_ID_LETS_TALK is missing. Contact will be created but not added to list.");
-  } else {
-    console.log("ℹ️ Target List ID:", listId);
+    // list is optional; contact can still be created without it
   }
 
   try {
-    const bodyData = req.body.data || {};
+    // Support both `{ data: {...} }` and direct `{...}` payloads
+    const bodyData = (req.body && (req.body.data || req.body)) || {};
     const { firstName, lastName, email, company, message } = bodyData;
 
-    console.log("👉 Processing Submission:", email);
+    // (intentionally no verbose console logging here)
+
+    // Validate required fields (prevents Apollo rejections + hard-to-debug empty payloads)
+    if (!firstName || !lastName || !email || !company || !message) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields",
+        details: {
+          firstName: !!firstName,
+          lastName: !!lastName,
+          email: !!email,
+          company: !!company,
+          message: !!message,
+        },
+      });
+    }
 
     // 2. Prepare Payload
     const apolloPayload = {
@@ -38,22 +51,38 @@ export default async function handler(req, res) {
       // custom_fields removed as Apollo configuration does not accept message field
     };
 
-    console.log("📤 Sending payload to Apollo...");
+    const fetchWithTimeout = async (url, options, timeoutMs = 12000) => {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        return await fetch(url, { ...options, signal: controller.signal });
+      } finally {
+        clearTimeout(timeout);
+      }
+    };
 
     // 3. Send to Apollo
-    const apolloResponse = await fetch('https://api.apollo.io/v1/contacts', {
+    const apolloResponse = await fetchWithTimeout('https://api.apollo.io/v1/contacts', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Cache-Control': 'no-cache'
+      },
       body: JSON.stringify(apolloPayload),
     });
 
-    const contactData = await apolloResponse.json();
+    // Apollo may return non-JSON on certain errors; avoid crashing the route on `.json()`
+    const apolloText = await apolloResponse.text();
+    let contactData = null;
+    try {
+      contactData = apolloText ? JSON.parse(apolloText) : null;
+    } catch {
+      contactData = { raw: apolloText };
+    }
 
     // 4. Check Apollo Response
     if (!apolloResponse.ok) {
-      console.error("❌ Apollo API FAILED. Response:");
-      console.error(JSON.stringify(contactData, null, 2));
-
       // Return error to frontend so we know it failed
       return res.status(400).json({
         success: false,
@@ -62,12 +91,10 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log("✅ Apollo Success! Contact ID:", contactData.contact.id);
-
     // 5. Save to Strapi (Backup)
     try {
       if (process.env.NEXT_PUBLIC_STRAPI_API_URL) {
-        await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/contact-form-submissions`, {
+        await fetchWithTimeout(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/contact-form-submissions`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -76,17 +103,15 @@ export default async function handler(req, res) {
               submittedAt: new Date().toISOString(),
             }
           }),
-        });
-        console.log("✅ Saved backup to Strapi");
+        }, 12000);
       }
     } catch (strapiErr) {
-      console.error("⚠️ Strapi Backup Failed:", strapiErr);
+      // backup failure shouldn't block Apollo success
     }
 
     return res.status(200).json({ success: true });
 
   } catch (error) {
-    console.error('❌ SERVER CRASH:', error);
     return res.status(500).json({ success: false, message: error.message });
   }
 }
