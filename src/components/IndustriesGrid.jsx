@@ -2,6 +2,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import Image from "next/image";
+import { getStrapiApiUrl, getStrapiMediaUrl } from "@/utils/strapi";
 
 const IndustriesGrid = () => {
   const [industries, setIndustries] = useState([]);
@@ -11,8 +12,7 @@ const IndustriesGrid = () => {
     const fetchIndustries = async () => {
       setIsLoading(true);
       try {
-        // Updated populate to get all fields including description
-        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/industries?populate=*&sort=order:asc`;
+        const apiUrl = `${getStrapiApiUrl()}/api/industries?populate=*&sort=order:asc`;
         const res = await fetch(apiUrl);
         if (!res.ok) throw new Error('Failed to fetch industries');
         const json = await res.json();
@@ -22,11 +22,8 @@ const IndustriesGrid = () => {
           return {
             id: item.id,
             name: attrs.name,
-            // Look for a description field
             description: attrs.description || "Strategic campaigns and content tailored for this industry.",
-            imageUrl: attrs.image?.url
-              ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${attrs.image.url}`
-              : '/images/icon/innovation.png'
+            imageUrl: getStrapiMediaUrl(attrs.image?.url) || '/images/icon/innovation.png'
           };
         });
         setIndustries(formattedIndustries);

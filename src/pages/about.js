@@ -10,6 +10,7 @@ import Faq from "@/components/home-page/Faq";
 import AdaptiveIntelligence from '@/components/AdaptiveIntelligence';
 import OurValues from '@/components/OurValues';
 import { useState, useEffect } from 'react';
+import { getStrapiApiUrl, getStrapiMediaUrl } from '@/utils/strapi';
 
 import SEO from '@/components/SEO';
 
@@ -67,7 +68,8 @@ export async function getStaticProps() {
 
   let pageData = null;
   try {
-    const pageUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/about-page?populate=*`;
+    const { getStrapiApiUrl } = await import('@/utils/strapi');
+    const pageUrl = `${getStrapiApiUrl()}/api/about-page?populate=*`;
     const pageRes = await fetch(pageUrl);
     const pageJson = await pageRes.json();
     pageData = pageJson.data || null;
@@ -90,7 +92,7 @@ const About = ({ treeCardStats, pageData }) => {
   useEffect(() => {
     const fetchValues = async () => {
       try {
-        const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
+        const API_URL = getStrapiApiUrl();
         const res = await fetch(`${API_URL}/api/values?populate=*&sort=order:asc`);
         const json = await res.json();
 
@@ -109,16 +111,16 @@ const About = ({ treeCardStats, pageData }) => {
 
   const heroType = pageData?.heroBackgroundType || 'Image';
   const heroVideoUrl = pageData?.heroBackgroundVideo?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundVideo.url}`
+    ? getStrapiMediaUrl(pageData.heroBackgroundVideo?.url)
     : null;
   const heroImageUrl = pageData?.heroBackgroundImage?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundImage.url}`
+    ? getStrapiMediaUrl(pageData.heroBackgroundImage?.url)
     : null;
 
   const hasMedia = (heroType === 'Video' && heroVideoUrl) || heroImageUrl;
 
   const whoWeAreImageUrl = pageData?.whoWeAreImage?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whoWeAreImage.url}`
+    ? getStrapiMediaUrl(pageData.whoWeAreImage?.url)
     : 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80';
 
   return (
@@ -326,21 +328,14 @@ const About = ({ treeCardStats, pageData }) => {
       {/* --- Adaptive Intelligence Section (Aligned) --- */}
       {/* ============================================== */}
       {(() => {
-        // 1. Get the API URL from your project settings (like your other section)
-        const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-
-        // 2. Data Access
         const title = pageData?.adaptiveIntelligenceTitle || "Ad·ap·tive In·tel·li·gence";
         const features = pageData?.adaptiveIntelligenceFeatures || [];
 
-        // 3. Construct URLs using the same logic as your "What We Do" section
-        // We handle the check: "Does the URL exist? If yes, add API_URL to front."
-
         const rawVideo = pageData?.adaptiveIntelligenceBgVideo?.data?.attributes?.url || pageData?.adaptiveIntelligenceBgVideo?.url;
-        const videoUrl = rawVideo ? `${API_URL}${rawVideo}` : null;
+        const videoUrl = getStrapiMediaUrl(rawVideo);
 
         const rawImage = pageData?.adaptiveIntelligenceBgImage?.data?.attributes?.url || pageData?.adaptiveIntelligenceBgImage?.url;
-        const imageUrl = rawImage ? `${API_URL}${rawImage}` : null;
+        const imageUrl = getStrapiMediaUrl(rawImage);
 
         return (
           <div className="adaptive-section">
@@ -415,7 +410,7 @@ const About = ({ treeCardStats, pageData }) => {
                     <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
                       <Image
                         width={45} height={45}
-                        src={pageData.whatWeDoCard1_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard1_Icon.url}` : '/images/icon/icon_175.svg'}
+                        src={getStrapiMediaUrl(pageData.whatWeDoCard1_Icon?.url) || '/images/icon/icon_175.svg'}
                         alt={pageData.whatWeDoCard1_Title || 'Icon'} className="lazy-img"
                       />
                     </div>
@@ -430,7 +425,7 @@ const About = ({ treeCardStats, pageData }) => {
                   <div className="col-lg-4 col-sm-6" data-aos="fade-up" data-aos-delay="100">
                     <div className="card-style-twentySix text-center h-100">
                       <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
-                        <Image width={45} height={45} src={pageData.whatWeDoCard2_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard2_Icon.url}` : '/images/icon/icon_175.svg'} alt="Icon" className="lazy-img" />
+                        <Image width={45} height={45} src={getStrapiMediaUrl(pageData.whatWeDoCard2_Icon?.url) || '/images/icon/icon_175.svg'} alt="Icon" className="lazy-img" />
                       </div>
                       <h5 className="tx-dark mt-40 lg-mt-30 mb-5">{pageData.whatWeDoCard2_Title}</h5>
                       <p className="fs-18">{pageData.whatWeDoCard2_Description}</p>
@@ -441,7 +436,7 @@ const About = ({ treeCardStats, pageData }) => {
                   <div className="col-lg-4 col-sm-6" data-aos="fade-up" data-aos-delay="200">
                     <div className="card-style-twentySix text-center h-100">
                       <div className="icon rounded-circle m-auto d-flex align-items-center justify-content-center">
-                        <Image width={45} height={45} src={pageData.whatWeDoCard3_Icon?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.whatWeDoCard3_Icon.url}` : '/images/icon/icon_175.svg'} alt="Icon" className="lazy-img" />
+                        <Image width={45} height={45} src={getStrapiMediaUrl(pageData.whatWeDoCard3_Icon?.url) || '/images/icon/icon_175.svg'} alt="Icon" className="lazy-img" />
                       </div>
                       <h5 className="tx-dark mt-40 lg-mt-30 mb-5">{pageData.whatWeDoCard3_Title}</h5>
                       <p className="fs-18">{pageData.whatWeDoCard3_Description}</p>
@@ -515,7 +510,7 @@ const About = ({ treeCardStats, pageData }) => {
               const data = item.attributes || item;
               if (!data) return null;
 
-              const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
+              const API_URL = getStrapiApiUrl();
 
               const rawIcon = data.icon?.data?.attributes?.url || data.icon?.url;
               const iconUrl = rawIcon ? (rawIcon.startsWith('http') ? rawIcon : `${API_URL}${rawIcon}`) : null;
@@ -603,7 +598,7 @@ const About = ({ treeCardStats, pageData }) => {
                <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column w-100">
                  <div className="icon m-auto tran3s"> 
                    <Image
-                     src={pageData.value1_Image?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.value1_Image.url}` : '/images/icon/icon_175.svg'}
+                     src={getStrapiMediaUrl(pageData.value1_Image?.url) || '/images/icon/icon_175.svg'}
                      alt={pageData.value1_Title || 'Value icon'}
                      className="lazy-img" width={32} height={32}
                    />
@@ -619,7 +614,7 @@ const About = ({ treeCardStats, pageData }) => {
                <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column w-100">
                    <div className="icon m-auto tran3s">
                      <Image
-                       src={pageData.value2_Image?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.value2_Image.url}` : '/images/icon/icon_175.svg'}
+                       src={getStrapiMediaUrl(pageData.value2_Image?.url) || '/images/icon/icon_175.svg'}
                        alt={pageData.value2_Title || 'Value icon'}
                        className="lazy-img" width={32} height={32}
                      />
@@ -635,7 +630,7 @@ const About = ({ treeCardStats, pageData }) => {
                <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column w-100">
                    <div className="icon m-auto tran3s">
                      <Image
-                       src={pageData.value3_Image?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.value3_Image.url}` : '/images/icon/icon_175.svg'}
+                       src={getStrapiMediaUrl(pageData.value3_Image?.url) || '/images/icon/icon_175.svg'}
                        alt={pageData.value3_Title || 'Value icon'}
                        className="lazy-img" width={32} height={32}
                      />
@@ -651,7 +646,7 @@ const About = ({ treeCardStats, pageData }) => {
                <div className="card-style-fifteen tran3s text-center h-100 d-flex flex-column w-100">
                    <div className="icon m-auto tran3s">
                      <Image
-                       src={pageData.value4_Image?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.value4_Image.url}` : '/images/icon/icon_175.svg'}
+                       src={getStrapiMediaUrl(pageData.value4_Image?.url) || '/images/icon/icon_175.svg'}
                        alt={pageData.value4_Title || 'Value icon'}
                        className="lazy-img" width={32} height={32}
                      />
@@ -745,7 +740,7 @@ const About = ({ treeCardStats, pageData }) => {
 
         const rawUrl = getBgUrl(ctaData);
         const fullUrl = rawUrl
-          ? (rawUrl.startsWith('http') ? rawUrl : `${process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'}${rawUrl}`)
+          ? getStrapiMediaUrl(rawUrl)
           : null;
 
         return (

@@ -6,12 +6,9 @@ const nextConfig = {
   images: {
     unoptimized: true,
     remotePatterns: [
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '1337',
-        pathname: '/uploads/**',
-      },
+      { protocol: 'http', hostname: 'localhost', port: '1337', pathname: '/uploads/**' },
+      { protocol: 'https', hostname: 'admin.adaptiveintelligence.online', pathname: '/uploads/**' },
+      { protocol: 'https', hostname: 'adaptive-strapi.s3.us-east-1.amazonaws.com', pathname: '/**' },
     ],
   },
   sassOptions: {

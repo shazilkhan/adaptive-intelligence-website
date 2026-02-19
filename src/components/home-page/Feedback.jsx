@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import { getStrapiMediaUrl } from "@/utils/strapi";
 
 const Feedback = ({ feedbackData }) => {
   const images = [
@@ -33,9 +34,7 @@ const Feedback = ({ feedbackData }) => {
     },
   ];
 
-  const avatarUrl = feedbackData?.feedbackAvatar?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${feedbackData.feedbackAvatar.url}`
-    : "/images/team/adam.jpeg";
+  const avatarUrl = getStrapiMediaUrl(feedbackData?.feedbackAvatar?.url) || "/images/team/adam.jpeg";
 
   const avatarAlt = feedbackData?.feedbackAvatar?.alternativeText || "Founder and CEO";
   const quoteStart = feedbackData?.feedbackQuoteStart || "Adaptive Intelligence is pushing the";

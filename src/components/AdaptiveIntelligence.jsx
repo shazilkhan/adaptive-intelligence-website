@@ -1,20 +1,18 @@
 import React from 'react';
 import Image from 'next/image';
+import { getStrapiMediaUrl } from '@/utils/strapi';
 
-// Helper to safely get URLs (handles Strapi v4/v5 nesting)
 const getUrl = (media) => {
     if (!media) return null;
-    return media.url || media.attributes?.url || null;
+    return media.url || media.attributes?.url || media.data?.attributes?.url || null;
 };
 
 const AdaptiveIntelligence = ({ data }) => {
-    // Safety check
     if (!data) return null;
 
-    // 1. Destructure with specific field names
     const title = data.adaptiveIntelligenceTitle || "Ad·ap·tive In·tel·li·gence";
-    const videoUrl = getUrl(data.adaptiveIntelligenceBgVideo);
-    const imageUrl = getUrl(data.adaptiveIntelligenceBgImage);
+    const videoUrl = getStrapiMediaUrl(getUrl(data.adaptiveIntelligenceBgVideo));
+    const imageUrl = getStrapiMediaUrl(getUrl(data.adaptiveIntelligenceBgImage));
     const features = data.adaptiveIntelligenceFeatures || [];
 
     return (

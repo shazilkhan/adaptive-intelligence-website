@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from "next/image";
 import LetsTalkButton from "@/components/LetsTalkButton";
+import { getStrapiApiUrl, getStrapiMediaUrl } from "@/utils/strapi";
 
 const ServicesGridDark = () => {
   // State for data, loading, errors
@@ -14,8 +15,7 @@ const ServicesGridDark = () => {
       setIsLoading(true);
       setError(null);
       try {
-        // Fetch ALL services and populate the icon
-        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/services?populate=icon`;
+        const apiUrl = `${getStrapiApiUrl()}/api/services?populate=icon`;
         console.log("ServicesGridDark fetching from:", apiUrl);
         const res = await fetch(apiUrl);
 
@@ -28,19 +28,15 @@ const ServicesGridDark = () => {
         const json = await res.json();
         console.log("ServicesGridDark received raw data:", json);
 
-        // Format data (assuming Strapi v5 flat structure)
         const formattedServices = (json.data || []).map(item => ({
           id: item.id,
           title: item.title,
           subtitle: item.subtitle,
           description: item.description,
-          buttonText: item.buttonText, // Assuming these fields exist
+          buttonText: item.buttonText,
           buttonUrl: item.buttonUrl,
           color: item.color,
-          // Use simple .url access for v5 icon
-          icon: item.icon?.url
-            ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${item.icon.url}`
-            : "/images/shape/content.png" // Fallback
+          icon: getStrapiMediaUrl(item.icon?.url) || "/images/shape/content.png"
         }));
         console.log("ServicesGridDark formatted data:", formattedServices);
         setServices(formattedServices);

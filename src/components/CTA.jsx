@@ -3,28 +3,26 @@
 import React from 'react';
 import Image from 'next/image';
 import LetsTalkButton from "@/components/LetsTalkButton";
+import { getStrapiMediaUrl } from "@/utils/strapi";
 
 const CTA = ({ data }) => {
   if (!data) return null;
 
-  // 1. Text Fields
   const title = data.ctaBgTitle || data.ctaTitle || "Feeling Inspired Yet?";
   const subtitle = data.ctaBgSubtitle || data.ctaSubtitle || "We're only a click away.";
   const btnText = data.ctaBgBtnText || data.ctaBtnText || "Schedule a Marketing Audit";
   const btnUrl = data.ctaBgBtnUrl || data.ctaBtnUrl || "/contact";
-  
-  // 2. Smart Image Logic
+
   const getBgUrl = (obj) => {
     const imgField = obj.ctaBgImage || obj['cta-bg'];
     if (!imgField) return null;
-    if (imgField.data?.attributes?.url) return imgField.data.attributes.url; // v4
-    if (imgField.url) return imgField.url; // v5 flat
-    if (imgField.data?.url) return imgField.data.url; // v5 nested
+    if (imgField.data?.attributes?.url) return imgField.data.attributes.url;
+    if (imgField.url) return imgField.url;
+    if (imgField.data?.url) return imgField.data.url;
     return null;
   };
 
-  const rawUrl = getBgUrl(data);
-  const fullUrl = rawUrl ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${rawUrl}` : null;
+  const fullUrl = getStrapiMediaUrl(getBgUrl(data));
 
   return (
     <div className="cta-hardcoded-wrapper">

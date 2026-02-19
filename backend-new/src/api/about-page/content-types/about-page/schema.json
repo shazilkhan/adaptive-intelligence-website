@@ -447,6 +447,9 @@
         "videos",
         "audios"
       ]
+    },
+    "valuesSectionSecondParagraph": {
+      "type": "text"
     }
   }
 }

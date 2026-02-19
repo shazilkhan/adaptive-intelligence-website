@@ -23,8 +23,9 @@ export default async function handler(req, res) {
 
     // Special handling: If revalidateAll query param is set, fetch all case study slugs
     if (req.query.revalidateAll === 'case-studies') {
+      const { getStrapiApiUrl } = await import('@/utils/strapi');
       const caseStudiesRes = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies?fields[0]=slug`
+        `${getStrapiApiUrl()}/api/case-studies?fields[0]=slug`
       );
       const caseStudiesJson = await caseStudiesRes.json();
       const allSlugs = caseStudiesJson.data || [];

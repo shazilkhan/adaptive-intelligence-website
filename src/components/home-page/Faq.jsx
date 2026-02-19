@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getStrapiApiUrl } from "@/utils/strapi";
 
 const Faq = () => {
   const [accordionItems, setAccordionItems] = useState([]);
@@ -10,7 +11,7 @@ const Faq = () => {
     const fetchFaqs = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/faqs?sort=order:asc`
+          `${getStrapiApiUrl()}/api/faqs?sort=order:asc`
         );
         const data = await res.json();
 

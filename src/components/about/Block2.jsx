@@ -1,16 +1,14 @@
 import Image from "next/image";
 import React from "react";
+import { getStrapiMediaUrl } from "@/utils/strapi";
 
 const Block2 = ({ cards }) => {
-  // Use the 'cards' prop from Strapi, or an empty array as a fallback.
   const items = cards || [];
 
   return (
     <>
       {items.map((card, index) => {
-        const iconUrl = card.icon?.url
-          ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${card.icon.url}`
-          : "/images/icon/icon_175.svg"; // Fallback icon
+        const iconUrl = getStrapiMediaUrl(card.icon?.url) || "/images/icon/icon_175.svg";
 
         return (
           <div

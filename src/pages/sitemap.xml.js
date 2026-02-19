@@ -1,4 +1,4 @@
-const EXTERNAL_DATA_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+import { getStrapiApiUrl } from '@/utils/strapi';
 
 function generateSiteMap(caseStudies) {
     // Defines the base URL of the website
@@ -63,7 +63,7 @@ export async function getServerSideProps({ res }) {
     let caseStudies = [];
     try {
         // Fetch all case studies to build dynamic routes
-        const request = await fetch(`${EXTERNAL_DATA_URL}/api/case-studies?pagination[limit]=-1`);
+        const request = await fetch(`${getStrapiApiUrl()}/api/case-studies?pagination[limit]=-1`);
         const response = await request.json();
         caseStudies = response.data || [];
     } catch (e) {

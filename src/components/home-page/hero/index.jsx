@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import HeroContent from "./HeroContent";
 import Partners from "./Partners";
 import Image from "next/image";
+import { getStrapiMediaUrl } from "@/utils/strapi";
 
 // --- Animation Styles ---
 const backgroundAnimations = `
@@ -354,14 +355,9 @@ const Hero = ({ isHomePage = false, autoHeight = false, children, heroData }) =>
   const bgImage = heroData?.heroBackgroundImage;
   const bgVideo = heroData?.heroBackgroundVideo;
 
-  // Determine Image/Video URLs (Using simple .url for Strapi v5)
-  const bgImageUrl = bgImage?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${bgImage.url}`
-    : null;
-
-  const bgVideoUrl = bgVideo?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${bgVideo.url}`
-    : null;
+  // Use getStrapiMediaUrl so full S3 URLs are left as-is; relative paths get the correct base
+  const bgImageUrl = getStrapiMediaUrl(bgImage?.url) || null;
+  const bgVideoUrl = getStrapiMediaUrl(bgVideo?.url) || null;
 
   // --- ADDED CONSOLE LOGS FOR DEBUGGING ---
   console.log("Hero Component - isHomePage:", isHomePage);

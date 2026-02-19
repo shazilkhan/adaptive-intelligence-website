@@ -1,10 +1,9 @@
 import Image from "next/image";
+import { getStrapiMediaUrl } from "@/utils/strapi";
 
 const SuccessStory = ({ successStoryData }) => {
   // Story 1 data
-  const story1Image = successStoryData?.successStory1Image?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${successStoryData.successStory1Image.url}`
-    : "/images/assets/krakenimages-Y5bvRlcCx8k-unsplash.jpg";
+  const story1Image = getStrapiMediaUrl(successStoryData?.successStory1Image?.url) || "/images/assets/krakenimages-Y5bvRlcCx8k-unsplash.jpg";
 
   const story1ImageAlt = successStoryData?.successStory1Image?.alternativeText || "Customer story";
   const story1QuoteStart = successStoryData?.successStory1QuoteStart || "WordPress has been a great success—with";

@@ -1,24 +1,14 @@
 import Image from "next/image";
 import React from "react";
+import { getStrapiMediaUrl } from "@/utils/strapi";
 
 const OurMission = ({ data }) => {
   if (!data) return null;
 
-  const image1Url = data.missionImage1?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data.missionImage1.url}`
-    : '/images/media/img_97.jpg';
-
-  const image2Url = data.missionImage2?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data.missionImage2.url}`
-    : '/images/media/img_98.jpg';
-
-  const image3Url = data.missionImage3?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data.missionImage3.url}`
-    : '/images/media/img_99.jpg';
-
-  const image4Url = data.missionImage4?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data.missionImage4.url}`
-    : '/images/media/img_100.jpg';
+  const image1Url = getStrapiMediaUrl(data.missionImage1?.url) || '/images/media/img_97.jpg';
+  const image2Url = getStrapiMediaUrl(data.missionImage2?.url) || '/images/media/img_98.jpg';
+  const image3Url = getStrapiMediaUrl(data.missionImage3?.url) || '/images/media/img_99.jpg';
+  const image4Url = getStrapiMediaUrl(data.missionImage4?.url) || '/images/media/img_100.jpg';
 
   // Helper function to highlight a word in the quote
   const highlightWord = (text, wordToHighlight) => {

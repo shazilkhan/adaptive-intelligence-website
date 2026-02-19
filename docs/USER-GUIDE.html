@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptive Intelligence – User Guide</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      color: #1a1a1a;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      background: #f8f9fa;
+    }
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+      color: #0d47a1;
+    }
+    .subtitle {
+      color: #555;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+    h2 {
+      font-size: 1.35rem;
+      margin-top: 2.5rem;
+      margin-bottom: 0.75rem;
+      color: #1565c0;
+      padding-bottom: 0.25rem;
+      border-bottom: 2px solid #e3f2fd;
+    }
+    h3 {
+      font-size: 1.15rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #1976d2;
+    }
+    h4 { font-size: 1.05rem; margin-top: 1.25rem; color: #333; }
+    p { margin: 0.75rem 0; }
+    ul, ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    li { margin: 0.35rem 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    th {
+      background: #e3f2fd;
+      font-weight: 600;
+      color: #0d47a1;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f5f5f5; }
+    code, .cmd {
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.9em;
+      background: #eceff1;
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+    }
+    pre {
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.85rem;
+      background: #263238;
+      color: #eeffff;
+      padding: 1rem 1.25rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 1rem 0;
+      line-height: 1.5;
+    }
+    pre .cmd { background: transparent; color: #c3e88d; padding: 0; }
+    .toc {
+      background: #fff;
+      padding: 1.25rem 1.5rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      border: 1px solid #e0e0e0;
+    }
+    .toc ul { list-style: none; padding-left: 0; }
+    .toc li { margin: 0.5rem 0; }
+    .toc a { color: #1565c0; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .tip {
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      padding: 0.75rem 1rem;
+      margin: 1rem 0;
+      border-radius: 0 6px 6px 0;
+    }
+    .warning {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 0.75rem 1rem;
+      margin: 1rem 0;
+      border-radius: 0 6px 6px 0;
+    }
+    hr { border: none; border-top: 1px solid #e0e0e0; margin: 2rem 0; }
+    .step { font-weight: 600; color: #0d47a1; }
+  </style>
+</head>
+<body>
+
+<h1>Adaptive Intelligence – User Guide</h1>
+<p class="subtitle">Backend &amp; Frontend – for non-technical users. Step-by-step with all commands.</p>
+
+<div class="toc">
+  <h3>Table of contents</h3>
+  <ul>
+    <li><a href="#overview">1. Project overview</a></li>
+    <li><a href="#installed">2. What you need installed</a></li>
+    <li><a href="#code">3. Getting the code</a></li>
+    <li><a href="#frontend">4. Frontend (website)</a></li>
+    <li><a href="#backend">5. Backend (Strapi CMS)</a></li>
+    <li><a href="#deploy">6. Deploying changes</a></li>
+    <li><a href="#env">7. Environment variables</a></li>
+    <li><a href="#commands">8. Commands quick reference</a></li>
+    <li><a href="#troubleshooting">9. Troubleshooting</a></li>
+  </ul>
+</div>
+
+<h2 id="overview">1. Project overview</h2>
+<table>
+  <tr><th>Part</th><th>What it is</th><th>Where it runs</th><th>URL (example)</th></tr>
+  <tr><td><strong>Frontend</strong></td><td>Public website (Next.js)</td><td>AWS Amplify</td><td><code>https://adaptiveintelligence.online</code></td></tr>
+  <tr><td><strong>Backend</strong></td><td>Strapi CMS (content, media, forms)</td><td>AWS App Runner</td><td><code>https://admin.adaptiveintelligence.online</code></td></tr>
+  <tr><td><strong>Repository</strong></td><td>Code for both</td><td>GitHub</td><td><a href="https://github.com/Adaptive-Admin-User/adaptive-intelligence">github.com/Adaptive-Admin-User/adaptive-intelligence</a></td></tr>
+</table>
+<ul>
+  <li><strong>Content changes</strong> (text, images) → Use <strong>Strapi Admin</strong> in the browser; no code needed.</li>
+  <li><strong>Design / layout / new pages</strong> → Change <strong>frontend</strong> code, then deploy.</li>
+  <li><strong>New content types or CMS settings</strong> → Change <strong>backend</strong> code or Strapi Admin, then deploy backend.</li>
+</ul>
+
+<h2 id="installed">2. What you need installed</h2>
+<p>Install the following <strong>in this order</strong> (some tools depend on others). To only <strong>edit content</strong> (text, images), you don’t need any of this – use Strapi Admin in the browser.</p>
+
+<h3>2.1 Node.js (required – includes npm)</h3>
+<p>Node.js runs the frontend and backend. It also installs <strong>npm</strong> (Node Package Manager), which you use to install Yarn.</p>
+<table>
+  <tr><th>What</th><th>Details</th></tr>
+  <tr><td><strong>Download</strong></td><td><a href="https://nodejs.org/">https://nodejs.org</a> – choose your OS</td></tr>
+  <tr><td><strong>Which version</strong></td><td>Choose the <strong>LTS</strong> version (e.g. 20.x or 18.x)</td></tr>
+  <tr><td><strong>Windows</strong></td><td>Run the .msi installer, accept defaults. Restart your terminal (or PC) after install.</td></tr>
+  <tr><td><strong>Mac</strong></td><td>Download the .pkg (Apple Silicon = ARM64, Intel = x64). Run it, follow the steps. Restart Terminal after install.</td></tr>
+  <tr><td><strong>Check</strong></td><td>Open a terminal and run: <code>node --version</code> and <code>npm --version</code></td></tr>
+</table>
+
+<h3>2.2 Yarn (required)</h3>
+<p>Yarn is the package manager this project uses to install dependencies and run scripts.</p>
+<table>
+  <tr><th>What</th><th>Details</th></tr>
+  <tr><td><strong>Install</strong></td><td>After Node.js: open a terminal and run <code>npm install -g yarn</code></td></tr>
+  <tr><td><strong>Check</strong></td><td>Run: <code>yarn --version</code> (e.g. 1.22.x)</td></tr>
+</table>
+
+<h3>2.3 Git (required)</h3>
+<p>Git is used to clone the repo, pull updates, and push changes to GitHub.</p>
+<table>
+  <tr><th>What</th><th>Details</th></tr>
+  <tr><td><strong>Download</strong></td><td><a href="https://git-scm.com/downloads">https://git-scm.com/downloads</a> – choose your OS</td></tr>
+  <tr><td><strong>Windows</strong></td><td>Download “Windows” and run the installer. Defaults are fine.</td></tr>
+  <tr><td><strong>Mac</strong></td><td>Option A: download the macOS .dmg and run it. Option B: install Xcode Command Line Tools (includes Git): run <code>xcode-select --install</code> in Terminal.</td></tr>
+  <tr><td><strong>Check</strong></td><td>Open a new terminal: <code>git --version</code></td></tr>
+</table>
+
+<h3>2.4 Docker Desktop (optional – only for deploying the backend)</h3>
+<p>Only needed if you will build and push the Strapi image to AWS yourself.</p>
+<table>
+  <tr><th>What</th><th>Details</th></tr>
+  <tr><td><strong>Download</strong></td><td><a href="https://www.docker.com/products/docker-desktop/">https://www.docker.com/products/docker-desktop</a> – choose your OS</td></tr>
+  <tr><td><strong>Windows</strong></td><td>Run the installer. Enable WSL 2 if prompted. Restart if asked.</td></tr>
+  <tr><td><strong>Mac</strong></td><td>Download Docker Desktop for Mac (Apple Silicon or Intel). Open the .dmg, drag Docker to Applications, then open it. Restart Terminal if needed.</td></tr>
+  <tr><td><strong>Check</strong></td><td><code>docker --version</code></td></tr>
+</table>
+
+<h3>2.5 AWS CLI (optional – only for deploying the backend)</h3>
+<p>Only needed if you will push the backend Docker image to Amazon ECR and trigger App Runner deploys.</p>
+<table>
+  <tr><th>What</th><th>Details</th></tr>
+  <tr><td><strong>Download</strong></td><td><a href="https://aws.amazon.com/cli/">https://aws.amazon.com/cli</a> – “Download the AWS CLI” for your OS</td></tr>
+  <tr><td><strong>Windows</strong></td><td>64-bit MSI installer, run it, restart terminal after install.</td></tr>
+  <tr><td><strong>Mac</strong></td><td>Option A: download the macOS .pkg installer and run it. Option B: with Homebrew, run <code>brew install awscli</code>. Restart Terminal after install.</td></tr>
+  <tr><td><strong>Check</strong></td><td><code>aws --version</code></td></tr>
+  <tr><td><strong>Configure</strong></td><td>When ready to deploy, run <code>aws configure</code> and enter Access Key ID, Secret Access Key, region (e.g. us-east-1).</td></tr>
+</table>
+
+<h3>Quick reference – what to download</h3>
+<table>
+  <tr><th>Tool</th><th>Required?</th><th>Download / install</th></tr>
+  <tr><td>Node.js (includes npm)</td><td>Yes</td><td><a href="https://nodejs.org/">nodejs.org</a> – LTS version</td></tr>
+  <tr><td>Yarn</td><td>Yes</td><td>After Node: <code>npm install -g yarn</code></td></tr>
+  <tr><td>Git</td><td>Yes</td><td><a href="https://git-scm.com/downloads">git-scm.com/downloads</a></td></tr>
+  <tr><td>Docker Desktop</td><td>Only for backend deploy</td><td><a href="https://www.docker.com/products/docker-desktop/">docker.com/products/docker-desktop</a></td></tr>
+  <tr><td>AWS CLI</td><td>Only for backend deploy</td><td><a href="https://aws.amazon.com/cli/">aws.amazon.com/cli</a></td></tr>
+</table>
+
+<h2 id="code">3. Getting the code</h2>
+<h3>3.1 Clone the repository (first time)</h3>
+<ol>
+  <li>Open a terminal (Command Prompt, PowerShell, or Terminal).</li>
+  <li>Go to the folder where you want the project, e.g. <span class="cmd">cd Desktop</span></li>
+  <li>Clone the repo:
+    <pre>git clone https://github.com/Adaptive-Admin-User/adaptive-intelligence.git "Adaptive Intelligence"
+cd "Adaptive Intelligence"</pre>
+  </li>
+  <li>You should see folders like <code>src</code>, <code>backend-new</code>, <code>public</code>, <code>package.json</code>.</li>
+</ol>
+<h3>3.2 Get the latest code (already have the project)</h3>
+<pre>cd "C:\Users\YOUR_USERNAME\OneDrive\Desktop\Adaptive Intelligence"
+git pull origin main</pre>
+<p>Use your actual path and branch (e.g. <code>main</code> or <code>master</code>).</p>
+
+<h2 id="frontend">4. Frontend (website)</h2>
+<p>The frontend is the public site. Its code is in the <strong>root</strong> of the project (not inside <code>backend-new</code>).</p>
+<h3>4.1 Folder structure (what to edit)</h3>
+<table>
+  <tr><th>Folder / file</th><th>What it’s for</th></tr>
+  <tr><td><code>src/pages/</code></td><td>One file per page: index.js (home), about.js, contact.js, services.js, case-studies/, etc.</td></tr>
+  <tr><td><code>src/components/</code></td><td>Reusable pieces: header, footer, forms, sections</td></tr>
+  <tr><td><code>src/styles/</code></td><td>Global styles (e.g. index.scss)</td></tr>
+  <tr><td><code>src/data/</code></td><td>Static data (e.g. menu items)</td></tr>
+  <tr><td><code>public/</code></td><td>Static images, favicon (don’t go through build)</td></tr>
+</table>
+<p>To change a <strong>page</strong>, open the file under <code>src/pages/</code>. To change header/footer, look in <code>src/components/</code>.</p>
+<h3>4.2 Run the frontend locally</h3>
+<ol>
+  <li>Open a terminal in the <strong>project root</strong> (where <code>package.json</code> and <code>src</code> are).</li>
+  <li>Install dependencies (first time only): <pre>yarn install</pre></li>
+  <li>Start the dev server: <pre>yarn dev</pre></li>
+  <li>Open a browser at: <strong>http://localhost:3000</strong></li>
+  <li>To stop: press <kbd>Ctrl</kbd> + <kbd>C</kbd> in the terminal.</li>
+</ol>
+<h3>4.3 Build the frontend (test production build)</h3>
+<pre>yarn build
+yarn start</pre>
+<p>Then open <strong>http://localhost:3000</strong>. Same as what runs on Amplify.</p>
+<h3>4.4 Frontend environment variables</h3>
+<p>For <strong>local</strong> runs, create a file in the project root named <strong>.env.local</strong> (git-ignored). Example:</p>
+<pre>NEXT_PUBLIC_STRAPI_API_URL=https://admin.adaptiveintelligence.online</pre>
+<p><strong>Production (Amplify):</strong> Set variables in <strong>Amplify Console → App settings → Environment variables</strong>. The build uses <code>amplify.yml</code> to write some into <code>.env.production</code>.</p>
+
+<h2 id="backend">5. Backend (Strapi CMS)</h2>
+<p>The backend is Strapi. Its code is in <strong>backend-new</strong>.</p>
+<h3>5.1 Folder structure (what to edit)</h3>
+<table>
+  <tr><th>Folder / file</th><th>What it’s for</th></tr>
+  <tr><td><code>backend-new/src/api/</code></td><td>Content types and API (homepage, about-page, case-study, etc.)</td></tr>
+  <tr><td><code>backend-new/config/</code></td><td>Database, plugins (S3 upload), server, middlewares</td></tr>
+  <tr><td><code>backend-new/src/admin/</code></td><td>Admin panel branding (logo, theme in app.tsx)</td></tr>
+  <tr><td><code>backend-new/scripts/</code></td><td>One-off scripts (e.g. update file URLs to S3)</td></tr>
+</table>
+<p>Most <strong>content</strong> changes are done in <strong>Strapi Admin</strong> in the browser, not in code.</p>
+<h3>5.2 Run the backend locally</h3>
+<ol>
+  <li>Open a terminal and go into the backend folder:
+    <pre>cd "C:\Users\YOUR_USERNAME\OneDrive\Desktop\Adaptive Intelligence\backend-new"</pre>
+  </li>
+  <li>Install dependencies (first time only): <pre>yarn install</pre></li>
+  <li>Copy env example and edit: <pre>copy env.example .env</pre> Then open <code>.env</code> and set database etc. (see section 7).</li>
+  <li>Start Strapi: <pre>yarn develop</pre></li>
+  <li>Open: <strong>http://localhost:1337/admin</strong></li>
+  <li>Create admin user if first time; otherwise log in. Stop with <kbd>Ctrl</kbd>+<kbd>C</kbd>.</li>
+</ol>
+<h3>5.3 Strapi Admin (content only, no code)</h3>
+<ul>
+  <li><strong>URL (production):</strong> <code>https://admin.adaptiveintelligence.online/admin</code></li>
+  <li>Edit homepage, about, services, case studies, team, settings, media library, forms. No code or deploy needed for content-only changes.</li>
+</ul>
+
+<h2 id="deploy">6. Deploying changes</h2>
+<h3>6.1 Deploy the frontend (website)</h3>
+<p>The frontend deploys automatically when you <strong>push</strong> to the connected branch (e.g. <code>main</code>) on GitHub.</p>
+<ol>
+  <li>In the project <strong>root</strong>:
+    <pre>git add .
+git commit -m "Describe your change in a short line"
+git push origin main</pre>
+  </li>
+  <li>In <strong>AWS Console → Amplify</strong> → your app. A new build starts. Wait until status is <strong>Succeeded</strong>.</li>
+  <li>Live site updates at your main domain.</li>
+</ol>
+<p><strong>Changing frontend env vars:</strong> Amplify → your app → <strong>Environment variables</strong> → add/edit → then <strong>Redeploy</strong>.</p>
+
+<h3>6.2 Deploy the backend (Strapi)</h3>
+<p>Backend runs on <strong>AWS App Runner</strong>. You must build a Docker image, push to ECR, then deploy in App Runner.</p>
+<p><span class="step">Step 1 – Log in to ECR:</span></p>
+<pre>aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 066123827652.dkr.ecr.us-east-1.amazonaws.com</pre>
+<p><span class="step">Step 2 – Build the image:</span></p>
+<pre>cd "C:\Users\YOUR_USERNAME\OneDrive\Desktop\Adaptive Intelligence\backend-new"
+docker build -t adaptive-strapi .</pre>
+<p><span class="step">Step 3 – Tag for ECR:</span></p>
+<pre>docker tag adaptive-strapi:latest 066123827652.dkr.ecr.us-east-1.amazonaws.com/adaptive-strapi:latest</pre>
+<p><span class="step">Step 4 – Push to ECR:</span></p>
+<pre>docker push 066123827652.dkr.ecr.us-east-1.amazonaws.com/adaptive-strapi:latest</pre>
+<p><span class="step">Step 5 – Deploy in App Runner:</span> AWS Console → <strong>App Runner</strong> → your service (e.g. strapi-adaptive) → click <strong>Deploy</strong>. Wait until status is <strong>Running</strong>.</p>
+<p><strong>Changing backend env vars:</strong> App Runner → your service → <strong>Configuration</strong> → Edit → Runtime environment variables → add/edit → Save and deploy.</p>
+
+<h3>6.3 Fix existing media URLs (S3) in the database</h3>
+<p>If you see <strong>404 for existing images</strong> in Strapi or on the site:</p>
+<ol>
+  <li>Ensure <code>backend-new/.env.upload-migration</code> or <code>.env</code> has the same database and S3 settings as production.</li>
+  <li>From <strong>backend-new</strong> folder: <pre>node scripts/update-file-urls-to-s3.mjs</pre></li>
+  <li>You should see: <code>Updated N row(s) (main url).</code> and <code>Updated N row(s) (formats/thumbnails).</code></li>
+  <li>No redeploy needed; refresh admin or site.</li>
+</ol>
+
+<h2 id="env">7. Environment variables reference</h2>
+<h3>Frontend (Amplify / .env.local)</h3>
+<table>
+  <tr><th>Variable</th><th>Where</th><th>Purpose</th></tr>
+  <tr><td><code>NEXT_PUBLIC_STRAPI_API_URL</code></td><td>Amplify + amplify.yml</td><td>Strapi base URL, e.g. https://admin.adaptiveintelligence.online (no trailing slash)</td></tr>
+  <tr><td><code>APOLLO_*</code></td><td>Amplify</td><td>Contact / Let’s talk forms</td></tr>
+  <tr><td><code>REVALIDATION_SECRET</code></td><td>Amplify</td><td>Revalidation API if used</td></tr>
+</table>
+<h3>Backend (App Runner)</h3>
+<p>All set in <strong>App Runner → Configuration → Runtime environment variables</strong>. Reference list in <code>backend-new/.env.apprunner</code> (do not commit). Main ones: HOST, PORT, NODE_ENV, APP_KEYS, ADMIN_JWT_SECRET, API_TOKEN_SALT, TRANSFER_TOKEN_SALT, ENCRYPTION_KEY, DATABASE_*, AWS_*, CDN_URL, NODE_TLS_REJECT_UNAUTHORIZED.</p>
+<p class="warning">Never commit real passwords or keys to the repository.</p>
+
+<h2 id="commands">8. Commands quick reference</h2>
+<p><strong>Frontend (project root):</strong></p>
+<pre>yarn install    # First time or after package changes
+yarn dev        # Run locally → http://localhost:3000
+yarn build      # Production build
+yarn start      # Run production build locally
+yarn lint       # Lint</pre>
+<p><strong>Backend (backend-new):</strong></p>
+<pre>yarn install    # First time or after package changes
+yarn develop    # Run Strapi locally → http://localhost:1337
+yarn build      # Build admin (e.g. before Docker)
+yarn start      # Production mode locally</pre>
+<p><strong>Git (project root):</strong></p>
+<pre>git status
+git add .
+git commit -m "Your message"
+git push origin main
+git pull origin main</pre>
+<p><strong>Backend deploy (backend-new):</strong></p>
+<pre>aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 066123827652.dkr.ecr.us-east-1.amazonaws.com
+docker build -t adaptive-strapi .
+docker tag adaptive-strapi:latest 066123827652.dkr.ecr.us-east-1.amazonaws.com/adaptive-strapi:latest
+docker push 066123827652.dkr.ecr.us-east-1.amazonaws.com/adaptive-strapi:latest</pre>
+<p>Then: App Runner → your service → <strong>Deploy</strong>.</p>
+<p><strong>Database script (backend-new):</strong></p>
+<pre>node scripts/update-file-urls-to-s3.mjs</pre>
+
+<h2 id="troubleshooting">9. Troubleshooting</h2>
+<h3>Frontend</h3>
+<ul>
+  <li><strong>“APOLLO_API_KEY is missing” or forms don’t work:</strong> Add required vars in Amplify (APOLLO_*, NEXT_PUBLIC_STRAPI_API_URL, REVALIDATION_SECRET) and ensure amplify.yml writes them to .env.production. Redeploy.</li>
+  <li><strong>Site shows old content:</strong> Confirm NEXT_PUBLIC_STRAPI_API_URL in Amplify points to the correct Strapi URL. Redeploy.</li>
+  <li><strong>Build fails on Amplify:</strong> Check build logs; fix code and push again.</li>
+</ul>
+<h3>Backend (Strapi on App Runner)</h3>
+<ul>
+  <li><strong>Strapi won’t start / “Timeout acquiring a connection”:</strong> Check RDS security group allows port 5432; check App Runner env vars (DATABASE_*, NODE_TLS_REJECT_UNAUTHORIZED=0 if needed).</li>
+  <li><strong>“Access Denied” or “PutObjectAcl” on upload:</strong> IAM user (e.g. strapi-upload) needs s3:PutObjectAcl (and PutObject, GetObject, DeleteObject) on the S3 bucket.</li>
+  <li><strong>Images/thumbnails 404:</strong> Run <code>node scripts/update-file-urls-to-s3.mjs</code>; ensure S3 bucket policy allows public GetObject; redeploy if you changed middleware.</li>
+  <li><strong>JSON parse error on upload:</strong> Ensure latest code (with upload middleware) is in the Docker image and you’ve pushed and redeployed.</li>
+</ul>
+<h3>Custom domain (admin.adaptiveintelligence.online)</h3>
+<ul>
+  <li><strong>“Pending certificate DNS validation”:</strong> Add the exact CNAME records from App Runner in Route 53. Wait up to 24–48 hours.</li>
+  <li>Linking the <strong>admin</strong> subdomain does not change the main domain or frontend.</li>
+</ul>
+
+<hr>
+<h2>Where to find more</h2>
+<ul>
+  <li>Strapi: <a href="https://docs.strapi.io">docs.strapi.io</a></li>
+  <li>Next.js: <a href="https://nextjs.org/docs">nextjs.org/docs</a></li>
+  <li>Amplify / App Runner: AWS Console → your app/service → Help / documentation</li>
+  <li>Project: STRAPI-AWS-MIGRATION.md, docs/AWS-SETUP-PART1-S3-AND-TRANSFER.md</li>
+</ul>
+<p class="tip"><strong>Note:</strong> This project uses <strong>GitHub</strong> (not Bitbucket). Connect Amplify to your GitHub repo when setting up hosting.</p>
+
+</body>
+</html>

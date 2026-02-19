@@ -7,7 +7,7 @@ import FooterContent from '@/components/footer/FooterContent';
 import Subscribe from '@/components/footer/Subscribe';
 import CopyrightFooter from '@/components/footer/CopyrightFooter';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
-
+import { getStrapiApiUrl, getStrapiMediaUrl } from '@/utils/strapi';
 import SEO from '@/components/SEO';
 
 const SingleCaseStudyPage = ({ resource, relatedResources, pageSettings }) => {
@@ -31,9 +31,7 @@ const SingleCaseStudyPage = ({ resource, relatedResources, pageSettings }) => {
     );
   }
 
-  const heroImageUrl = resource.heroImage?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${resource.heroImage.url}`
-    : '/images/placeholder.png';
+  const heroImageUrl = getStrapiMediaUrl(resource.heroImage?.url) || '/images/placeholder.png';
 
   return (
     <>
@@ -220,7 +218,7 @@ const SingleCaseStudyPage = ({ resource, relatedResources, pageSettings }) => {
             <div className="row g-4">
               {relatedResources.map((related) => {
                 const relatedImgUrl = related.heroImage?.url
-                  ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${related.heroImage.url}`
+                  ? getStrapiMediaUrl(related.heroImage?.url)
                   : '/images/placeholder.png';
                 return (
                   <div key={related.id} className="col-lg-4 col-md-6">
@@ -357,7 +355,8 @@ const SingleCaseStudyPage = ({ resource, relatedResources, pageSettings }) => {
 
 export async function getStaticPaths() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies`);
+    const { getStrapiApiUrl } = await import('@/utils/strapi');
+    const res = await fetch(`${getStrapiApiUrl()}/api/case-studies`);
     const json = await res.json();
 
     const paths = (json.data || []).map(item => ({
@@ -375,23 +374,22 @@ export async function getStaticProps({ params }) {
   const { slug } = params;
 
   try {
-    // Fetch the specific case study
-    const resourceUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies?filters[slug][$eq]=${slug}&populate=*`;
+    const { getStrapiApiUrl } = await import('@/utils/strapi');
+    const base = getStrapiApiUrl();
+    const resourceUrl = `${base}/api/case-studies?filters[slug][$eq]=${slug}&populate=*`;
     const resourceRes = await fetch(resourceUrl);
     const resourceJson = await resourceRes.json();
     const resource = resourceJson.data?.[0] || null;
 
-    // Fetch related case studies
     let relatedResources = [];
     if (resource) {
-      const relatedUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies?filters[slug][$ne]=${slug}&pagination[limit]=3&populate=*`;
+      const relatedUrl = `${base}/api/case-studies?filters[slug][$ne]=${slug}&pagination[limit]=3&populate=*`;
       const relatedRes = await fetch(relatedUrl);
       const relatedJson = await relatedRes.json();
       relatedResources = relatedJson.data || [];
     }
 
-    // Fetch Case Studies Page settings
-    const pageSettingsUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies-page?populate=*`;
+    const pageSettingsUrl = `${base}/api/case-studies-page?populate=*`;
     const pageSettingsRes = await fetch(pageSettingsUrl);
     const pageSettingsJson = await pageSettingsRes.json();
     const pageSettings = pageSettingsJson.data || null;

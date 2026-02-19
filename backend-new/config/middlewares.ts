@@ -4,23 +4,9 @@ export default [
   {
     name: 'strapi::security',
     config: {
-      contentSecurityPolicy: {
-        useDefaults: true,
-        directives: {
-          'connect-src': ["'self'", 'https:'],
-          'img-src': [
-            "'self'",
-            'data:',
-            'blob:',
-          ],
-          'media-src': [
-            "'self'",
-            'data:',
-            'blob:',
-          ],
-          upgradeInsecureRequests: null,
-        },
-      },
+      // Disable CSP so admin can load images/media from S3 (adaptive-strapi bucket).
+      // Custom img-src/media-src with S3 were not applied (likely overridden by Strapi/App Runner).
+      contentSecurityPolicy: false,
     },
   },
   'strapi::cors',
@@ -52,7 +38,9 @@ export default [
   {
     name: 'strapi::public',
     config: {
-      path: process.env.NODE_ENV === 'production' ? '/data/public' : './public',
+      // Render: set STRAPI_PUBLIC_PATH=/data/public. AWS/local: default ./public
+      path: process.env.STRAPI_PUBLIC_PATH || './public',
     },
   },
+  'global::upload', // Normalize fileInfo for /upload (fix Media Library JSON parse error)
 ];

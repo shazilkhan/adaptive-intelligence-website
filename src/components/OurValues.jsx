@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
+import { getStrapiApiUrl, getStrapiMediaUrl } from '@/utils/strapi';
 
 const OurValues = ({ values }) => {
-  // Config for API URL
-  const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337";
+  const API_URL = getStrapiApiUrl();
 
   if (!values || values.length === 0) return null;
 
@@ -25,8 +25,7 @@ const OurValues = ({ values }) => {
           {values.map((item, index) => {
             const data = item.attributes;
             const iconUrl = data.icon?.data?.attributes?.url;
-            // Fix URL if needed
-            const fullIconUrl = iconUrl ? (iconUrl.startsWith('http') ? iconUrl : `${API_URL}${iconUrl}`) : null;
+            const fullIconUrl = getStrapiMediaUrl(iconUrl);
 
             return (
               <div 

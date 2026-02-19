@@ -6,7 +6,7 @@ import FooterContent from '@/components/footer/FooterContent';
 import Subscribe from '@/components/footer/Subscribe';
 import CopyrightFooter from '@/components/footer/CopyrightFooter';
 import LetsTalkButton from '@/components/LetsTalkButton';
-
+import { getStrapiApiUrl, getStrapiMediaUrl } from '@/utils/strapi';
 import SEO from '@/components/SEO';
 
 const CaseStudies = ({ allCaseStudies }) => {
@@ -82,9 +82,7 @@ const CaseStudies = ({ allCaseStudies }) => {
 
           <div className="row g-4">
             {featuredCaseStudies.map((study) => {
-              const heroImageUrl = study.heroImage?.url
-                ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${study.heroImage.url}`
-                : '/images/placeholder.png';
+              const heroImageUrl = getStrapiMediaUrl(study.heroImage?.url) || '/images/placeholder.png';
 
               return (
                 <div key={study.id} className="col-lg-4 col-md-6">
@@ -261,7 +259,8 @@ const CaseStudies = ({ allCaseStudies }) => {
   );
 };
 export async function getStaticProps() {
-  const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies?populate=deep`;
+  const { getStrapiApiUrl } = await import('@/utils/strapi');
+  const apiUrl = `${getStrapiApiUrl()}/api/case-studies?populate=deep`;
   try {
     const res = await fetch(apiUrl);
     if (!res.ok) throw new Error("Failed to fetch case studies");

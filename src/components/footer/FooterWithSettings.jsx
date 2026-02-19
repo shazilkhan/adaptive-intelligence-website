@@ -3,12 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useSettings } from "@/context/SettingsContext";
+import { getStrapiMediaUrl } from "@/utils/strapi";
 import FooterContent from "@/components/footer/FooterContent";
 import Subscribe from "@/components/footer/Subscribe";
 import CopyrightFooter from "@/components/footer/CopyrightFooter";
 
 const FooterWithSettings = () => {
   const { settings } = useSettings();
+  const logoUrl = getStrapiMediaUrl(settings?.logoFooter?.url);
 
   return (
     <div className="footer-style-nine theme-basic-footer zn2 position-relative">
@@ -19,11 +21,7 @@ const FooterWithSettings = () => {
               <div className="logo">
                 <Link href="/">
                   <Image
-                    src={
-                      settings?.logoFooter?.url
-                        ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${settings.logoFooter.url}`
-                        : "/images/logo/logo_06.svg"
-                    }
+                    src={logoUrl || "/images/logo/logo_06.svg"}
                     alt="logo"
                     width={115}
                     height={80}

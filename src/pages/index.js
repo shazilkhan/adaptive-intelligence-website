@@ -19,6 +19,7 @@ import Link from "next/link";
 import TreeStats from "@/components/home-page/TreeStats";
 
 import SEO from "@/components/SEO";
+import { getStrapiApiUrl, getStrapiMediaUrl } from "@/utils/strapi";
 
 const HomePage = ({ homepageData }) => {
   // --- Background Logic (Video vs Image) ---
@@ -130,7 +131,7 @@ const HomePage = ({ homepageData }) => {
         <div className="section-bg-wrapper">
           {homepageData?.testimonialsBackgroundImage?.url ? (
             <Image
-              src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}${homepageData.testimonialsBackgroundImage.url}`}
+              src={getStrapiMediaUrl(homepageData.testimonialsBackgroundImage?.url) || ''}
               alt="Testimonial Background"
               fill
               className="hero-bg-media"
@@ -334,7 +335,7 @@ const HomePage = ({ homepageData }) => {
 };
 
 export async function getStaticProps() {
-  const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/homepage?populate=*`;
+  const apiUrl = `${getStrapiApiUrl()}/api/homepage?populate=*`;
   try {
     const res = await fetch(apiUrl);
     if (!res.ok) throw new Error(`API fetch failed: ${res.status}`);

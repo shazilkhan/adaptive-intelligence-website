@@ -11,16 +11,13 @@ import ServicesGridBullets from "@/components/ServicesGridBullets";
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 import Link from "next/link";
 import SEO from "@/components/SEO";
+import { getStrapiApiUrl, getStrapiMediaUrl } from "@/utils/strapi";
 
 const ServicesPage = ({ servicesPageData }) => {
   // --- Hero Background Logic ---
   const heroType = servicesPageData?.heroBackgroundType || 'Image';
-  const heroVideoUrl = servicesPageData?.heroBackgroundVideo?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.heroBackgroundVideo.url}`
-    : null;
-  const heroImageUrl = servicesPageData?.heroBackgroundImage?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.heroBackgroundImage.url}`
-    : null;
+  const heroVideoUrl = getStrapiMediaUrl(servicesPageData?.heroBackgroundVideo?.url);
+  const heroImageUrl = getStrapiMediaUrl(servicesPageData?.heroBackgroundImage?.url);
 
   return (
     <>
@@ -128,7 +125,7 @@ const ServicesPage = ({ servicesPageData }) => {
                 <Image
                   src={
                     servicesPageData?.processImage?.url
-                      ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.processImage.url}`
+                      ? getStrapiMediaUrl(servicesPageData.processImage?.url)
                       : "/images/assets/process_placeholder.jpg"
                   }
                   alt="Our Process"
@@ -153,7 +150,7 @@ const ServicesPage = ({ servicesPageData }) => {
                 <Image
                   src={
                     servicesPageData?.insightsImage?.url
-                      ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${servicesPageData.insightsImage.url}`
+                      ? getStrapiMediaUrl(servicesPageData.insightsImage?.url)
                       : "/images/assets/marketing_insights_placeholder.jpg"
                   }
                   alt={servicesPageData?.insightsHeading || "Marketing Insights"}
@@ -278,7 +275,7 @@ const ServicesPage = ({ servicesPageData }) => {
         const rawUrl = getBgUrl(ctaData);
         // Build full URL if it's relative
         const fullUrl = rawUrl
-          ? (rawUrl.startsWith('http') ? rawUrl : `${process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'}${rawUrl}`)
+          ? getStrapiMediaUrl(rawUrl)
           : null;
 
         return (
@@ -511,7 +508,8 @@ const ServicesPage = ({ servicesPageData }) => {
 };
 
 export async function getStaticProps() {
-  const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/services-page?populate=*`;
+  const { getStrapiApiUrl } = await import('@/utils/strapi');
+  const apiUrl = `${getStrapiApiUrl()}/api/services-page?populate=*`;
   try {
     const res = await fetch(apiUrl);
     if (!res.ok) throw new Error(`API fetch failed: ${res.status}`);

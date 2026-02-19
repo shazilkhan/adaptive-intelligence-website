@@ -131,9 +131,11 @@ export async function getStaticProps() {
   let contactPageData = null;
 
   try {
+    const { getStrapiApiUrl } = await import('@/utils/strapi');
+    const base = getStrapiApiUrl();
     const [settingsRes, pageRes] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/setting?populate=*`),
-      fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/contact-page?populate=*`)
+      fetch(`${base}/api/setting?populate=*`),
+      fetch(`${base}/api/contact-page?populate=*`)
     ]);
 
     const settingsJson = settingsRes.ok ? await settingsRes.json() : { data: null };

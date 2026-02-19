@@ -545,6 +545,7 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
     valuesSectionMainDescription: Schema.Attribute.Text;
     valuesSectionMainHeading: Schema.Attribute.Text;
     valuesSectionMissionHeading: Schema.Attribute.String;
+    valuesSectionSecondParagraph: Schema.Attribute.Text;
     valuesSectionTitle: Schema.Attribute.String;
     valuesTagline: Schema.Attribute.String;
     valuesTitle: Schema.Attribute.String;

@@ -45,8 +45,10 @@ export default async function handler(req, res) {
     }
 
     // --- 2. Check Duplicate in Strapi ---
-    const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-    
+    const { getStrapiApiUrl } = await import('@/utils/strapi');
+    const strapiUrl = getStrapiApiUrl();
+    if (!strapiUrl) return res.status(500).json({ message: 'Backend not configured' });
+
     const checkRes = await fetch(`${strapiUrl}/api/newsletters?filters[email][$eq]=${email}`);
     const checkData = await checkRes.json();
 

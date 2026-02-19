@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getStrapiApiUrl, getStrapiMediaUrl } from '@/utils/strapi';
 
 const LatestCaseStudiesSection = () => {
   const [studies, setStudies] = useState([]);
@@ -11,9 +12,8 @@ const LatestCaseStudiesSection = () => {
   useEffect(() => {
     const fetchLatestStudies = async () => {
       try {
-        const LATEST_CASE_STUDIES_API_URL = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies?populate=*&sort=publishedAt:desc&pagination[limit]=3`;
-        
-        const res = await fetch(LATEST_CASE_STUDIES_API_URL);
+        const apiBase = getStrapiApiUrl();
+        const res = await fetch(`${apiBase}/api/case-studies?populate=*&sort=publishedAt:desc&pagination[limit]=3`);
         if (!res.ok) throw new Error('Data could not be fetched.');
         
         const json = await res.json();
@@ -52,9 +52,7 @@ const LatestCaseStudiesSection = () => {
 
           <div className="row g-4 mt-50 lg-mt-20">
             {studies.map((study) => {
-              const heroImageUrl = study.heroImage?.url
-                ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${study.heroImage.url}`
-                : '/images/placeholder.png';
+              const heroImageUrl = getStrapiMediaUrl(study.heroImage?.url) || '/images/placeholder.png';
 
               return (
                 <div key={study.id} className="col-lg-4 col-md-6">

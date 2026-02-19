@@ -6,6 +6,7 @@ import LetsTalkButton from '@/components/LetsTalkButton';
 import { resourceDatabase } from '@/data/resources';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 import SEO from "@/components/SEO";
+import { getStrapiApiUrl, getStrapiMediaUrl } from '@/utils/strapi';
 
 const DownloadPage = () => {
   const router = useRouter();
@@ -71,18 +72,17 @@ const DownloadPage = () => {
   const fetchCaseStudyFile = async (slug, email) => {
     try {
       // Fetch file data from Strapi
-      const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies?filters[slug][$eq]=${slug}&populate=downloadFile`);
+      const res = await fetch(`${getStrapiApiUrl()}/api/case-studies?filters[slug][$eq]=${slug}&populate=downloadFile`);
       const json = await res.json();
       const caseStudy = json.data?.[0];
 
       if (caseStudy && caseStudy.downloadFile?.url) {
-        // Prepare Resource Object
         const localData = resourceDatabase[slug] || {};
         const resource = {
           ...localData,
           title: caseStudy.title || localData.title || "Case Study",
           description: caseStudy.description || localData.description,
-          downloadUrl: `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${caseStudy.downloadFile.url}`,
+          downloadUrl: getStrapiMediaUrl(caseStudy.downloadFile.url),
           fileName: caseStudy.downloadFile.name || `${slug}.pdf`,
           client: caseStudy.client || localData.client,
           industry: caseStudy.industry || localData.industry,

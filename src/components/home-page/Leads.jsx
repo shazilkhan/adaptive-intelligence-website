@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from "next/image";
 import LetsTalkButton from "@/components/LetsTalkButton";
+import { getStrapiApiUrl, getStrapiMediaUrl } from "@/utils/strapi";
 
 const Leads = () => {
   const [leadItems, setLeadItems] = useState([]);
@@ -12,8 +13,7 @@ const Leads = () => {
       setIsLoading(true);
       setError(null);
       try {
-        // UPDATED: Added '&sort=order:asc' to the end
-        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/services?populate=icon&sort=order:asc`;
+        const apiUrl = `${getStrapiApiUrl()}/api/services?populate=icon&sort=order:asc`;
 
         const res = await fetch(apiUrl);
 
@@ -36,9 +36,7 @@ const Leads = () => {
           buttonText: item.buttonText,
           buttonUrl: item.buttonUrl,
           color: item.color,
-          icon: item.icon?.url
-            ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${item.icon.url}`
-            : "/images/shape/content.png"
+          icon: getStrapiMediaUrl(item.icon?.url) || "/images/shape/content.png"
         }));
 
         setLeadItems(formattedServices);

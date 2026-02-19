@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { useSettings } from '@/context/SettingsContext';
+import { getStrapiMediaUrl } from '@/utils/strapi';
 
 const SEO = ({ pageTitle, metaDescription, ogImage, canonicalUrl }) => {
     const { settings } = useSettings();
@@ -12,12 +13,10 @@ const SEO = ({ pageTitle, metaDescription, ogImage, canonicalUrl }) => {
     const defaultDesc = settings?.siteDescription || 'Fueling Creative Innovation and Digital Growth.';
     const description = metaDescription || defaultDesc;
 
-    // 3. Resolve Media URL (Stapi v5 structure)
+    // 3. Resolve Media URL (Strapi v5 structure; works with local or AWS/S3)
     const getImageUrl = (imageObj) => {
         const url = imageObj?.url || imageObj?.attributes?.url;
-        if (!url) return null;
-        if (url.startsWith('http')) return url;
-        return `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${url}`;
+        return getStrapiMediaUrl(url || null);
     };
 
     const previewImage = getImageUrl(ogImage) || getImageUrl(settings?.sitePreviewImage);

@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { getStrapiApiUrl } from "@/utils/strapi";
 
 const SettingsContext = createContext(null);
 
@@ -11,7 +12,7 @@ export const SettingsProvider = ({ children }) => {
   useEffect(() => {
     const fetchSettings = async (retries = 3, delay = 2000) => {
       try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/setting?populate=*`;
+        const apiUrl = `${getStrapiApiUrl()}/api/setting?populate=*`;
         console.log(`Fetching settings from: ${apiUrl} (Attempts remaining: ${retries})`);
 
         const res = await fetch(apiUrl);

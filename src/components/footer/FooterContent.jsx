@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getStrapiApiUrl } from "@/utils/strapi";
 
 const FooterContent = () => {
   const [latestCaseStudies, setLatestCaseStudies] = useState([]);
@@ -6,9 +7,7 @@ const FooterContent = () => {
   useEffect(() => {
     const fetchCaseStudies = async () => {
       try {
-        // Fetch latest 3 case studies, sorted by publication date
-        // Note: Adjust NEXT_PUBLIC_STRAPI_API_URL to match your specific ENV variable name
-        const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
+        const apiUrl = getStrapiApiUrl();
         const res = await fetch(
           `${apiUrl}/api/case-studies?sort=publishedAt:desc&pagination[limit]=3`
         );

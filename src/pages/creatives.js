@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Header from '@/components/header/Header';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 import LetsTalkButton from "@/components/LetsTalkButton";
-
+import { getStrapiApiUrl, getStrapiMediaUrl } from '@/utils/strapi';
 import SEO from '@/components/SEO';
 
 const Creatives = ({ pageData }) => {
@@ -22,17 +22,9 @@ const Creatives = ({ pageData }) => {
 
   // --- Background Logic (Video vs Image) ---
   const heroType = pageData.heroBackgroundType || 'Image';
-  const heroVideoUrl = pageData.heroBackgroundVideo?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundVideo.url}`
-    : null;
-  const heroImageUrl = pageData.heroBackgroundImage?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundImage.url}`
-    : null;
-
-  // Fallback images
-  const missionImageUrl = pageData.missionImage?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.missionImage.url}`
-    : '/images/media/img_133.jpg';
+  const heroVideoUrl = getStrapiMediaUrl(pageData.heroBackgroundVideo?.url);
+  const heroImageUrl = getStrapiMediaUrl(pageData.heroBackgroundImage?.url);
+  const missionImageUrl = getStrapiMediaUrl(pageData.missionImage?.url) || '/images/media/img_133.jpg';
 
   return (
     <>
@@ -125,7 +117,7 @@ const Creatives = ({ pageData }) => {
                 <Image
                   src={
                     pageData.valuesImage?.url
-                      ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.valuesImage.url}`
+                      ? getStrapiMediaUrl(pageData.valuesImage?.url)
                       : '/images/media/img_133.jpg'
                   }
                   alt={pageData.valuesTitle || 'Our Values'}
@@ -159,7 +151,7 @@ const Creatives = ({ pageData }) => {
                 <Image
                   src={
                     pageData.benefitsImage?.url
-                      ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.benefitsImage.url}`
+                      ? getStrapiMediaUrl(pageData.benefitsImage?.url)
                       : '/images/media/img_133.jpg'
                   }
                   alt={pageData.benefitsTitle || 'Benefits & Perks'}
@@ -384,7 +376,8 @@ const Creatives = ({ pageData }) => {
 
 export async function getStaticProps() {
   try {
-    const pageUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/creatives-page?populate=*`;
+    const { getStrapiApiUrl } = await import('@/utils/strapi');
+    const pageUrl = `${getStrapiApiUrl()}/api/creatives-page?populate=*`;
     const pageRes = await fetch(pageUrl);
     const pageJson = await pageRes.json();
     const pageData = pageJson.data || null;

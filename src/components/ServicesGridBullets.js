@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from "next/image";
 import LetsTalkButton from "@/components/LetsTalkButton";
+import { getStrapiApiUrl, getStrapiMediaUrl } from "@/utils/strapi";
 
 const ServicesGridBullets = () => {
   const [services, setServices] = useState([]);
@@ -9,8 +10,7 @@ const ServicesGridBullets = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Updated API URL: Added '&sort=order:asc' at the end
-        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/service-lists?populate[0]=icon&populate[1]=features&sort=order:asc`;
+        const apiUrl = `${getStrapiApiUrl()}/api/service-lists?populate[0]=icon&populate[1]=features&sort=order:asc`;
 
         const res = await fetch(apiUrl);
         const json = await res.json();
@@ -34,10 +34,7 @@ const ServicesGridBullets = () => {
   return (
     <>
       {services.map((item, index) => {
-        // Strapi v5 Flat structure
-        const iconUrl = item.icon?.url
-          ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${item.icon.url}`
-          : "/images/shape/content.png";
+        const iconUrl = getStrapiMediaUrl(item.icon?.url) || "/images/shape/content.png";
 
         return (
           <div className="col-lg-4 col-md-6" key={item.id || index}>

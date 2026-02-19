@@ -1,12 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import LetsTalkButton from "@/components/LetsTalkButton";
+import { getStrapiMediaUrl } from "@/utils/strapi";
 
 const Feature = ({ featureData }) => {
-  // --- 1. Image Logic ---
-  const imageUrl = featureData?.featureImage?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${featureData.featureImage.url}`
-    : null;
+  const imageUrl = getStrapiMediaUrl(featureData?.featureImage?.url);
 
   const imageAlt = featureData?.featureImage?.alternativeText || "Feature Image";
 

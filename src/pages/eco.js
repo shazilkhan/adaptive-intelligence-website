@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Header from '@/components/header/Header';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 import SEO from '@/components/SEO';
+import { getStrapiApiUrl, getStrapiMediaUrl } from '@/utils/strapi';
 
 // Icon mapping function for hub cards
 const getHubIconByType = (iconType) => {
@@ -48,21 +49,13 @@ const EcoPage = ({ treeCardStats, pageData }) => {
   // --- Hero Background Logic ---
   const heroType = pageData.heroBackgroundType || 'Image';
 
-  const heroVideoUrl = pageData.heroBackgroundVideo?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundVideo.url}`
-    : null;
+  const heroVideoUrl = getStrapiMediaUrl(pageData.heroBackgroundVideo?.url);
 
-  const heroImageUrl = pageData.heroBackgroundImage?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundImage.url}`
-    : 'https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2400&q=80';
+  const heroImageUrl = getStrapiMediaUrl(pageData.heroBackgroundImage?.url) || 'https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2400&q=80';
 
-  const impactImageUrl = pageData.impactBackgroundImage?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.impactBackgroundImage.url}`
-    : 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2342&q=80';
+  const impactImageUrl = getStrapiMediaUrl(pageData.impactBackgroundImage?.url) || 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2342&q=80';
 
-  const noaaImageUrl = pageData.noaaImage?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.noaaImage.url}`
-    : '/images/assets/environmental-impact.jpeg';
+  const noaaImageUrl = getStrapiMediaUrl(pageData.noaaImage?.url) || '/images/assets/environmental-impact.jpeg';
 
   return (
     <>
@@ -417,7 +410,8 @@ export async function getStaticProps() {
   let strapiPageData = null;
   try {
     // populate=* handles top-level media
-    const pageUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/eco-page?populate=*`;
+    const { getStrapiApiUrl } = await import('@/utils/strapi');
+    const pageUrl = `${getStrapiApiUrl()}/api/eco-page?populate=*`;
     const pageRes = await fetch(pageUrl);
 
     if (pageRes.ok) {

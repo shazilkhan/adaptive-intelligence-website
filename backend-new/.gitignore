@@ -122,6 +122,8 @@ coverage
 ############################
 
 .env
+.env.upload-migration
+.env.apprunner
 license.txt
 exports
 .strapi

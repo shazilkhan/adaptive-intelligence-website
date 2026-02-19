@@ -44,7 +44,8 @@ export default async function handler(req, res) {
     }
 
     // --- 2. Save to Strapi (Existing Logic) ---
-    const strapiResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-study-downloads`, {
+    const { getStrapiApiUrl } = await import('@/utils/strapi');
+    const strapiResponse = await fetch(`${getStrapiApiUrl()}/api/case-study-downloads`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

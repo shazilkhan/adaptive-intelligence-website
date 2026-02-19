@@ -93,8 +93,10 @@ export default async function handler(req, res) {
 
     // 5. Save to Strapi (Backup)
     try {
-      if (process.env.NEXT_PUBLIC_STRAPI_API_URL) {
-        await fetchWithTimeout(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/contact-form-submissions`, {
+      const { getStrapiApiUrl } = await import('@/utils/strapi');
+      const strapiBase = getStrapiApiUrl();
+      if (strapiBase) {
+        await fetchWithTimeout(`${strapiBase}/api/contact-form-submissions`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

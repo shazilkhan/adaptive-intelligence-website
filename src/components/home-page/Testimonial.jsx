@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import Slider from "react-slick";
+import { getStrapiApiUrl } from "@/utils/strapi";
 
 const Testimonial = () => {
   const sliderRef = useRef(null);
@@ -12,7 +13,7 @@ const Testimonial = () => {
     const fetchTestimonials = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/testimonials?sort=order:asc`
+          `${getStrapiApiUrl()}/api/testimonials?sort=order:asc`
         );
         const data = await res.json();
 

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/header/Header';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
-
+import { getStrapiApiUrl, getStrapiMediaUrl } from '@/utils/strapi';
 import LetsTalkButton from "@/components/LetsTalkButton";
 
 
@@ -17,12 +17,8 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
   // --- Hero Background Logic ---
   const heroType = data.heroBackgroundType || 'Image';
 
-  const heroVideoUrl = data.heroBackgroundVideo?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data.heroBackgroundVideo.url}`
-    : null;
-  const heroImageUrl = data.heroBackgroundImage?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${data.heroBackgroundImage.url}`
-    : null;
+  const heroVideoUrl = getStrapiMediaUrl(data.heroBackgroundVideo?.url);
+  const heroImageUrl = getStrapiMediaUrl(data.heroBackgroundImage?.url);
 
   const isVideo = heroType === 'Video' || heroType === 'video' || heroType === 'heroBackgroundVideo';
 
@@ -115,7 +111,7 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
           <div className="row g-4">
             {allCaseStudies.map((study) => {
               const studyHeroUrl = study.heroImage?.url
-                ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${study.heroImage.url}`
+                ? getStrapiMediaUrl(study.heroImage?.url)
                 : '/images/placeholder.png';
 
               return (
@@ -298,9 +294,11 @@ const CaseStudies = ({ allCaseStudies, pageData }) => {
 
 export async function getStaticProps() {
   try {
+    const { getStrapiApiUrl } = await import('@/utils/strapi');
+    const base = getStrapiApiUrl();
     const [casesRes, pageRes] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies?populate=*`),
-      fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/case-studies-page?populate=*`)
+      fetch(`${base}/api/case-studies?populate=*`),
+      fetch(`${base}/api/case-studies-page?populate=*`)
     ]);
 
     const casesJson = casesRes.ok ? await casesRes.json() : { data: [] };

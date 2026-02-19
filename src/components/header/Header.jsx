@@ -4,6 +4,7 @@ import MainMenu from "./MainMenu";
 import Link from "next/link";
 import Image from "next/image";
 import { useSettings } from "@/context/SettingsContext";
+import { getStrapiMediaUrl } from "@/utils/strapi";
 
 const Header = ({ style, menuTextColor }) => {
   const { settings } = useSettings();
@@ -107,7 +108,7 @@ const Header = ({ style, menuTextColor }) => {
                 <Image
                   src={
                     settings?.logo?.url
-                      ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${settings.logo.url}`
+                      ? getStrapiMediaUrl(settings.logo.url)
                       : "/images/logo/logo_06.svg"
                   }
                   alt="logo"

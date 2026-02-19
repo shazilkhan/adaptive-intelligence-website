@@ -1,24 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import LetsTalkButton from "@/components/LetsTalkButton";
+import { getStrapiMediaUrl } from "@/utils/strapi";
 
 const FeaturesBlock = ({ featuresData }) => {
-  // CORRECTED: The image URL path is now simpler to match your Strapi data.
-  const mainImageUrl = featuresData?.whyUsMainImage?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${featuresData.whyUsMainImage.url}`
-    : "/images/assets/john-FlPc9-unsplash.jpg";
-
-  const infoBox1IconUrl = featuresData?.whyUsInfoBox1Icon?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${featuresData.whyUsInfoBox1Icon.url}`
-    : "/images/logo/Plogo-34.png";
-
-  const infoBox2Icon1Url = featuresData?.whyUsInfoBox2Icon1?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${featuresData.whyUsInfoBox2Icon1.url}`
-    : "/images/logo/Plogo-35.png";
-
-  const infoBox2Icon2Url = featuresData?.whyUsInfoBox2Icon2?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${featuresData.whyUsInfoBox2Icon2.url}`
-    : "/images/logo/Plogo-36.png";
+  const mainImageUrl = getStrapiMediaUrl(featuresData?.whyUsMainImage?.url) || "/images/assets/john-FlPc9-unsplash.jpg";
+  const infoBox1IconUrl = getStrapiMediaUrl(featuresData?.whyUsInfoBox1Icon?.url) || "/images/logo/Plogo-34.png";
+  const infoBox2Icon1Url = getStrapiMediaUrl(featuresData?.whyUsInfoBox2Icon1?.url) || "/images/logo/Plogo-35.png";
+  const infoBox2Icon2Url = getStrapiMediaUrl(featuresData?.whyUsInfoBox2Icon2?.url) || "/images/logo/Plogo-36.png";
 
   return (
     <>

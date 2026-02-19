@@ -3,6 +3,7 @@ import Header from '@/components/header/Header';
 import FooterWithSettings from "@/components/footer/FooterWithSettings";
 import Image from "next/image";
 import Head from 'next/head';
+import { getStrapiApiUrl, getStrapiMediaUrl } from '@/utils/strapi';
 
 // --- getStaticProps ---
 export async function getStaticProps() {
@@ -10,14 +11,15 @@ export async function getStaticProps() {
   let pageData = null;
 
   try {
-    const membersRes = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/team-members?populate[0]=headshot`);
+    const base = getStrapiApiUrl();
+    const membersRes = await fetch(`${base}/api/team-members?populate[0]=headshot`);
     if (membersRes.ok) {
       const json = await membersRes.json();
       teamMembers = json.data || [];
     }
 
     try {
-      const pageRes = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/team-page?populate=*`);
+      const pageRes = await fetch(`${base}/api/team-page?populate=*`);
       if (pageRes.ok) {
         const json = await pageRes.json();
         pageData = json.data || null;
@@ -41,9 +43,7 @@ export async function getStaticProps() {
 
 // --- REDESIGNED PREMIUM CARD ---
 const TeamMemberCard = ({ member }) => {
-  const imageUrl = member.headshot?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${member.headshot.url}`
-    : '/images/placeholder-headshot.png';
+  const imageUrl = getStrapiMediaUrl(member.headshot?.url) || '/images/placeholder-headshot.png';
 
   let displayBio = member.bio_short || '';
   if (!displayBio && member.bio_long) {
@@ -101,12 +101,8 @@ const TeamPage = ({ teamMembers, pageData }) => {
 
   // --- HERO LOGIC ---
   const heroType = pageData?.heroBackgroundType || 'Image';
-  const heroVideoUrl = pageData?.heroBackgroundVideo?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundVideo.url}`
-    : null;
-  const heroImageUrl = pageData?.heroBackgroundImage?.url
-    ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${pageData.heroBackgroundImage.url}`
-    : null;
+  const heroVideoUrl = getStrapiMediaUrl(pageData?.heroBackgroundVideo?.url);
+  const heroImageUrl = getStrapiMediaUrl(pageData?.heroBackgroundImage?.url);
 
   const hasMediaBackground = (heroType === 'Video') || (heroType === 'Image');
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Slider from "react-slick";
 import Image from "next/image";
+import { getStrapiApiUrl, getStrapiMediaUrl } from "@/utils/strapi";
 
 const ClientCarousel = () => {
   const [clientLogos, setClientLogos] = useState([]);
@@ -9,7 +10,7 @@ const ClientCarousel = () => {
   useEffect(() => {
     const fetchClientLogos = async () => {
       try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/client-logos?populate=logo`;
+        const apiUrl = `${getStrapiApiUrl()}/api/client-logos?populate=logo`;
         const res = await fetch(apiUrl);
         if (!res.ok) throw new Error('Failed to fetch logos');
 
@@ -17,9 +18,7 @@ const ClientCarousel = () => {
 
         const formattedLogos = (json.data || json).map(item => ({
           name: item.name,
-          logo: item.logo?.url
-            ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${item.logo.url}`
-            : ""
+          logo: getStrapiMediaUrl(item.logo?.url) || ""
         })).filter(item => item.logo);
 
         setClientLogos(formattedLogos);
