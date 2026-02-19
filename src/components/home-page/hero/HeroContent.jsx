@@ -16,7 +16,7 @@ const HeroContent = ({ heroData }) => {
         {heroData?.heroSubtitleEnd || "through innovative strategies and crafting key messages that resonate clearly with a universal audience."}
       </p>
 
-      <div className="d-flex justify-content-center align-items-center flex-wrap gap-3">
+      <div className="hero-cta-wrapper d-flex justify-content-center align-items-center flex-wrap gap-3">
         {/* Button 1: Start Project (Typeform) */}
         <LetsTalkButton
           buttonText={heroData?.heroButtonText || "Start Project"}
@@ -25,8 +25,7 @@ const HeroContent = ({ heroData }) => {
           className="custom-button hero-cta-btn"
         />
 
-        {/* Button 2: Apply Now (Creatives) - Only shows if text is provided or defaults are desired */}
-        {/* Button 2: Apply Now (Creatives) - Uses new "pink" variant for inverted styling */}
+        {/* Button 2: Apply Now (Creatives) */}
         <LetsTalkButton
           buttonText={heroData?.heroButtonText2 || "Apply Now"}
           href={heroData?.heroButtonUrl2 || "/creatives"}
@@ -45,10 +44,16 @@ const HeroContent = ({ heroData }) => {
           user-select: none;
         }
 
-        /* Ensure both buttons have the exact same width */
+        /* Desktop: buttons side by side, same width */
+        .hero-cta-wrapper {
+          max-width: 540px;
+        }
         :global(.hero-cta-btn) {
-          min-width: 200px;
+          flex: 1 1 0;
+          min-width: 0;
           justify-content: center;
+          box-sizing: border-box;
+          white-space: nowrap;
         }
 
         .sub-text {
@@ -59,6 +64,16 @@ const HeroContent = ({ heroData }) => {
 
         /* --- MOBILE OPTIMIZATION (Below 768px) --- */
         @media (max-width: 767px) {
+          .hero-cta-wrapper {
+            flex-direction: column;
+            max-width: 100%;
+          }
+          :global(.hero-cta-btn) {
+            width: 100%;
+            max-width: 320px;
+            flex: none;
+          }
+
           .hero-heading {
             font-size: 55px !important; /* Drastically smaller for mobile */
             line-height: 1.25 !important;
