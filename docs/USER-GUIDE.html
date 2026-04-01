@@ -65,24 +65,33 @@
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: #f5f5f5; }
     code, .cmd {
-      font-family: 'Consolas', 'Monaco', monospace;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
       font-size: 0.9em;
       background: #eceff1;
+      color: #1a1a1a;
       padding: 0.15em 0.4em;
       border-radius: 4px;
     }
     pre {
-      font-family: 'Consolas', 'Monaco', monospace;
-      font-size: 0.85rem;
-      background: #263238;
-      color: #eeffff;
-      padding: 1rem 1.25rem;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      background: #fff;
+      color: #1a1a1a;
+      padding: 1.25rem 1.5rem;
       border-radius: 6px;
       overflow-x: auto;
       margin: 1rem 0;
-      line-height: 1.5;
+      border: 1px solid #e0e0e0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
-    pre .cmd { background: transparent; color: #c3e88d; padding: 0; }
+    pre code {
+      background: transparent;
+      color: #1a1a1a;
+      padding: 0;
+      font-size: inherit;
+    }
+    pre .cmd { background: transparent; color: #1a1a1a; padding: 0; }
     .toc {
       background: #fff;
       padding: 1.25rem 1.5rem;
@@ -126,9 +135,10 @@
     <li><a href="#frontend">4. Frontend (website)</a></li>
     <li><a href="#backend">5. Backend (Strapi CMS)</a></li>
     <li><a href="#deploy">6. Deploying changes</a></li>
-    <li><a href="#env">7. Environment variables</a></li>
+    <li><a href="#env">7. Environment variables</a> (<a href="#env-setup-new">7.1 New developer local setup</a>)</li>
     <li><a href="#commands">8. Commands quick reference</a></li>
     <li><a href="#troubleshooting">9. Troubleshooting</a></li>
+    <li><a href="#code-changes">10. Making frontend and backend code changes</a></li>
   </ul>
 </div>
 
@@ -319,14 +329,69 @@ docker build -t adaptive-strapi .</pre>
 </ol>
 
 <h2 id="env">7. Environment variables reference</h2>
-<h3>Frontend (Amplify / .env.local)</h3>
+
+<h3 id="env-setup-new">7.1 Environment setup for a new developer (local)</h3>
+<p>Follow these steps <strong>after cloning the repo</strong> so the frontend and backend run correctly on your machine. Use the exact file paths and examples below.</p>
+
+<h4>Step 1: Frontend local env (project root)</h4>
+<ol>
+  <li>Open the <strong>project root</strong> folder (where <code>package.json</code> and <code>src</code> are – <em>not</em> inside <code>backend-new</code>).</li>
+  <li>Create a new file named <strong><code>.env.local</code></strong> (no name before the dot; the file can be hidden in some editors).</li>
+  <li>Paste one of the blocks below depending on whether you use <strong>local Strapi</strong> or <strong>AWS Strapi</strong>.</li>
+</ol>
+<p><strong>Option A – Local Strapi (recommended for new devs):</strong> Frontend will talk to Strapi at <code>http://localhost:1337</code>. Run the backend with <code>yarn develop</code> in <code>backend-new</code>.</p>
+<pre><code># Frontend – point to local Strapi
+NEXT_PUBLIC_STRAPI_API_URL=http://localhost:1337
+
+# Optional: forms / newsletter (get keys from your team or leave empty)
+# APOLLO_API_KEY=
+# APOLLO_LIST_ID_CONTACT_FORM=
+# APOLLO_LIST_ID_LETS_TALK=
+# APOLLO_LIST_ID_DOWNLOADS=
+# APOLLO_LIST_ID_NEWSLETTER=</code></pre>
+<p><strong>Option B – AWS Strapi:</strong> Frontend will use the live admin URL. No need to run Strapi locally.</p>
+<pre><code># Frontend – use AWS Strapi
+NEXT_PUBLIC_STRAPI_API_URL=http://localhost:1337
+NEXT_PUBLIC_STRAPI_USE_AWS=1
+NEXT_PUBLIC_STRAPI_AWS_URL=https://admin.adaptiveintelligence.online
+
+# Optional: media from S3
+# NEXT_PUBLIC_STRAPI_MEDIA_URL=https://adaptive-strapi.s3.us-east-1.amazonaws.com</code></pre>
+<p>Save the file. It is git-ignored; never commit <code>.env.local</code>.</p>
+
+<h4>Step 2: Backend local env (Strapi)</h4>
+<ol>
+  <li>Open the <strong><code>backend-new</code></strong> folder.</li>
+  <li>Copy the example env file:<br>
+    <strong>Windows (Command Prompt or PowerShell):</strong> <code>copy env.example .env</code><br>
+    <strong>Mac / Linux:</strong> <code>cp env.example .env</code>
+  </li>
+  <li>Open <strong><code>.env</code></strong> in a text editor.</li>
+  <li>For <strong>local development only</strong>, the default uses SQLite – leave <code>DATABASE_CLIENT=sqlite</code> and <code>DATABASE_FILENAME=.tmp/data.db</code> as-is.</li>
+  <li>You <strong>must</strong> set the Strapi secrets. Generate random values (e.g. run <code>openssl rand -base64 32</code> four times) and set <code>APP_KEYS</code>, <code>ADMIN_JWT_SECRET</code>, <code>API_TOKEN_SALT</code>, <code>TRANSFER_TOKEN_SALT</code>, <code>ENCRYPTION_KEY</code>. Replace placeholders with different 32+ character random strings. Never commit <code>.env</code>.</li>
+  <li>Save. Then from <code>backend-new</code> run <code>yarn develop</code> and open <strong>http://localhost:1337/admin</strong> to create your admin user.</li>
+</ol>
+<p><strong>Using PostgreSQL locally (optional):</strong> Uncomment and set the <code>DATABASE_*</code> or <code>DATABASE_URL</code> lines in <code>.env</code> and set <code>DATABASE_CLIENT=postgres</code>. Comment out the SQLite lines.</p>
+
+<h4>Quick check</h4>
+<ul>
+  <li><strong>Frontend:</strong> Project root has <code>.env.local</code> with <code>NEXT_PUBLIC_STRAPI_API_URL=http://localhost:1337</code> (for local Strapi).</li>
+  <li><strong>Backend:</strong> <code>backend-new</code> has <code>.env</code> with <code>APP_KEYS</code>, <code>ADMIN_JWT_SECRET</code>, <code>API_TOKEN_SALT</code>, <code>TRANSFER_TOKEN_SALT</code>, <code>ENCRYPTION_KEY</code> set, and database (SQLite or Postgres) configured.</li>
+</ul>
+<p>Then: in one terminal run <code>yarn develop</code> from <code>backend-new</code>; in another run <code>yarn dev</code> from the project root. Open http://localhost:3000 and http://localhost:1337/admin.</p>
+
+<hr>
+<h3>7.2 Frontend (Amplify / .env.local)</h3>
 <table>
   <tr><th>Variable</th><th>Where</th><th>Purpose</th></tr>
-  <tr><td><code>NEXT_PUBLIC_STRAPI_API_URL</code></td><td>Amplify + amplify.yml</td><td>Strapi base URL, e.g. https://admin.adaptiveintelligence.online (no trailing slash)</td></tr>
+  <tr><td><code>NEXT_PUBLIC_STRAPI_API_URL</code></td><td>Amplify + .env.local</td><td>Strapi base URL (no trailing slash), e.g. http://localhost:1337 or https://admin.adaptiveintelligence.online</td></tr>
+  <tr><td><code>NEXT_PUBLIC_STRAPI_USE_AWS</code></td><td>.env.local / Amplify</td><td>Set to 1 or true to use AWS Strapi URL</td></tr>
+  <tr><td><code>NEXT_PUBLIC_STRAPI_AWS_URL</code></td><td>.env.local / Amplify</td><td>When using AWS: https://admin.adaptiveintelligence.online</td></tr>
+  <tr><td><code>NEXT_PUBLIC_STRAPI_MEDIA_URL</code></td><td>.env.local / Amplify</td><td>Optional: base URL for media (e.g. S3)</td></tr>
   <tr><td><code>APOLLO_*</code></td><td>Amplify</td><td>Contact / Let’s talk forms</td></tr>
   <tr><td><code>REVALIDATION_SECRET</code></td><td>Amplify</td><td>Revalidation API if used</td></tr>
 </table>
-<h3>Backend (App Runner)</h3>
+<h3>7.3 Backend (App Runner / backend-new/.env)</h3>
 <p>All set in <strong>App Runner → Configuration → Runtime environment variables</strong>. Reference list in <code>backend-new/.env.apprunner</code> (do not commit). Main ones: HOST, PORT, NODE_ENV, APP_KEYS, ADMIN_JWT_SECRET, API_TOKEN_SALT, TRANSFER_TOKEN_SALT, ENCRYPTION_KEY, DATABASE_*, AWS_*, CDN_URL, NODE_TLS_REJECT_UNAUTHORIZED.</p>
 <p class="warning">Never commit real passwords or keys to the repository.</p>
 
@@ -376,6 +441,83 @@ docker push 066123827652.dkr.ecr.us-east-1.amazonaws.com/adaptive-strapi:latest<
   <li><strong>“Pending certificate DNS validation”:</strong> Add the exact CNAME records from App Runner in Route 53. Wait up to 24–48 hours.</li>
   <li>Linking the <strong>admin</strong> subdomain does not change the main domain or frontend.</li>
 </ul>
+
+<hr>
+<h2 id="code-changes">10. Making frontend and backend code changes</h2>
+<p>This section shows how to make <strong>actual code changes</strong> so that content from Strapi (or new layout elements like paragraphs and buttons) appear on the website. We use the <strong>About</strong> page as the example.</p>
+
+<h3>10.1 Example page: About</h3>
+<table>
+  <tr><th>Where</th><th>What</th></tr>
+  <tr><td><strong>Frontend (code)</strong></td><td><code>src/pages/about.js</code> – the About page component and how it fetches data.</td></tr>
+  <tr><td><strong>Backend (content type)</strong></td><td>Strapi <strong>Single Type</strong> “About Page” – fields like hero title, paragraphs, images, buttons.</td></tr>
+  <tr><td><strong>API</strong></td><td>The frontend calls <code>GET /api/about-page?populate=*</code> to get all About page fields.</td></tr>
+</table>
+<p><strong>Flow in short:</strong> Strapi stores the content → the frontend fetches it in <code>getStaticProps</code> → the page component receives <code>pageData</code> and renders it (paragraphs, images, buttons).</p>
+
+<h3>10.2 Adding a new paragraph (from Strapi)</h3>
+<p><strong>Option A: Use an existing Strapi field</strong></p>
+<p>The About page already has fields like <code>whoWeAreParagraph1</code>, <code>whoWeAreParagraph2</code>. They are filled in <strong>Strapi Admin</strong> (Content-Manager → About Page). In the frontend they are used like this:</p>
+<pre><code>&lt;p className="fs-18"&gt;{pageData?.whoWeAreParagraph1}&lt;/p&gt;
+&lt;p className="fs-18"&gt;{pageData?.whoWeAreParagraph2}&lt;/p&gt;</code></pre>
+<p>So to “add” a new paragraph <strong>without code</strong>: use one of the existing paragraph fields in Strapi and make sure the frontend page has a line like the one above for that field. If the field exists in Strapi but not in the page file, add one line in the right place in <code>src/pages/about.js</code>.</p>
+
+<p><strong>Option B: Add a new field in Strapi, then show it on the frontend</strong></p>
+<ol>
+  <li><strong>Strapi Admin</strong> → Content-Type Builder → open <strong>About Page</strong> (Single Type) → Add another field, e.g. name <code>extraParagraph</code>, type <strong>Text</strong> (or <strong>Rich text</strong>). Save and restart Strapi (<code>yarn develop</code> in <code>backend-new</code>).</li>
+  <li><strong>Strapi Admin</strong> → Content-Manager → About Page → fill in <strong>Extra Paragraph</strong>. Save &amp; Publish.</li>
+  <li><strong>Frontend:</strong> In <code>src/pages/about.js</code>, in the section where you want the new paragraph, add:
+    <pre><code>{pageData?.extraParagraph && (
+  &lt;p className="fs-18"&gt;{pageData.extraParagraph}&lt;/p&gt;
+)}</code></pre>
+  </li>
+</ol>
+<p>The data is already loaded because <code>getStaticProps</code> fetches the whole About page with <code>populate=*</code>, so any new field on that single type is included.</p>
+
+<h3>10.3 Adding a button (text and link from Strapi)</h3>
+<p>The About page already has button fields, e.g. <strong>Sustainability</strong> section: <code>sustainabilityButtonText</code> and <code>sustainabilityButtonUrl</code>. In the frontend you render them like this:</p>
+<pre><code>import Link from 'next/link';
+
+&lt;Link
+  href={pageData?.sustainabilityButtonUrl || '/eco'}
+  className="btn btn-primary"
+&gt;
+  {pageData?.sustainabilityButtonText || 'Learn more'}
+&lt;/Link&gt;</code></pre>
+<ul>
+  <li><strong>Content only:</strong> Set the button text and URL in Strapi Admin; no code change needed if this block already exists.</li>
+  <li><strong>New button elsewhere:</strong> Add two fields in Strapi (e.g. <code>ctaButtonText</code>, <code>ctaButtonUrl</code>), then in the page add a similar <code>&lt;Link&gt;</code> or <code>&lt;a&gt;</code> using <code>pageData?.ctaButtonText</code> and <code>pageData?.ctaButtonUrl</code>.</li>
+</ul>
+
+<h3>10.4 Adding an image from Strapi on the frontend</h3>
+<p>Images from Strapi can be <strong>relative</strong> (e.g. <code>/uploads/photo.jpg</code>) or <strong>full URLs</strong> (e.g. S3). The project uses a helper so both work.</p>
+<p><strong>Step 1 – Strapi:</strong> Add a <strong>Media</strong> field to your content type (e.g. About Page → new field <code>sectionImage</code>, type <strong>Media</strong>, single image). In Content-Manager, upload the image and save.</p>
+<p><strong>Step 2 – Frontend:</strong> Use <code>getStrapiMediaUrl</code> and the Next.js <code>Image</code> component:</p>
+<pre><code>import Image from 'next/image';
+import { getStrapiMediaUrl } from '@/utils/strapi';
+
+const sectionImageUrl = getStrapiMediaUrl(pageData?.sectionImage?.url);
+
+{sectionImageUrl && (
+  &lt;Image
+    src={sectionImageUrl}
+    alt="Section image"
+    width={800}
+    height={500}
+    style={{ width: '100%', height: 'auto' }}
+  /&gt;
+)}</code></pre>
+<p><strong>Important:</strong> Always use <code>getStrapiMediaUrl(...)</code> for any image (or video) URL that comes from Strapi. Do <strong>not</strong> concatenate the API base URL with the path yourself, or full S3 URLs will break.</p>
+
+<h3>10.5 Summary: Strapi field → frontend</h3>
+<table>
+  <tr><th>Goal</th><th>Strapi</th><th>Frontend (example)</th></tr>
+  <tr><td><strong>New paragraph</strong></td><td>Add a <strong>Text</strong> (or Rich text) field; fill it in Content-Manager.</td><td><code>{pageData?.yourFieldName &amp;&amp; &lt;p&gt;{...}&lt;/p&gt;}</code></td></tr>
+  <tr><td><strong>New button</strong></td><td>Add two <strong>Text</strong> fields (e.g. button label + URL); fill in Content-Manager.</td><td><code>&lt;Link href={...}&gt;{...}&lt;/Link&gt;</code></td></tr>
+  <tr><td><strong>New image</strong></td><td>Add a <strong>Media</strong> field; upload image in Content-Manager.</td><td><code>getStrapiMediaUrl(pageData?.yourImage?.url)</code> and use in <code>&lt;Image src={...} /&gt;</code></td></tr>
+</table>
+<p><strong>Where to edit:</strong> Frontend: <code>src/pages/about.js</code> (About page) or other files under <code>src/pages/</code> and <code>src/components/</code>. Backend: content types under <code>backend-new/src/api/</code> (e.g. <code>about-page/content-types/about-page/schema.json</code>). After changing the schema, restart Strapi. Content is edited in <strong>Strapi Admin</strong> only.</p>
+<p>After changing code, run the site locally (<code>yarn dev</code>, Strapi at <code>http://localhost:1337</code>), then deploy (frontend: push to GitHub; backend: Docker build/push and App Runner deploy) when ready.</p>
 
 <hr>
 <h2>Where to find more</h2>

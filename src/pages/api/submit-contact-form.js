@@ -1,12 +1,12 @@
 // pages/api/submit-contact-form.js
 
+import { sendSlackNotification } from '@/utils/slack';
+
 export default async function handler(req, res) {
   // 1. Allow only POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
-
-    // Minimal logging: keep errors actionable without noisy debug output
 
   try {
     // Support both `{ data: {...} }` and direct `{...}` payloads
@@ -20,16 +20,44 @@ export default async function handler(req, res) {
     const services = Array.isArray(bodyData.servicesNeeded) ? bodyData.servicesNeeded.join(', ') : "None";
     const sources = Array.isArray(bodyData.leadSource) ? bodyData.leadSource.join(', ') : "None";
     const userMessage = bodyData.message || "";
-
-    // (intentionally no verbose console logging here)
+    const turnstileToken = bodyData.turnstileToken || "";
 
     let apolloSuccess = false;
     let strapiSuccess = false;
     let errorDetails = [];
 
+    // --- 2. Cloudflare Turnstile Verification ---
+    if (process.env.TURNSTILE_SECRET_KEY) {
+      if (!turnstileToken) {
+        return res.status(400).json({
+          success: false,
+          message: "CAPTCHA verification required",
+        });
+      }
+
+      try {
+        const turnstileRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            secret: process.env.TURNSTILE_SECRET_KEY,
+            response: turnstileToken,
+          }),
+        });
+        const turnstileData = await turnstileRes.json();
+
+        if (!turnstileData.success) {
+          return res.status(400).json({
+            success: false,
+            message: "CAPTCHA verification failed. Please try again.",
+          });
+        }
+      } catch {
+        // If Turnstile service is unreachable, allow the submission through
+      }
+    }
+
     // --- 3. Apollo Submission (Primary) ---
-    // Previously this route could "succeed" via Strapi or mock success even if Apollo never ran.
-    // If your goal is "send to Apollo", we should fail loudly when Apollo isn't configured or rejects the request.
     if (!process.env.APOLLO_API_KEY) {
       return res.status(500).json({
         success: false,
@@ -38,7 +66,7 @@ export default async function handler(req, res) {
     }
 
     // Basic validation so Apollo doesn't receive empty records
-    if (!email || !firstName || !lastName || !companyName || !userMessage) {
+    if (!email || !firstName || !lastName || !companyName || !phone || !userMessage) {
       return res.status(400).json({
         success: false,
         message: "Missing required fields",
@@ -47,6 +75,7 @@ export default async function handler(req, res) {
           firstName: !!firstName,
           lastName: !!lastName,
           companyName: !!companyName,
+          phone: !!phone,
           message: !!userMessage,
         },
       });
@@ -61,13 +90,13 @@ export default async function handler(req, res) {
         email: email,
         organization_name: companyName,
         label_ids: targetListId ? [targetListId] : [],
-        // Keep consistent with other routes in this repo
-        custom_fields: {
-          initial_message: `Message: ${userMessage} | Services: ${services} | Source: ${sources}`,
-        },
+        typed_custom_fields: [
+          { id: "phone_number", value: phone },
+          { id: "message", value: userMessage },
+          { id: "services_needed", value: services },
+          { id: "lead_source", value: sources },
+        ],
       };
-
-      // NOTE: We intentionally do not send `phone_numbers` here to avoid Apollo schema rejections.
 
       const apolloResponse = await fetch('https://api.apollo.io/v1/contacts', {
         method: 'POST',
@@ -104,7 +133,21 @@ export default async function handler(req, res) {
       });
     }
 
-    // --- 4. Attempt Strapi Submission (Backup) ---
+    // --- 4. Slack Notification ---
+    await sendSlackNotification({
+      formType: 'Contact Form',
+      fields: {
+        'Name': `${firstName} ${lastName}`,
+        'Email': email,
+        'Phone': phone,
+        'Company': companyName,
+        'Services Needed': services,
+        'Lead Source': sources,
+        'Message': userMessage,
+      },
+    });
+
+    // --- 5. Attempt Strapi Submission (Backup) ---
     const { getStrapiApiUrl } = await import('@/utils/strapi');
     const strapiBase = getStrapiApiUrl();
     if (strapiBase) {
@@ -118,15 +161,12 @@ export default async function handler(req, res) {
               lastName,
               email,
               companyName,
-              // Removed extra fields that were causing Strapi 400 errors
-              // message, phone, emailOptin, servicesNeeded, leadSource are excluded based on user request
             }
           }),
         });
 
         if (strapiRes.ok) {
           strapiSuccess = true;
-          // saved to Strapi
         } else {
           const errorText = await strapiRes.text();
           let strapiErrorMessage = `Strapi save failed (${strapiRes.status})`;
@@ -143,11 +183,9 @@ export default async function handler(req, res) {
       } catch (strapiErr) {
         errorDetails.push("Strapi connection failed");
       }
-    } else {
-      // Strapi not configured (optional backup)
     }
 
-    // --- 5. Return Success if At Least One Succeeded ---
+    // --- 6. Return Success if At Least One Succeeded ---
     if (apolloSuccess || strapiSuccess) {
       return res.status(200).json({
         success: true,
@@ -157,7 +195,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // If we had keys but both failed:
     return res.status(500).json({
       success: false,
       message: 'Submission failed. System configuration issue.',

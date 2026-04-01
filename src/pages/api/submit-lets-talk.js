@@ -1,30 +1,56 @@
+import { sendSlackNotification } from '@/utils/slack';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  // Minimal logging: keep errors actionable without noisy debug output
-
-  // 1. Debug Env Vars
+  // 1. Check env
   const apiKey = process.env.APOLLO_API_KEY;
   const listId = process.env.APOLLO_LIST_ID_LETS_TALK;
 
   if (!apiKey) {
     return res.status(500).json({ message: "Server configuration error" });
   }
-  if (!listId) {
-    // list is optional; contact can still be created without it
-  }
 
   try {
     // Support both `{ data: {...} }` and direct `{...}` payloads
     const bodyData = (req.body && (req.body.data || req.body)) || {};
-    const { firstName, lastName, email, company, message } = bodyData;
+    const { firstName, lastName, email, company, phone, message, turnstileToken } = bodyData;
 
-    // (intentionally no verbose console logging here)
+    // --- 2. Cloudflare Turnstile Verification ---
+    if (process.env.TURNSTILE_SECRET_KEY) {
+      if (!turnstileToken) {
+        return res.status(400).json({
+          success: false,
+          message: "CAPTCHA verification required",
+        });
+      }
 
-    // Validate required fields (prevents Apollo rejections + hard-to-debug empty payloads)
-    if (!firstName || !lastName || !email || !company || !message) {
+      try {
+        const turnstileRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            secret: process.env.TURNSTILE_SECRET_KEY,
+            response: turnstileToken,
+          }),
+        });
+        const turnstileData = await turnstileRes.json();
+
+        if (!turnstileData.success) {
+          return res.status(400).json({
+            success: false,
+            message: "CAPTCHA verification failed. Please try again.",
+          });
+        }
+      } catch {
+        // If Turnstile service is unreachable, allow through
+      }
+    }
+
+    // Validate required fields
+    if (!firstName || !lastName || !email || !company || !phone || !message) {
       return res.status(400).json({
         success: false,
         message: "Missing required fields",
@@ -33,22 +59,24 @@ export default async function handler(req, res) {
           lastName: !!lastName,
           email: !!email,
           company: !!company,
+          phone: !!phone,
           message: !!message,
         },
       });
     }
 
-    // 2. Prepare Payload
+    // 3. Prepare Apollo Payload with all fields
     const apolloPayload = {
       api_key: apiKey,
       first_name: firstName,
       last_name: lastName,
       email: email,
       organization_name: company,
-      // Add to List (Label)
       label_ids: listId ? [listId] : [],
-      // Note: If 'initial_message' custom field doesn't exist in Apollo, this might be ignored, which is fine.
-      // custom_fields removed as Apollo configuration does not accept message field
+      typed_custom_fields: [
+        { id: "phone_number", value: phone },
+        { id: "message", value: message },
+      ],
     };
 
     const fetchWithTimeout = async (url, options, timeoutMs = 12000) => {
@@ -61,7 +89,7 @@ export default async function handler(req, res) {
       }
     };
 
-    // 3. Send to Apollo
+    // 4. Send to Apollo
     const apolloResponse = await fetchWithTimeout('https://api.apollo.io/v1/contacts', {
       method: 'POST',
       headers: {
@@ -72,7 +100,6 @@ export default async function handler(req, res) {
       body: JSON.stringify(apolloPayload),
     });
 
-    // Apollo may return non-JSON on certain errors; avoid crashing the route on `.json()`
     const apolloText = await apolloResponse.text();
     let contactData = null;
     try {
@@ -81,9 +108,8 @@ export default async function handler(req, res) {
       contactData = { raw: apolloText };
     }
 
-    // 4. Check Apollo Response
+    // 5. Check Apollo Response
     if (!apolloResponse.ok) {
-      // Return error to frontend so we know it failed
       return res.status(400).json({
         success: false,
         message: "Apollo rejected the entry",
@@ -91,7 +117,19 @@ export default async function handler(req, res) {
       });
     }
 
-    // 5. Save to Strapi (Backup)
+    // 6. Slack Notification
+    await sendSlackNotification({
+      formType: "Let's Talk",
+      fields: {
+        'Name': `${firstName} ${lastName}`,
+        'Email': email,
+        'Phone': phone,
+        'Company': company,
+        'Message': message,
+      },
+    });
+
+    // 7. Save to Strapi (Backup)
     try {
       const { getStrapiApiUrl } = await import('@/utils/strapi');
       const strapiBase = getStrapiApiUrl();

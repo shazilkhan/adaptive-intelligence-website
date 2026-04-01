@@ -1,10 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import MainMenu from "./MainMenu";
 import Link from "next/link";
 import Image from "next/image";
 import { useSettings } from "@/context/SettingsContext";
 import { getStrapiMediaUrl } from "@/utils/strapi";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 const Header = ({ style, menuTextColor }) => {
   const { settings } = useSettings();
@@ -14,11 +16,15 @@ const Header = ({ style, menuTextColor }) => {
     firstName: '',
     lastName: '',
     email: '',
+    phone: '',
     company: '',
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef(null);
+  const turnstileWidgetId = useRef(null);
 
   const changeBackground = () => {
     if (window.scrollY >= 10) {
@@ -34,6 +40,38 @@ const Header = ({ style, menuTextColor }) => {
       window.removeEventListener("scroll", changeBackground);
     };
   }, []);
+
+  // Load Cloudflare Turnstile script
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY) return;
+    if (document.getElementById('cf-turnstile-script')) return;
+    const script = document.createElement('script');
+    script.id = 'cf-turnstile-script';
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    script.async = true;
+    document.head.appendChild(script);
+  }, []);
+
+  // Render Turnstile widget when menu opens
+  useEffect(() => {
+    if (!isMenuOpen || !TURNSTILE_SITE_KEY || !turnstileRef.current) return;
+    const interval = setInterval(() => {
+      if (window.turnstile && turnstileRef.current) {
+        clearInterval(interval);
+        if (turnstileWidgetId.current !== null) {
+          window.turnstile.reset(turnstileWidgetId.current);
+        } else {
+          turnstileWidgetId.current = window.turnstile.render(turnstileRef.current, {
+            sitekey: TURNSTILE_SITE_KEY,
+            theme: 'dark',
+            callback: (token) => setTurnstileToken(token),
+            'expired-callback': () => setTurnstileToken(""),
+          });
+        }
+      }
+    }, 100);
+    return () => clearInterval(interval);
+  }, [isMenuOpen]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -54,11 +92,8 @@ const Header = ({ style, menuTextColor }) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus(null);
-    
+
     try {
-      // ---------------------------------------------------------
-      // FIX: Point to internal API Route (which sends to Apollo + Strapi)
-      // ---------------------------------------------------------
       const response = await fetch('/api/submit-lets-talk', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -67,23 +102,27 @@ const Header = ({ style, menuTextColor }) => {
             firstName: formData.firstName,
             lastName: formData.lastName,
             email: formData.email,
+            phone: formData.phone,
             company: formData.company,
             message: formData.message,
-            // submittedAt is added by the server now
+            turnstileToken,
           }
         }),
       });
 
       if (!response.ok) {
-        // Try to parse error message if available
         const errorData = await response.json().catch(() => ({}));
         console.error("Submission Failed:", errorData);
         throw new Error(errorData.message || 'Failed to submit form');
       }
-      
+
       setSubmitStatus({ type: 'success', message: 'Thank you! We\'ll be in touch soon.' });
-      setFormData({ firstName: '', lastName: '', email: '', company: '', message: '' });
-      
+      setFormData({ firstName: '', lastName: '', email: '', phone: '', company: '', message: '' });
+      setTurnstileToken("");
+      if (turnstileWidgetId.current !== null && window.turnstile) {
+        window.turnstile.reset(turnstileWidgetId.current);
+      }
+
       setTimeout(() => { closeMenu(); }, 2000);
 
     } catch (error) {
@@ -183,12 +222,20 @@ const Header = ({ style, menuTextColor }) => {
               <input type="email" name="email" placeholder="Email Address *" value={formData.email} onChange={handleInputChange} required disabled={isSubmitting} />
             </div>
             <div className="form-group">
+              <input type="tel" name="phone" placeholder="Phone Number *" value={formData.phone} onChange={handleInputChange} required disabled={isSubmitting} />
+            </div>
+            <div className="form-group">
               <input type="text" name="company" placeholder="Company Name *" value={formData.company} onChange={handleInputChange} required disabled={isSubmitting} />
             </div>
             <div className="form-group">
               <textarea name="message" placeholder="Tell us a little bit more: *" rows="4" value={formData.message} onChange={handleInputChange} required disabled={isSubmitting}></textarea>
             </div>
-            <button type="submit" className="submit-btn" disabled={isSubmitting}>
+            {TURNSTILE_SITE_KEY && (
+              <div className="form-group">
+                <div ref={turnstileRef} />
+              </div>
+            )}
+            <button type="submit" className="submit-btn" disabled={isSubmitting || (TURNSTILE_SITE_KEY && !turnstileToken)}>
               {isSubmitting ? 'Submitting...' : 'Submit'}
             </button>
             <p className="privacy-text">

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -76,8 +76,37 @@ const WhiteFormControl = styled(FormControl)({
   },
 });
 
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
 const ContactForm4 = () => {
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef(null);
+  const turnstileWidgetId = useRef(null);
+
+  // Load Cloudflare Turnstile script and render widget
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY) return;
+    if (!document.getElementById('cf-turnstile-script')) {
+      const script = document.createElement('script');
+      script.id = 'cf-turnstile-script';
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      document.head.appendChild(script);
+    }
+    const interval = setInterval(() => {
+      if (window.turnstile && turnstileRef.current && turnstileWidgetId.current === null) {
+        clearInterval(interval);
+        turnstileWidgetId.current = window.turnstile.render(turnstileRef.current, {
+          sitekey: TURNSTILE_SITE_KEY,
+          theme: 'dark',
+          callback: (token) => setTurnstileToken(token),
+          'expired-callback': () => setTurnstileToken(""),
+        });
+      }
+    }, 100);
+    return () => clearInterval(interval);
+  }, []);
 
   const serviceOptions = [
     {
@@ -131,6 +160,7 @@ const ContactForm4 = () => {
     first_name: "",
     last_name: "",
     email: "",
+    phone: "",
     company_name: "",
     message: "",
   };
@@ -139,6 +169,7 @@ const ContactForm4 = () => {
     first_name: yup.string().required("First Name is required"),
     last_name: yup.string().required("Last Name is required"),
     email: yup.string().email("Invalid email").required("Email is required"),
+    phone: yup.string().required("Phone Number is required"),
     company_name: yup.string().required("Company Name is required"),
     message: yup.string().required("Message is required"),
   });
@@ -170,11 +201,11 @@ const ContactForm4 = () => {
             firstName: data.first_name,
             lastName: data.last_name,
             email: data.email,
+            phone: data.phone,
             companyName: data.company_name,
             message: data.message,
-            // Sending default/empty for removed fields to avoid API errors if they are required
-            phone: "",
             emailOptin: true,
+            turnstileToken,
           }
         }),
       });
@@ -202,14 +233,17 @@ const ContactForm4 = () => {
           full_name: `${data.first_name} ${data.last_name}`,
           company_name: data.company_name,
           message: data.message,
-          // Defaults
-          phone_number: "",
+          phone_number: data.phone,
           consent_approval: "yes",
         });
       }
 
       setSubmitStatus({ type: 'success', message: 'Form submitted successfully!' });
       reset();
+      setTurnstileToken("");
+      if (turnstileWidgetId.current !== null && window.turnstile) {
+        window.turnstile.reset(turnstileWidgetId.current);
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
       setSubmitStatus({ type: 'error', message: error.message || 'Failed to submit form. Please try again.' });
@@ -267,6 +301,19 @@ const ContactForm4 = () => {
         <Grid item xs={12}>
           <WhiteTextField
             fullWidth
+            label="Phone Number"
+            variant="outlined"
+            type="tel"
+            {...register("phone")}
+            error={!!errors.phone}
+            helperText={errors.phone?.message}
+            required
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <WhiteTextField
+            fullWidth
             label="Company Name"
             variant="outlined"
             {...register("company_name")}
@@ -290,10 +337,16 @@ const ContactForm4 = () => {
           />
         </Grid>
 
+        {TURNSTILE_SITE_KEY && (
+          <Grid item xs={12}>
+            <div ref={turnstileRef} />
+          </Grid>
+        )}
+
         <Grid item xs={12}>
           <Button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || (TURNSTILE_SITE_KEY && !turnstileToken)}
             aria-label="Submit"
             variant="contained"
             style={{
