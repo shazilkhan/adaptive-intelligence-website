@@ -5,10 +5,35 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { email } = req.body;
+  const { email, turnstileToken } = req.body;
 
   if (!email) {
     return res.status(400).json({ message: 'Email is required' });
+  }
+
+  // --- Cloudflare Turnstile Verification ---
+  if (process.env.TURNSTILE_SECRET_KEY) {
+    if (!turnstileToken) {
+      return res.status(400).json({ message: 'CAPTCHA verification required' });
+    }
+
+    try {
+      const turnstileRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          secret: process.env.TURNSTILE_SECRET_KEY,
+          response: turnstileToken,
+        }),
+      });
+      const turnstileData = await turnstileRes.json();
+
+      if (!turnstileData.success) {
+        return res.status(400).json({ message: 'CAPTCHA verification failed. Please try again.' });
+      }
+    } catch {
+      // If Turnstile service is unreachable, allow through
+    }
   }
 
   try {
