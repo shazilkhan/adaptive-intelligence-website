@@ -152,13 +152,6 @@ const EcoPage = ({ treeCardStats, pageData }) => {
         <div className="container">
           <div className="row">
             <div className="col-12 text-center">
-              <Image
-                src="/images/logo/62fbf4327b17746206b87f63_white logo.svg"
-                alt="TreeCard Logo"
-                width={150}
-                height={50}
-                style={{ margin: '0 auto 20px auto' }}
-              />
               <h2 className="section-title text-white">{pageData.impactTitle}</h2>
               <p className="section-description text-white-70">
                 {pageData.impactDescription}
