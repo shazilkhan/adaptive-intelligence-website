@@ -89,12 +89,12 @@ export default async function handler(req, res) {
         last_name: lastName,
         email: email,
         organization_name: companyName,
+        phone_number: phone,
+        source: sources,
         label_ids: targetListId ? [targetListId] : [],
         typed_custom_fields: [
-          { id: "phone_number", value: phone },
           { id: "message", value: userMessage },
           { id: "services_needed", value: services },
-          { id: "lead_source", value: sources },
         ],
       };
 
