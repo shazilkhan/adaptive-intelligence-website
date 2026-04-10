@@ -1,0 +1,98 @@
+{
+  "kind": "singleType",
+  "collectionName": "adaptive_ai_pages",
+  "info": {
+    "singularName": "adaptive-ai-page",
+    "pluralName": "adaptive-ai-pages",
+    "displayName": "Adaptive & AI Page"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "pageTitle": {
+      "type": "string"
+    },
+    "metaDescription": {
+      "type": "string"
+    },
+    "pagePreviewImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "heroTitle": {
+      "type": "string"
+    },
+    "heroSubtitle": {
+      "type": "text"
+    },
+    "heroBackgroundType": {
+      "type": "enumeration",
+      "enum": ["Image", "Video"]
+    },
+    "heroBackgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "heroBackgroundVideo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["videos"]
+    },
+    "methodologyTagline": {
+      "type": "string"
+    },
+    "methodologyTitle": {
+      "type": "string"
+    },
+    "methodologyParagraph1": {
+      "type": "text"
+    },
+    "methodologyParagraph2": {
+      "type": "text"
+    },
+    "methodologyImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "aiModelTagline": {
+      "type": "string"
+    },
+    "aiModelTitle": {
+      "type": "string"
+    },
+    "aiModelSubtitle": {
+      "type": "string"
+    },
+    "aiModelParagraph1": {
+      "type": "text"
+    },
+    "aiModelParagraph2": {
+      "type": "text"
+    },
+    "aiModelParagraph3": {
+      "type": "text"
+    },
+    "aiModelImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "ctaTitle": {
+      "type": "string"
+    },
+    "ctaSubtitle": {
+      "type": "string"
+    },
+    "ctaButtonText": {
+      "type": "string"
+    },
+    "ctaButtonUrl": {
+      "type": "string"
+    }
+  }
+}

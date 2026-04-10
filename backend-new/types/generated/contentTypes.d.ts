@@ -598,6 +598,58 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiAdaptiveAiPageAdaptiveAiPage
+  extends Struct.SingleTypeSchema {
+  collectionName: 'adaptive_ai_pages';
+  info: {
+    displayName: 'Adaptive & AI Page';
+    pluralName: 'adaptive-ai-pages';
+    singularName: 'adaptive-ai-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    aiModelImage: Schema.Attribute.Media<'images'>;
+    aiModelParagraph1: Schema.Attribute.Text;
+    aiModelParagraph2: Schema.Attribute.Text;
+    aiModelParagraph3: Schema.Attribute.Text;
+    aiModelSubtitle: Schema.Attribute.String;
+    aiModelTagline: Schema.Attribute.String;
+    aiModelTitle: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    ctaButtonText: Schema.Attribute.String;
+    ctaButtonUrl: Schema.Attribute.String;
+    ctaSubtitle: Schema.Attribute.String;
+    ctaTitle: Schema.Attribute.String;
+    heroBackgroundImage: Schema.Attribute.Media<'images'>;
+    heroBackgroundType: Schema.Attribute.Enumeration<['Image', 'Video']>;
+    heroBackgroundVideo: Schema.Attribute.Media<'videos'>;
+    heroSubtitle: Schema.Attribute.Text;
+    heroTitle: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::adaptive-ai-page.adaptive-ai-page'
+    > &
+      Schema.Attribute.Private;
+    metaDescription: Schema.Attribute.String;
+    methodologyImage: Schema.Attribute.Media<'images'>;
+    methodologyParagraph1: Schema.Attribute.Text;
+    methodologyParagraph2: Schema.Attribute.Text;
+    methodologyTagline: Schema.Attribute.String;
+    methodologyTitle: Schema.Attribute.String;
+    pagePreviewImage: Schema.Attribute.Media<'images'>;
+    pageTitle: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCaseStudiesPageCaseStudiesPage
   extends Struct.SingleTypeSchema {
   collectionName: 'case_studies_pages';
@@ -2109,6 +2161,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::about-page.about-page': ApiAboutPageAboutPage;
+      'api::adaptive-ai-page.adaptive-ai-page': ApiAdaptiveAiPageAdaptiveAiPage;
       'api::case-studies-page.case-studies-page': ApiCaseStudiesPageCaseStudiesPage;
       'api::case-study-download.case-study-download': ApiCaseStudyDownloadCaseStudyDownload;
       'api::case-study.case-study': ApiCaseStudyCaseStudy;

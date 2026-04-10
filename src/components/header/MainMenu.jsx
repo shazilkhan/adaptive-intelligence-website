@@ -26,6 +26,7 @@ const MainMenu = () => {
 
   const aboutItems = [
     { name: "About Us", link: "/about" },
+    { name: "Adaptive & AI", link: "/adaptive-and-ai" },
     { name: "Team", link: "/team" }
   ];
 
