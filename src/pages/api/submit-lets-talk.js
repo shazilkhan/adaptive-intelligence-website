@@ -66,6 +66,9 @@ export default async function handler(req, res) {
     }
 
     // 3. Prepare Apollo Payload with all fields
+    // typed_custom_fields require Apollo's internal field IDs and must be a MAP
+    // (not an array). Field IDs come from Apollo's GET /v1/typed_custom_fields.
+    const messageFieldId = process.env.APOLLO_FIELD_ID_MESSAGE;
     const apolloPayload = {
       api_key: apiKey,
       first_name: firstName,
@@ -74,10 +77,10 @@ export default async function handler(req, res) {
       organization_name: company,
       phone_number: phone,
       label_ids: listId ? [listId] : [],
-      typed_custom_fields: [
-        { id: "message", value: message },
-      ],
     };
+    if (messageFieldId && message) {
+      apolloPayload.typed_custom_fields = { [messageFieldId]: message };
+    }
 
     const fetchWithTimeout = async (url, options, timeoutMs = 12000) => {
       const controller = new AbortController();

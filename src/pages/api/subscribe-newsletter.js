@@ -42,14 +42,14 @@ export default async function handler(req, res) {
       try {
         const listId = process.env.APOLLO_LIST_ID_NEWSLETTER;
         
+        // List assignment alone identifies these contacts as newsletter
+        // subscribers. The previous `custom_fields: { initial_message: ... }`
+        // used a non-ID key and was silently dropped by Apollo.
         const apolloPayload = {
           api_key: process.env.APOLLO_API_KEY,
           email: email,
-          // Add to the specific Newsletter List
+          source: 'newsletter_form',
           label_ids: listId ? [listId] : [],
-          custom_fields: {
-            "initial_message": "Newsletter Subscriber"
-          }
         };
 
         const apolloRes = await fetch('https://api.apollo.io/v1/contacts', {

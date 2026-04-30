@@ -17,8 +17,10 @@ export default async function handler(req, res) {
     const email = bodyData.email || "";
     const phone = bodyData.phone || "";
     const companyName = bodyData.companyName || "";
-    const services = Array.isArray(bodyData.servicesNeeded) ? bodyData.servicesNeeded.join(', ') : "None";
-    const sources = Array.isArray(bodyData.leadSource) ? bodyData.leadSource.join(', ') : "None";
+    const servicesArr = Array.isArray(bodyData.servicesNeeded) ? bodyData.servicesNeeded : [];
+    const sourcesArr = Array.isArray(bodyData.leadSource) ? bodyData.leadSource : [];
+    const services = servicesArr.join(', ');
+    const sources = sourcesArr.join(', ');
     const userMessage = bodyData.message || "";
     const turnstileToken = bodyData.turnstileToken || "";
 
@@ -83,6 +85,21 @@ export default async function handler(req, res) {
 
     try {
       const targetListId = process.env.APOLLO_LIST_ID_CONTACT_FORM;
+
+      // Apollo's typed_custom_fields require their internal field IDs (24-char
+      // ObjectIDs) and must be sent as a MAP { "<field_id>": value }, not an
+      // array. The array form returns 422 "There is something wrong with your
+      // request." Field IDs come from Apollo's GET /v1/typed_custom_fields.
+      const messageFieldId = process.env.APOLLO_FIELD_ID_MESSAGE;
+      const servicesFieldId = process.env.APOLLO_FIELD_ID_SERVICES_NEEDED;
+      const typedCustomFields = {};
+      if (messageFieldId && userMessage) {
+        typedCustomFields[messageFieldId] = userMessage;
+      }
+      if (servicesFieldId && servicesArr.length > 0) {
+        typedCustomFields[servicesFieldId] = services;
+      }
+
       const apolloPayload = {
         api_key: process.env.APOLLO_API_KEY,
         first_name: firstName,
@@ -90,13 +107,14 @@ export default async function handler(req, res) {
         email: email,
         organization_name: companyName,
         phone_number: phone,
-        source: sources,
         label_ids: targetListId ? [targetListId] : [],
-        typed_custom_fields: [
-          { id: "message", value: userMessage },
-          { id: "services_needed", value: services },
-        ],
       };
+      // Only set `source` when user actually picked one — Apollo can reject
+      // arbitrary placeholder strings like "None".
+      if (sourcesArr.length > 0) apolloPayload.source = sources;
+      if (Object.keys(typedCustomFields).length > 0) {
+        apolloPayload.typed_custom_fields = typedCustomFields;
+      }
 
       const apolloResponse = await fetch('https://api.apollo.io/v1/contacts', {
         method: 'POST',

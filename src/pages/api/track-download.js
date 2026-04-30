@@ -15,17 +15,22 @@ export default async function handler(req, res) {
     // --- 1. Send to Apollo (Create/Update Contact & Add to List) ---
     if (process.env.APOLLO_API_KEY && process.env.APOLLO_LIST_ID_DOWNLOADS) {
       try {
+        // typed_custom_fields must be a MAP keyed by Apollo's internal field ID.
+        // The previous `custom_fields: { initial_message: ... }` used a non-ID
+        // key and was silently dropped by Apollo. We reuse the "message" field
+        // since it's already configured for this kind of free-text payload.
+        const messageFieldId = process.env.APOLLO_FIELD_ID_MESSAGE;
         const apolloPayload = {
           api_key: process.env.APOLLO_API_KEY,
           email: email,
-          // Add to the specific Download List
+          source: 'download_form',
           label_ids: [process.env.APOLLO_LIST_ID_DOWNLOADS],
-          custom_fields: {
-            "initial_message": `Downloaded Resource: ${title} (${slug})`
-          }
-          // Note: We don't have First/Last name here based on your URL params, 
-          // so Apollo will try to enrich it or just create it with Email.
         };
+        if (messageFieldId) {
+          apolloPayload.typed_custom_fields = {
+            [messageFieldId]: `Downloaded Resource: ${title || ''} (${slug})`,
+          };
+        }
 
         const apolloRes = await fetch('https://api.apollo.io/v1/contacts', {
           method: 'POST',
