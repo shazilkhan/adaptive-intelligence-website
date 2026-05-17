@@ -12,7 +12,7 @@ frontend:
         #
         # NOTE: output is redirected to file (not to logs).
         - rm -f .env.production
-        - printenv | grep -E '^(APOLLO_|REVALIDATION_SECRET=|NEXT_PUBLIC_STRAPI_API_URL=)' >> .env.production || true
+        - printenv | grep -E '^(APOLLO_|REVALIDATION_SECRET=|NEXT_PUBLIC_STRAPI_API_URL=|SLACK_WEBHOOK_URL_ALERTS=|RESEND_API_KEY=|ALERT_EMAIL_FROM=|ALERT_EMAIL_TO=|RUNBOOK_BASE_URL=|MONITOR_SECRET=|MONITOR_STATUS_URL=)' >> .env.production || true
         - yarn build
   artifacts:
     baseDirectory: .next

@@ -1,14 +1,26 @@
 // pages/api/track-download.js
 
+import { dispatchAlert } from '@/utils/alerts';
+import { isSyntheticRequest, syntheticOkResponse } from '@/utils/monitor';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
+  const synthetic = isSyntheticRequest(req);
   const { email, slug, title } = req.body;
 
   if (!email || !slug) {
     return res.status(400).json({ message: 'Missing email or slug' });
+  }
+
+  // Synthetic mode: required fields validated. Apollo and Strapi reachability
+  // are checked separately by the detector; skip the side-effecting writes.
+  if (synthetic) {
+    return res.status(200).json(syntheticOkResponse({
+      checks: { emailPresent: true, slugPresent: true },
+    }));
   }
 
   try {
@@ -41,10 +53,25 @@ export default async function handler(req, res) {
         if (apolloRes.ok) {
           console.log(`✅ Added ${email} to Apollo Download List`);
         } else {
-          console.error("❌ Apollo Error:", await apolloRes.text());
+          const apolloErrText = await apolloRes.text();
+          console.error("❌ Apollo Error:", apolloErrText);
+          void dispatchAlert({
+            checkKey: 'forms.download.apollo',
+            severity: 'HIGH',
+            title: `Apollo rejected download tracking (HTTP ${apolloRes.status})`,
+            body: 'Resource download tracking failed at Apollo. Strapi tracking may still record it.',
+            context: { formType: 'download', userEmail: email, resource: slug, apolloStatus: apolloRes.status, apolloBody: apolloErrText?.slice(0, 500) },
+          });
         }
       } catch (apolloErr) {
         console.error("Apollo Connection Failed:", apolloErr);
+        void dispatchAlert({
+          checkKey: 'forms.download.apollo_unreachable',
+          severity: 'HIGH',
+          title: 'Apollo unreachable from download tracking handler',
+          body: 'Network or timeout error reaching api.apollo.io for a resource download.',
+          context: { formType: 'download', userEmail: email, resource: slug, error: apolloErr?.message || String(apolloErr) },
+        });
       }
     }
 
@@ -67,7 +94,15 @@ export default async function handler(req, res) {
     });
 
     if (!strapiResponse.ok) {
-      console.error("Strapi Tracking Failed:", await strapiResponse.text());
+      const strapiErrText = await strapiResponse.text();
+      console.error("Strapi Tracking Failed:", strapiErrText);
+      void dispatchAlert({
+        checkKey: 'forms.download.strapi',
+        severity: 'MEDIUM',
+        title: `Strapi rejected download tracking (HTTP ${strapiResponse.status})`,
+        body: 'Resource download not recorded in Strapi case-study-downloads.',
+        context: { formType: 'download', userEmail: email, resource: slug, strapiStatus: strapiResponse.status, strapiBody: strapiErrText?.slice(0, 500) },
+      });
       // We don't return 500 here if Apollo succeeded, just log it.
     }
 
@@ -75,6 +110,13 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error("Tracking API Error:", error);
+    void dispatchAlert({
+      checkKey: 'forms.download.handler_crash',
+      severity: 'HIGH',
+      title: 'Download tracking handler threw an unhandled exception',
+      body: 'The download tracking handler crashed unexpectedly.',
+      context: { formType: 'download', error: error?.message || String(error) },
+    });
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 }

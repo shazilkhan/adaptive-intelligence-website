@@ -1,16 +1,29 @@
 import { sendSlackNotification } from '@/utils/slack';
+import { dispatchAlert } from '@/utils/alerts';
+import { isSyntheticRequest, syntheticOkResponse } from '@/utils/monitor';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
+  const synthetic = isSyntheticRequest(req);
+
   // 1. Check env
   const apiKey = process.env.APOLLO_API_KEY;
   const listId = process.env.APOLLO_LIST_ID_LETS_TALK;
 
   if (!apiKey) {
-    return res.status(500).json({ message: "Server configuration error" });
+    if (!synthetic) {
+      void dispatchAlert({
+        checkKey: 'forms.letstalk.config',
+        severity: 'CRITICAL',
+        title: "Let's Talk form misconfigured — APOLLO_API_KEY missing",
+        body: 'Real users are hitting the form and getting a 500. Set APOLLO_API_KEY in Amplify environment variables.',
+        context: { formType: 'letstalk' },
+      });
+    }
+    return res.status(500).json({ message: "Server configuration error", synthetic });
   }
 
   try {
@@ -19,7 +32,8 @@ export default async function handler(req, res) {
     const { firstName, lastName, email, company, phone, message, turnstileToken } = bodyData;
 
     // --- 2. Cloudflare Turnstile Verification ---
-    if (process.env.TURNSTILE_SECRET_KEY) {
+    // Skipped in synthetic mode (Lambda cannot produce real tokens).
+    if (!synthetic && process.env.TURNSTILE_SECRET_KEY) {
       if (!turnstileToken) {
         return res.status(400).json({
           success: false,
@@ -82,6 +96,13 @@ export default async function handler(req, res) {
       apolloPayload.typed_custom_fields = { [messageFieldId]: message };
     }
 
+    // Synthetic mode: env vars present, payload built, field mapping good.
+    if (synthetic) {
+      return res.status(200).json(syntheticOkResponse({
+        checks: { envVars: true, payloadConstructed: true, fieldMappingResolved: true },
+      }));
+    }
+
     const fetchWithTimeout = async (url, options, timeoutMs = 12000) => {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), timeoutMs);
@@ -113,6 +134,18 @@ export default async function handler(req, res) {
 
     // 5. Check Apollo Response
     if (!apolloResponse.ok) {
+      void dispatchAlert({
+        checkKey: 'forms.letstalk.apollo',
+        severity: 'CRITICAL',
+        title: `Apollo rejected Let's Talk submission (HTTP ${apolloResponse.status})`,
+        body: "A real user submitted the Let's Talk form and Apollo refused. Lead was lost.",
+        context: {
+          formType: 'letstalk',
+          userEmail: email,
+          apolloStatus: apolloResponse.status,
+          apolloResponse: contactData,
+        },
+      });
       return res.status(400).json({
         success: false,
         message: "Apollo rejected the entry",
@@ -150,11 +183,27 @@ export default async function handler(req, res) {
       }
     } catch (strapiErr) {
       // backup failure shouldn't block Apollo success
+      void dispatchAlert({
+        checkKey: 'forms.letstalk.strapi_unreachable',
+        severity: 'HIGH',
+        title: "Strapi backup failed for Let's Talk submission",
+        body: 'Apollo accepted the lead but the Strapi backup write threw. Lead is safe in Apollo.',
+        context: { formType: 'letstalk', userEmail: email, error: strapiErr?.message || String(strapiErr) },
+      });
     }
 
     return res.status(200).json({ success: true });
 
   } catch (error) {
+    if (!synthetic) {
+      void dispatchAlert({
+        checkKey: 'forms.letstalk.handler_crash',
+        severity: 'CRITICAL',
+        title: "Let's Talk handler threw an unhandled exception",
+        body: 'The form handler crashed unexpectedly. Investigate immediately.',
+        context: { formType: 'letstalk', error: error?.message || String(error) },
+      });
+    }
     return res.status(500).json({ success: false, message: error.message });
   }
 }

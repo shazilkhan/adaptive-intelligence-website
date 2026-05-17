@@ -1,0 +1,229 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Adaptive Intelligence downtime detector.
+  Polls site / Strapi / forms / external deps on a schedule, tracks per-check
+  state in DynamoDB, publishes a public status JSON to S3, and dispatches
+  alerts to Slack + email on state transitions.
+
+  Architecture intentionally lives in its own AWS region/stack from the
+  Amplify/Strapi workloads it observes: if those workloads' region is having
+  problems, the detector still runs.
+
+Parameters:
+  SiteBaseUrl:
+    Type: String
+    Description: Public Next.js URL (no trailing slash). e.g. https://adaptiveintelligence.online
+  StrapiBaseUrl:
+    Type: String
+    Description: Public Strapi URL (no trailing slash). e.g. https://admin.adaptiveintelligence.online
+  StrapiApiToken:
+    Type: String
+    NoEcho: true
+    Description: Read-only Strapi API token with Upload read permission (for image health checks).
+  MonitorSecret:
+    Type: String
+    NoEcho: true
+    Description: Shared secret. Must match MONITOR_SECRET in the Next.js Amplify environment.
+  SlackWebhookUrl:
+    Type: String
+    NoEcho: true
+    Default: ''
+    Description: Slack incoming webhook for ops alerts. Leave empty to disable Slack.
+  ResendApiKey:
+    Type: String
+    NoEcho: true
+    Default: ''
+    Description: Resend API key for email alerts. Leave empty to disable email.
+  AlertEmailFrom:
+    Type: String
+    Default: ''
+    Description: Verified sender address (Resend). e.g. alerts@adaptiveintelligence.online
+  AlertEmailTo:
+    Type: String
+    Default: ''
+    Description: Comma-separated recipient list.
+  RunbookBaseUrl:
+    Type: String
+    Default: ''
+    Description: URL prefix for runbook links in alert footers (optional).
+  AlertSinkEmail:
+    Type: String
+    Description: Email address that receives the CloudWatch "Lambda not invoking" alarm (the watchdog-of-the-watchdog). Should be set even if alerting email above is empty.
+  ApolloApiKey:
+    Type: String
+    NoEcho: true
+    Default: ''
+    Description: Apollo API key used by the daily end-to-end check. Leave empty to disable the end-to-end check (synthetic + dep.apollo still run).
+  ApolloListIdMonitor:
+    Type: String
+    Default: ''
+    Description: Apollo list ID receiving the daily end-to-end test contacts. Create a dedicated list in Apollo (e.g. "MONITOR") so test entries are filterable and cleanable.
+
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Timeout: 30
+    MemorySize: 256
+    Architectures: [arm64]
+    Tracing: Active
+
+Resources:
+  # ─── State store ──────────────────────────────────────────────────────────
+  MonitorStateTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${AWS::StackName}-state'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: checkKey
+          AttributeType: S
+      KeySchema:
+        - AttributeName: checkKey
+          KeyType: HASH
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: false  # state is ephemeral; PITR not worth the cost
+
+  # ─── Public status JSON ───────────────────────────────────────────────────
+  # Read by /api/monitor/status. Public-read because the status JSON IS the
+  # status page payload — no sensitive content, just check states.
+  StatusBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${AWS::StackName}-status-${AWS::AccountId}'
+      OwnershipControls:
+        Rules: [{ ObjectOwnership: BucketOwnerEnforced }]
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: false
+        RestrictPublicBuckets: false
+      CorsConfiguration:
+        CorsRules:
+          - AllowedMethods: [GET, HEAD]
+            AllowedOrigins: ['*']
+            AllowedHeaders: ['*']
+            MaxAge: 60
+
+  StatusBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref StatusBucket
+      PolicyDocument:
+        Statement:
+          - Sid: PublicReadStatusJson
+            Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: !Sub '${StatusBucket.Arn}/status.json'
+
+  # ─── Detector Lambda ──────────────────────────────────────────────────────
+  DetectorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-detector'
+      CodeUri: src/
+      Handler: index.handler
+      Description: Runs scheduled health checks and dispatches alerts on state transitions.
+      Environment:
+        Variables:
+          SITE_BASE_URL: !Ref SiteBaseUrl
+          STRAPI_BASE_URL: !Ref StrapiBaseUrl
+          STRAPI_API_TOKEN: !Ref StrapiApiToken
+          MONITOR_SECRET: !Ref MonitorSecret
+          SLACK_WEBHOOK_URL_ALERTS: !Ref SlackWebhookUrl
+          RESEND_API_KEY: !Ref ResendApiKey
+          ALERT_EMAIL_FROM: !Ref AlertEmailFrom
+          ALERT_EMAIL_TO: !Ref AlertEmailTo
+          RUNBOOK_BASE_URL: !Ref RunbookBaseUrl
+          MONITOR_STATE_TABLE: !Ref MonitorStateTable
+          MONITOR_STATUS_BUCKET: !Ref StatusBucket
+          MONITOR_STATUS_KEY: status.json
+          APOLLO_API_KEY: !Ref ApolloApiKey
+          APOLLO_LIST_ID_MONITOR: !Ref ApolloListIdMonitor
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MonitorStateTable
+        - S3WritePolicy:
+            BucketName: !Ref StatusBucket
+
+  # ─── Schedule: 1-min cron, Lambda decides per-check cadence internally ───
+  # cron(0/1 * * * ? *) fires every minute on the dot. The Lambda checks
+  # `getUTCMinutes() % N` to decide which check buckets are due, which keeps
+  # all scheduling logic in one place and makes Phase 4 additions trivial.
+  DetectorSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: !Sub '${AWS::StackName}-every-minute'
+      ScheduleExpression: cron(0/1 * * * ? *)
+      ScheduleExpressionTimezone: UTC
+      State: ENABLED
+      FlexibleTimeWindow: { Mode: 'OFF' }
+      Target:
+        Arn: !GetAtt DetectorFunction.Arn
+        RoleArn: !GetAtt DetectorScheduleRole.Arn
+        RetryPolicy: { MaximumRetryAttempts: 0 }  # next minute's invocation IS the retry
+
+  DetectorScheduleRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: { Service: scheduler.amazonaws.com }
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: InvokeDetector
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource: !GetAtt DetectorFunction.Arn
+
+  # ─── Watchdog-of-the-watchdog ─────────────────────────────────────────────
+  # If the detector itself stops invoking (broken code, IAM revoked, region
+  # outage), CloudWatch alarms via SNS → email. This is the only alert path
+  # that does NOT depend on the detector itself.
+  WatchdogTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub '${AWS::StackName}-watchdog'
+      Subscription:
+        - Protocol: email
+          Endpoint: !Ref AlertSinkEmail
+
+  DetectorMissedInvocationsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub '${AWS::StackName}-detector-missing'
+      AlarmDescription: Detector Lambda invoked fewer than expected times in 15 min — scheduler broken, role revoked, or region down.
+      Namespace: AWS/Lambda
+      MetricName: Invocations
+      Dimensions:
+        - { Name: FunctionName, Value: !Ref DetectorFunction }
+      Statistic: Sum
+      Period: 900  # 15 min
+      EvaluationPeriods: 1
+      Threshold: 5  # expect ~15 invocations in 15 min; alarm if fewer than 5
+      ComparisonOperator: LessThanThreshold
+      TreatMissingData: breaching
+      AlarmActions: [!Ref WatchdogTopic]
+
+Outputs:
+  StateTableName:
+    Description: DynamoDB table holding per-check state
+    Value: !Ref MonitorStateTable
+  StatusBucketName:
+    Description: S3 bucket hosting public status.json
+    Value: !Ref StatusBucket
+  StatusJsonUrl:
+    Description: Public URL of the aggregated status JSON — set this as MONITOR_STATUS_URL in Amplify env
+    Value: !Sub 'https://${StatusBucket}.s3.${AWS::Region}.amazonaws.com/status.json'
+  DetectorFunctionName:
+    Description: Lambda function name
+    Value: !Ref DetectorFunction
+  WatchdogTopicArn:
+    Description: SNS topic for missed-invocation alarms
+    Value: !Ref WatchdogTopic

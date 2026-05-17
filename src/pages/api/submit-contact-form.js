@@ -1,12 +1,16 @@
 // pages/api/submit-contact-form.js
 
 import { sendSlackNotification } from '@/utils/slack';
+import { dispatchAlert } from '@/utils/alerts';
+import { isSyntheticRequest, syntheticOkResponse } from '@/utils/monitor';
 
 export default async function handler(req, res) {
   // 1. Allow only POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
+
+  const synthetic = isSyntheticRequest(req);
 
   try {
     // Support both `{ data: {...} }` and direct `{...}` payloads
@@ -29,7 +33,10 @@ export default async function handler(req, res) {
     let errorDetails = [];
 
     // --- 2. Cloudflare Turnstile Verification ---
-    if (process.env.TURNSTILE_SECRET_KEY) {
+    // Skipped in synthetic mode: the detector Lambda cannot produce real
+    // Turnstile tokens, and short-circuiting here is exactly the point of
+    // the dry-run path.
+    if (!synthetic && process.env.TURNSTILE_SECRET_KEY) {
       if (!turnstileToken) {
         return res.status(400).json({
           success: false,
@@ -61,8 +68,18 @@ export default async function handler(req, res) {
 
     // --- 3. Apollo Submission (Primary) ---
     if (!process.env.APOLLO_API_KEY) {
+      if (!synthetic) {
+        void dispatchAlert({
+          checkKey: 'forms.contact.config',
+          severity: 'CRITICAL',
+          title: 'Contact form misconfigured — APOLLO_API_KEY missing',
+          body: 'Real users are hitting the contact form and getting a 500. Set APOLLO_API_KEY in Amplify environment variables.',
+          context: { formType: 'contact', userEmail: email },
+        });
+      }
       return res.status(500).json({
         success: false,
+        synthetic,
         message: "Server configuration error: APOLLO_API_KEY is missing",
       });
     }
@@ -116,6 +133,18 @@ export default async function handler(req, res) {
         apolloPayload.typed_custom_fields = typedCustomFields;
       }
 
+      // Synthetic mode: payload constructed successfully, env vars are
+      // present, field mapping resolved. Skip Apollo/Slack/Strapi I/O.
+      if (synthetic) {
+        return res.status(200).json(syntheticOkResponse({
+          checks: {
+            envVars: true,
+            payloadConstructed: true,
+            fieldMappingResolved: true,
+          },
+        }));
+      }
+
       const apolloResponse = await fetch('https://api.apollo.io/v1/contacts', {
         method: 'POST',
         headers: {
@@ -135,6 +164,18 @@ export default async function handler(req, res) {
       }
 
       if (!apolloResponse.ok) {
+        void dispatchAlert({
+          checkKey: 'forms.contact.apollo',
+          severity: 'CRITICAL',
+          title: `Apollo rejected contact form submission (HTTP ${apolloResponse.status})`,
+          body: 'A real user submitted the contact form and Apollo refused the request. Lead was lost unless the Strapi backup also caught it.',
+          context: {
+            formType: 'contact',
+            userEmail: email,
+            apolloStatus: apolloResponse.status,
+            apolloResponse: apolloData,
+          },
+        });
         return res.status(400).json({
           success: false,
           message: "Apollo rejected the entry",
@@ -144,6 +185,17 @@ export default async function handler(req, res) {
 
       apolloSuccess = true;
     } catch (apolloErr) {
+      void dispatchAlert({
+        checkKey: 'forms.contact.apollo_unreachable',
+        severity: 'CRITICAL',
+        title: 'Apollo unreachable from contact form handler',
+        body: 'fetch() to api.apollo.io threw — network issue, timeout, or DNS. Lead was lost.',
+        context: {
+          formType: 'contact',
+          userEmail: email,
+          error: apolloErr?.message || String(apolloErr),
+        },
+      });
       return res.status(500).json({
         success: false,
         message: "Apollo submission failed (server error)",
@@ -197,9 +249,23 @@ export default async function handler(req, res) {
             if (errorText.length < 200) strapiErrorMessage += `: ${errorText}`;
           }
           errorDetails.push(strapiErrorMessage);
+          void dispatchAlert({
+            checkKey: 'forms.contact.strapi_backup',
+            severity: 'HIGH',
+            title: `Strapi backup write failed (${strapiRes.status})`,
+            body: 'Apollo accepted the lead but the Strapi backup write failed. Lead is safe in Apollo. Investigate Strapi.',
+            context: { formType: 'contact', userEmail: email, error: strapiErrorMessage },
+          });
         }
       } catch (strapiErr) {
         errorDetails.push("Strapi connection failed");
+        void dispatchAlert({
+          checkKey: 'forms.contact.strapi_unreachable',
+          severity: 'HIGH',
+          title: 'Strapi unreachable from contact form handler',
+          body: 'Apollo accepted the lead but Strapi backup write threw. Lead is safe in Apollo.',
+          context: { formType: 'contact', userEmail: email, error: strapiErr?.message || String(strapiErr) },
+        });
       }
     }
 
@@ -220,6 +286,15 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
+    if (!synthetic) {
+      void dispatchAlert({
+        checkKey: 'forms.contact.handler_crash',
+        severity: 'CRITICAL',
+        title: 'Contact form handler threw an unhandled exception',
+        body: 'The form handler crashed unexpectedly. Investigate immediately.',
+        context: { formType: 'contact', error: error?.message || String(error) },
+      });
+    }
     return res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
   }
 }
