@@ -1,9 +1,13 @@
 import { sendSlackNotification } from '@/utils/slack';
+import { handleHeartbeat } from '@/utils/monitor/heartbeat';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
+
+  // Monitor heartbeat: short-circuit before any real submission logic.
+  if (handleHeartbeat(req, res, ['APOLLO_API_KEY'])) return;
 
   // 1. Check env
   const apiKey = process.env.APOLLO_API_KEY;

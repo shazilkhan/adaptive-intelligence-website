@@ -25,6 +25,7 @@
     "@react-three/fiber": "8.17.5",
     "@react-three/postprocessing": "^2.16.6",
     "@tawk.to/tawk-messenger-react": "^2.0.2",
+    "@upstash/redis": "^1.38.0",
     "analytics": "^0.8.16",
     "aos": "^2.3.4",
     "bootstrap": "5.1.3",

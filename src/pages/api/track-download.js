@@ -1,9 +1,14 @@
 // pages/api/track-download.js
 
+import { handleHeartbeat } from '@/utils/monitor/heartbeat';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
+
+  // Monitor heartbeat: short-circuit before any real submission logic.
+  if (handleHeartbeat(req, res, ['APOLLO_API_KEY'])) return;
 
   const { email, slug, title } = req.body;
 

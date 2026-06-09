@@ -1,12 +1,17 @@
 // pages/api/submit-contact-form.js
 
 import { sendSlackNotification } from '@/utils/slack';
+import { handleHeartbeat } from '@/utils/monitor/heartbeat';
 
 export default async function handler(req, res) {
   // 1. Allow only POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
+
+  // Monitor heartbeat: verify the endpoint + required env without running the
+  // real submission (no Apollo/Strapi/Slack side effects). Must come first.
+  if (handleHeartbeat(req, res, ['APOLLO_API_KEY'])) return;
 
   try {
     // Support both `{ data: {...} }` and direct `{...}` payloads

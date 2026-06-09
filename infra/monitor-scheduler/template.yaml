@@ -1,0 +1,154 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Triggers the Adaptive Intelligence uptime monitor (/api/monitor/run) every 5
+  minutes via EventBridge Scheduler + a small Lambda. Production runs on AWS
+  Amplify, which has no built-in cron; this stack is that cron. The Lambda also
+  acts as a dead-man's switch, alerting Slack directly if the site is unreachable.
+
+Parameters:
+  MonitorUrl:
+    Type: String
+    Default: https://adaptiveintelligence.online/api/monitor/run
+    Description: Full URL of the monitor run endpoint.
+  MonitorRunSecret:
+    Type: String
+    NoEcho: true
+    Description: Value of MONITOR_RUN_SECRET set in Amplify; sent as Authorization Bearer.
+  AlertWebhookUrl:
+    Type: String
+    NoEcho: true
+    Default: ''
+    Description: Slack incoming webhook for dead-man's-switch alerts (optional; e.g. your #alerts webhook).
+  ScheduleExpression:
+    Type: String
+    Default: rate(5 minutes)
+    Description: EventBridge Scheduler expression. Match monitorConfig / vercel.json intent.
+
+Resources:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  MonitorPokeFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: adaptive-monitor-poke
+      Runtime: nodejs20.x
+      Handler: index.handler
+      Timeout: 65
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Environment:
+        Variables:
+          MONITOR_URL: !Ref MonitorUrl
+          MONITOR_RUN_SECRET: !Ref MonitorRunSecret
+          ALERT_WEBHOOK_URL: !Ref AlertWebhookUrl
+      Code:
+        # Mirror of infra/monitor-scheduler/index.js. If you edit that file,
+        # update this inline copy (or switch to a packaged deploy — see README).
+        ZipFile: |
+          const MONITOR_URL = process.env.MONITOR_URL;
+          const SECRET = process.env.MONITOR_RUN_SECRET || '';
+          const ALERT_WEBHOOK = process.env.ALERT_WEBHOOK_URL || '';
+          const FETCH_TIMEOUT_MS = 60000;
+
+          async function notifySlack(text) {
+            if (!ALERT_WEBHOOK) return;
+            try {
+              await fetch(ALERT_WEBHOOK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text }),
+              });
+            } catch {}
+          }
+
+          exports.handler = async () => {
+            if (!MONITOR_URL) throw new Error('MONITOR_URL env var is not set');
+            const started = Date.now();
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+            try {
+              const res = await fetch(MONITOR_URL, {
+                method: 'POST',
+                headers: SECRET ? { Authorization: `Bearer ${SECRET}` } : {},
+                signal: controller.signal,
+              });
+              const body = await res.text();
+              if (!res.ok) {
+                await notifySlack(
+                  `:rotating_light: *Monitor trigger failed.* \`POST ${MONITOR_URL}\` returned HTTP ${res.status}. ` +
+                    `The uptime monitor may not be running. Response: ${body.slice(0, 300)}`
+                );
+                return { ok: false, statusCode: res.status };
+              }
+              return { ok: true, statusCode: 200, durationMs: Date.now() - started };
+            } catch (err) {
+              const reason = err && err.name === 'AbortError'
+                ? `timeout after ${FETCH_TIMEOUT_MS}ms`
+                : String((err && err.message) || err);
+              await notifySlack(
+                `:rotating_light: *Monitor trigger errored.* Could not reach \`${MONITOR_URL}\` (${reason}). ` +
+                  `The site or the monitor endpoint is unreachable — the uptime monitor is NOT running.`
+              );
+              return { ok: false, error: reason };
+            } finally {
+              clearTimeout(timer);
+            }
+          };
+
+  SchedulerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: scheduler.amazonaws.com
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+      Policies:
+        - PolicyName: InvokeMonitorPoke
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource:
+                  - !GetAtt MonitorPokeFunction.Arn
+                  - !Sub '${MonitorPokeFunction.Arn}:*'
+
+  MonitorSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: adaptive-monitor-every-5-min
+      Description: Calls /api/monitor/run on the Adaptive Intelligence site.
+      ScheduleExpression: !Ref ScheduleExpression
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+      Target:
+        Arn: !GetAtt MonitorPokeFunction.Arn
+        RoleArn: !GetAtt SchedulerRole.Arn
+        RetryPolicy:
+          MaximumRetryAttempts: 2
+
+Outputs:
+  FunctionName:
+    Description: Name of the trigger Lambda.
+    Value: !Ref MonitorPokeFunction
+  FunctionArn:
+    Value: !GetAtt MonitorPokeFunction.Arn
+  ScheduleName:
+    Description: EventBridge schedule name.
+    Value: !Ref MonitorSchedule
