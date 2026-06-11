@@ -43,6 +43,9 @@ const ServicesGridBullets = () => {
               data-aos="fade-up"
               data-aos-delay={index * 100}
             >
+              {/* "New" badge — toggled per-service from Strapi (isNew) */}
+              {item.isNew && <span className="service-new-badge">New</span>}
+
               <div className="service-header-dark">
                 <div className="service-number-dark">0{index + 1}</div>
                 <div className="service-icon-dark">
@@ -113,6 +116,21 @@ const ServicesGridBullets = () => {
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
           border-color: #FF1292;
           background: rgba(255, 255, 255, 0.05);
+        }
+
+        .service-new-badge {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          z-index: 3;
+          background: #2751D2;
+          color: #ffffff;
+          font-size: 13px;
+          font-weight: 600;
+          line-height: 1;
+          letter-spacing: 0.2px;
+          padding: 6px 12px;
+          border-radius: 6px;
         }
 
         .service-header-dark {

@@ -50,6 +50,10 @@
     },
     "order": {
       "type": "integer"
+    },
+    "isNew": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
