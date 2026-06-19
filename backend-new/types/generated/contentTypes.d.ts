@@ -650,6 +650,66 @@ export interface ApiAdaptiveAiPageAdaptiveAiPage
   };
 }
 
+export interface ApiPreferredPartnersPagePreferredPartnersPage
+  extends Struct.SingleTypeSchema {
+  collectionName: 'preferred_partners_pages';
+  info: {
+    displayName: 'Preferred Partners Page';
+    pluralName: 'preferred-partners-pages';
+    singularName: 'preferred-partners-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    ctaButtonText: Schema.Attribute.String;
+    ctaButtonUrl: Schema.Attribute.String;
+    ctaSubtitle: Schema.Attribute.Text;
+    ctaTitle: Schema.Attribute.String;
+    heroBackgroundImage: Schema.Attribute.Media<'images'>;
+    heroBackgroundType: Schema.Attribute.Enumeration<['Image', 'Video']>;
+    heroBackgroundVideo: Schema.Attribute.Media<'videos'>;
+    heroSubtitle: Schema.Attribute.Text;
+    heroTitle: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::preferred-partners-page.preferred-partners-page'
+    > &
+      Schema.Attribute.Private;
+    metaDescription: Schema.Attribute.String;
+    pagePreviewImage: Schema.Attribute.Media<'images'>;
+    pageTitle: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    qualificationsClosing: Schema.Attribute.Text;
+    qualificationsImage: Schema.Attribute.Media<'images'>;
+    qualificationsIntro: Schema.Attribute.Text;
+    qualificationsList: Schema.Attribute.Text;
+    qualificationsListIntro: Schema.Attribute.Text;
+    qualificationsTagline: Schema.Attribute.String;
+    qualificationsTitle: Schema.Attribute.String;
+    rateImage: Schema.Attribute.Media<'images'>;
+    rateParagraph1: Schema.Attribute.Text;
+    rateParagraph2: Schema.Attribute.Text;
+    rateParagraph3: Schema.Attribute.Text;
+    rateTagline: Schema.Attribute.String;
+    rateTitle: Schema.Attribute.String;
+    relationshipImage: Schema.Attribute.Media<'images'>;
+    relationshipParagraph1: Schema.Attribute.Text;
+    relationshipParagraph2: Schema.Attribute.Text;
+    relationshipParagraph3: Schema.Attribute.Text;
+    relationshipParagraph4: Schema.Attribute.Text;
+    relationshipTagline: Schema.Attribute.String;
+    relationshipTitle: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCaseStudiesPageCaseStudiesPage
   extends Struct.SingleTypeSchema {
   collectionName: 'case_studies_pages';
@@ -2175,6 +2235,7 @@ declare module '@strapi/strapi' {
       'api::industry.industry': ApiIndustryIndustry;
       'api::lets-talk-submission.lets-talk-submission': ApiLetsTalkSubmissionLetsTalkSubmission;
       'api::newsletter.newsletter': ApiNewsletterNewsletter;
+      'api::preferred-partners-page.preferred-partners-page': ApiPreferredPartnersPagePreferredPartnersPage;
       'api::service-list.service-list': ApiServiceListServiceList;
       'api::service.service': ApiServiceService;
       'api::services-page.services-page': ApiServicesPageServicesPage;

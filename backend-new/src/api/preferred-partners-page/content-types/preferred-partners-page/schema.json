@@ -1,0 +1,124 @@
+{
+  "kind": "singleType",
+  "collectionName": "preferred_partners_pages",
+  "info": {
+    "singularName": "preferred-partners-page",
+    "pluralName": "preferred-partners-pages",
+    "displayName": "Preferred Partners Page"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "pageTitle": {
+      "type": "string"
+    },
+    "metaDescription": {
+      "type": "string"
+    },
+    "pagePreviewImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "heroTitle": {
+      "type": "string"
+    },
+    "heroSubtitle": {
+      "type": "text"
+    },
+    "heroBackgroundType": {
+      "type": "enumeration",
+      "enum": ["Image", "Video"]
+    },
+    "heroBackgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "heroBackgroundVideo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["videos"]
+    },
+    "rateTagline": {
+      "type": "string"
+    },
+    "rateTitle": {
+      "type": "string"
+    },
+    "rateParagraph1": {
+      "type": "text"
+    },
+    "rateParagraph2": {
+      "type": "text"
+    },
+    "rateParagraph3": {
+      "type": "text"
+    },
+    "rateImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "relationshipTagline": {
+      "type": "string"
+    },
+    "relationshipTitle": {
+      "type": "string"
+    },
+    "relationshipParagraph1": {
+      "type": "text"
+    },
+    "relationshipParagraph2": {
+      "type": "text"
+    },
+    "relationshipParagraph3": {
+      "type": "text"
+    },
+    "relationshipParagraph4": {
+      "type": "text"
+    },
+    "relationshipImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "qualificationsTagline": {
+      "type": "string"
+    },
+    "qualificationsTitle": {
+      "type": "string"
+    },
+    "qualificationsIntro": {
+      "type": "text"
+    },
+    "qualificationsListIntro": {
+      "type": "text"
+    },
+    "qualificationsList": {
+      "type": "text"
+    },
+    "qualificationsClosing": {
+      "type": "text"
+    },
+    "qualificationsImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "ctaTitle": {
+      "type": "string"
+    },
+    "ctaSubtitle": {
+      "type": "text"
+    },
+    "ctaButtonText": {
+      "type": "string"
+    },
+    "ctaButtonUrl": {
+      "type": "string"
+    }
+  }
+}

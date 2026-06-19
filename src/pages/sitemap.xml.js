@@ -14,6 +14,7 @@ function generateSiteMap(caseStudies) {
         "creatives",
         "download",
         "eco",
+        "preferred-partners",
         "privacy-policy",
         "services",
         "team",

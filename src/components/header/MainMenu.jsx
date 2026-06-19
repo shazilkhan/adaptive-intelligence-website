@@ -21,7 +21,8 @@ const MainMenu = () => {
   // --- Dropdown Data ---
   const clientsItems = [
     { name: "Services", link: "/services" },
-    { name: "Case Studies", link: "/case-studies" }
+    { name: "Case Studies", link: "/case-studies" },
+    { name: "Preferred Partners", link: "/preferred-partners" }
   ];
 
   const aboutItems = [
