@@ -154,7 +154,6 @@ const NonCompliantIndustriesPage = ({ pageData }) => {
                   <div className="sc-title">{ind.label}</div>
                   <h2 className="section-title font-recoleta mb-20">{ind.title}</h2>
                   <p className="section-text industry-desc">{ind.description}</p>
-                  <div className="examples-label">Top 10 Examples</div>
                 </div>
               </div>
               <IndustryCards companies={ind.companies} />

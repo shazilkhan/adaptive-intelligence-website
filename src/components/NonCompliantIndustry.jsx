@@ -2,6 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Slider from 'react-slick';
+// slick-theme supplies the arrow/dot glyphs. Only core slick.css is loaded
+// globally, and slick-theme is otherwise only pulled in on the homepage, so
+// this route needs it explicitly for the mobile carousel arrows/dots to show.
+import 'slick-carousel/slick/slick-theme.css';
 
 /**
  * Non-compliant industry company cards.
@@ -87,6 +91,7 @@ const IndustryCards = ({ companies = [] }) => {
     <div className="nc-cards-wrap">
       {isMobile ? (
         <div className="nc-carousel">
+          <div className="nc-examples-label">Top 10 Examples</div>
           <Slider {...sliderSettings}>
             {companies.map((c, i) => (
               <div key={i} className="nc-slide">
@@ -172,6 +177,7 @@ const IndustryCards = ({ companies = [] }) => {
 
         /* Mobile carousel arrows/dots */
         .nc-carousel { position: relative; padding: 0 34px; }
+        .nc-examples-label { text-align: center; color: #ff1292; text-transform: uppercase; letter-spacing: 2px; font-size: 13px; font-weight: 600; margin: 0 0 24px; }
         .nc-carousel .slick-prev,
         .nc-carousel .slick-next {
           width: 30px; height: 30px; z-index: 2;
