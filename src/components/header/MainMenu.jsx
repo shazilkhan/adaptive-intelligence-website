@@ -22,12 +22,14 @@ const MainMenu = () => {
   const clientsItems = [
     { name: "Services", link: "/services" },
     { name: "Case Studies", link: "/case-studies" },
-    { name: "Preferred Partners", link: "/preferred-partners" }
+    { name: "Preferred Partners", link: "/preferred-partners" },
+    { name: "Non-Compliant Industries", link: "/non-compliant-industries" }
   ];
 
   const aboutItems = [
     { name: "About Us", link: "/about" },
     { name: "Adaptive & AI", link: "/adaptive-and-ai" },
+    { name: "Adaptive Beats", link: "/adaptive-beats" },
     { name: "Team", link: "/team" }
   ];
 

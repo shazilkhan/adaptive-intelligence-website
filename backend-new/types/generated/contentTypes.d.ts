@@ -650,6 +650,140 @@ export interface ApiAdaptiveAiPageAdaptiveAiPage
   };
 }
 
+export interface ApiAdaptiveBeatsPageAdaptiveBeatsPage
+  extends Struct.SingleTypeSchema {
+  collectionName: 'adaptive_beats_pages';
+  info: {
+    displayName: 'Adaptive Beats Page';
+    pluralName: 'adaptive-beats-pages';
+    singularName: 'adaptive-beats-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    creativesImage: Schema.Attribute.Media<'images'>;
+    creativesParagraph1: Schema.Attribute.Text;
+    creativesParagraph2: Schema.Attribute.Text;
+    creativesParagraph3: Schema.Attribute.Text;
+    creativesTagline: Schema.Attribute.String;
+    creativesTitle: Schema.Attribute.String;
+    ctaBackgroundImage: Schema.Attribute.Media<'images'>;
+    ctaButtonText: Schema.Attribute.String;
+    ctaButtonUrl: Schema.Attribute.String;
+    ctaSubtitle: Schema.Attribute.String;
+    ctaTitle: Schema.Attribute.String;
+    heroBackgroundImage: Schema.Attribute.Media<'images'>;
+    heroBackgroundType: Schema.Attribute.Enumeration<['Image', 'Video']>;
+    heroBackgroundVideo: Schema.Attribute.Media<'videos'>;
+    heroSubtitle: Schema.Attribute.Text;
+    heroTitle: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::adaptive-beats-page.adaptive-beats-page'
+    > &
+      Schema.Attribute.Private;
+    metaDescription: Schema.Attribute.Text;
+    pagePreviewImage: Schema.Attribute.Media<'images'>;
+    pageTitle: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    rotationButtonText: Schema.Attribute.String;
+    rotationButtonUrl: Schema.Attribute.String;
+    rotationParagraph1: Schema.Attribute.Text;
+    rotationParagraph2: Schema.Attribute.Text;
+    rotationParagraph3: Schema.Attribute.Text;
+    rotationTagline: Schema.Attribute.String;
+    rotationTitle: Schema.Attribute.String;
+    spotifyEmbedUrl: Schema.Attribute.Text;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiNonCompliantPageNonCompliantPage
+  extends Struct.SingleTypeSchema {
+  collectionName: 'non_compliant_pages';
+  info: {
+    displayName: 'Non-Compliant Industries Page';
+    pluralName: 'non-compliant-pages';
+    singularName: 'non-compliant-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    ctaButton1Text: Schema.Attribute.String;
+    ctaButton1Url: Schema.Attribute.String;
+    ctaButton2Text: Schema.Attribute.String;
+    ctaButton2Url: Schema.Attribute.String;
+    ctaSubtitle: Schema.Attribute.Text;
+    ctaTitle: Schema.Attribute.String;
+    heroBackgroundImage: Schema.Attribute.Media<'images'>;
+    heroBackgroundType: Schema.Attribute.Enumeration<['Image', 'Video']>;
+    heroBackgroundVideo: Schema.Attribute.Media<'videos'>;
+    heroSubtitle: Schema.Attribute.Text;
+    heroTitle: Schema.Attribute.String;
+    industry1Companies: Schema.Attribute.Component<
+      'non-compliant.company-card',
+      true
+    >;
+    industry1Description: Schema.Attribute.Text;
+    industry1Label: Schema.Attribute.String;
+    industry1Title: Schema.Attribute.String;
+    industry2Companies: Schema.Attribute.Component<
+      'non-compliant.company-card',
+      true
+    >;
+    industry2Description: Schema.Attribute.Text;
+    industry2Label: Schema.Attribute.String;
+    industry2Title: Schema.Attribute.String;
+    industry3Companies: Schema.Attribute.Component<
+      'non-compliant.company-card',
+      true
+    >;
+    industry3Description: Schema.Attribute.Text;
+    industry3Label: Schema.Attribute.String;
+    industry3Title: Schema.Attribute.String;
+    introImage: Schema.Attribute.Media<'images'>;
+    introParagraph1: Schema.Attribute.Text;
+    introParagraph2: Schema.Attribute.Text;
+    introTagline: Schema.Attribute.String;
+    introTitle: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::non-compliant-page.non-compliant-page'
+    > &
+      Schema.Attribute.Private;
+    metaDescription: Schema.Attribute.Text;
+    pagePreviewImage: Schema.Attribute.Media<'images'>;
+    pageTitle: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    qualificationsClosing: Schema.Attribute.Text;
+    qualificationsImage: Schema.Attribute.Media<'images'>;
+    qualificationsIntro: Schema.Attribute.Text;
+    qualificationsList: Schema.Attribute.Text;
+    qualificationsListIntro: Schema.Attribute.Text;
+    qualificationsTagline: Schema.Attribute.String;
+    qualificationsTitle: Schema.Attribute.String;
+    scoringButtonText: Schema.Attribute.String;
+    scoringButtonUrl: Schema.Attribute.String;
+    scoringDescription: Schema.Attribute.Text;
+    scoringTitle: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiPreferredPartnersPagePreferredPartnersPage
   extends Struct.SingleTypeSchema {
   collectionName: 'preferred_partners_pages';
@@ -2222,6 +2356,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::about-page.about-page': ApiAboutPageAboutPage;
       'api::adaptive-ai-page.adaptive-ai-page': ApiAdaptiveAiPageAdaptiveAiPage;
+      'api::adaptive-beats-page.adaptive-beats-page': ApiAdaptiveBeatsPageAdaptiveBeatsPage;
       'api::case-studies-page.case-studies-page': ApiCaseStudiesPageCaseStudiesPage;
       'api::case-study-download.case-study-download': ApiCaseStudyDownloadCaseStudyDownload;
       'api::case-study.case-study': ApiCaseStudyCaseStudy;
@@ -2235,6 +2370,7 @@ declare module '@strapi/strapi' {
       'api::industry.industry': ApiIndustryIndustry;
       'api::lets-talk-submission.lets-talk-submission': ApiLetsTalkSubmissionLetsTalkSubmission;
       'api::newsletter.newsletter': ApiNewsletterNewsletter;
+      'api::non-compliant-page.non-compliant-page': ApiNonCompliantPageNonCompliantPage;
       'api::preferred-partners-page.preferred-partners-page': ApiPreferredPartnersPagePreferredPartnersPage;
       'api::service-list.service-list': ApiServiceListServiceList;
       'api::service.service': ApiServiceService;

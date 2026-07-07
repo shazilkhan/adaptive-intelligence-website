@@ -172,6 +172,19 @@ export interface SharedTag extends Struct.ComponentSchema {
   };
 }
 
+export interface NonCompliantCompanyCard extends Struct.ComponentSchema {
+  collectionName: 'components_non_compliant_company_cards';
+  info: {
+    displayName: 'Company Card';
+  };
+  attributes: {
+    adaptiveScore: Schema.Attribute.Integer;
+    description: Schema.Attribute.Text;
+    esgScoreUrl: Schema.Attribute.String;
+    name: Schema.Attribute.String;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
@@ -183,6 +196,7 @@ declare module '@strapi/strapi' {
       'homepage.counter-item': HomepageCounterItem;
       'homepage.feature-list-item': HomepageFeatureListItem;
       'homepage.text-chunk': HomepageTextChunk;
+      'non-compliant.company-card': NonCompliantCompanyCard;
       'shared.adaptive-intelligence-features': SharedAdaptiveIntelligenceFeatures;
       'shared.bullet-point': SharedBulletPoint;
       'shared.cta-banner': SharedCtaBanner;

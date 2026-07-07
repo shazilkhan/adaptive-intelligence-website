@@ -1,0 +1,158 @@
+{
+  "kind": "singleType",
+  "collectionName": "non_compliant_pages",
+  "info": {
+    "singularName": "non-compliant-page",
+    "pluralName": "non-compliant-pages",
+    "displayName": "Non-Compliant Industries Page"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "pageTitle": {
+      "type": "string"
+    },
+    "metaDescription": {
+      "type": "text"
+    },
+    "pagePreviewImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "heroTitle": {
+      "type": "string"
+    },
+    "heroSubtitle": {
+      "type": "text"
+    },
+    "heroBackgroundType": {
+      "type": "enumeration",
+      "enum": ["Image", "Video"]
+    },
+    "heroBackgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "heroBackgroundVideo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["videos"]
+    },
+    "introTagline": {
+      "type": "string"
+    },
+    "introTitle": {
+      "type": "string"
+    },
+    "introParagraph1": {
+      "type": "text"
+    },
+    "introParagraph2": {
+      "type": "text"
+    },
+    "introImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "industry1Label": {
+      "type": "string"
+    },
+    "industry1Title": {
+      "type": "string"
+    },
+    "industry1Description": {
+      "type": "text"
+    },
+    "industry1Companies": {
+      "type": "component",
+      "component": "non-compliant.company-card",
+      "repeatable": true
+    },
+    "industry2Label": {
+      "type": "string"
+    },
+    "industry2Title": {
+      "type": "string"
+    },
+    "industry2Description": {
+      "type": "text"
+    },
+    "industry2Companies": {
+      "type": "component",
+      "component": "non-compliant.company-card",
+      "repeatable": true
+    },
+    "industry3Label": {
+      "type": "string"
+    },
+    "industry3Title": {
+      "type": "string"
+    },
+    "industry3Description": {
+      "type": "text"
+    },
+    "industry3Companies": {
+      "type": "component",
+      "component": "non-compliant.company-card",
+      "repeatable": true
+    },
+    "scoringTitle": {
+      "type": "string"
+    },
+    "scoringDescription": {
+      "type": "text"
+    },
+    "scoringButtonText": {
+      "type": "string"
+    },
+    "scoringButtonUrl": {
+      "type": "string"
+    },
+    "qualificationsTagline": {
+      "type": "string"
+    },
+    "qualificationsTitle": {
+      "type": "string"
+    },
+    "qualificationsIntro": {
+      "type": "text"
+    },
+    "qualificationsListIntro": {
+      "type": "text"
+    },
+    "qualificationsList": {
+      "type": "text"
+    },
+    "qualificationsClosing": {
+      "type": "text"
+    },
+    "qualificationsImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "ctaTitle": {
+      "type": "string"
+    },
+    "ctaSubtitle": {
+      "type": "text"
+    },
+    "ctaButton1Text": {
+      "type": "string"
+    },
+    "ctaButton1Url": {
+      "type": "string"
+    },
+    "ctaButton2Text": {
+      "type": "string"
+    },
+    "ctaButton2Url": {
+      "type": "string"
+    }
+  }
+}

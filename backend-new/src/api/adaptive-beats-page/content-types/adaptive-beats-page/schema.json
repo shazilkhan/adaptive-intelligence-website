@@ -1,0 +1,107 @@
+{
+  "kind": "singleType",
+  "collectionName": "adaptive_beats_pages",
+  "info": {
+    "singularName": "adaptive-beats-page",
+    "pluralName": "adaptive-beats-pages",
+    "displayName": "Adaptive Beats Page"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "pageTitle": {
+      "type": "string"
+    },
+    "metaDescription": {
+      "type": "text"
+    },
+    "pagePreviewImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "heroTitle": {
+      "type": "string"
+    },
+    "heroSubtitle": {
+      "type": "text"
+    },
+    "heroBackgroundType": {
+      "type": "enumeration",
+      "enum": ["Image", "Video"]
+    },
+    "heroBackgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "heroBackgroundVideo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["videos"]
+    },
+    "creativesTagline": {
+      "type": "string"
+    },
+    "creativesTitle": {
+      "type": "string"
+    },
+    "creativesParagraph1": {
+      "type": "text"
+    },
+    "creativesParagraph2": {
+      "type": "text"
+    },
+    "creativesParagraph3": {
+      "type": "text"
+    },
+    "creativesImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "rotationTagline": {
+      "type": "string"
+    },
+    "rotationTitle": {
+      "type": "string"
+    },
+    "rotationParagraph1": {
+      "type": "text"
+    },
+    "rotationParagraph2": {
+      "type": "text"
+    },
+    "rotationParagraph3": {
+      "type": "text"
+    },
+    "spotifyEmbedUrl": {
+      "type": "text"
+    },
+    "rotationButtonText": {
+      "type": "string"
+    },
+    "rotationButtonUrl": {
+      "type": "string"
+    },
+    "ctaTitle": {
+      "type": "string"
+    },
+    "ctaSubtitle": {
+      "type": "string"
+    },
+    "ctaButtonText": {
+      "type": "string"
+    },
+    "ctaButtonUrl": {
+      "type": "string"
+    },
+    "ctaBackgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}

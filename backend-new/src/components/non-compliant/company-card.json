@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_non_compliant_company_cards",
+  "info": {
+    "displayName": "Company Card"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "adaptiveScore": {
+      "type": "integer"
+    },
+    "esgScoreUrl": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}
