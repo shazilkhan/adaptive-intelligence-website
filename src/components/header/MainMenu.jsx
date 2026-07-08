@@ -23,13 +23,13 @@ const MainMenu = () => {
     { name: "Services", link: "/services" },
     { name: "Case Studies", link: "/case-studies" },
     { name: "Preferred Partners", link: "/preferred-partners" },
-    { name: "Non-Compliant Industries", link: "/non-compliant-industries" }
+    { name: "Divestments", link: "/divestments" }
   ];
 
   const aboutItems = [
     { name: "About Us", link: "/about" },
     { name: "Adaptive & AI", link: "/adaptive-and-ai" },
-    { name: "Adaptive Beats", link: "/adaptive-beats" },
+    { name: "Adaptive Playlist", link: "/adaptive-playlist" },
     { name: "Team", link: "/team" }
   ];
 

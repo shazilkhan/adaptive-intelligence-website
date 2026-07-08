@@ -19,6 +19,17 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Pages renamed 2026-07: keep the original URLs working (they shipped live).
+      {
+        source: '/adaptive-beats',
+        destination: '/adaptive-playlist',
+        permanent: true,
+      },
+      {
+        source: '/non-compliant-industries',
+        destination: '/divestments',
+        permanent: true,
+      },
       {
         source: '/home', // Common old path
         destination: '/',

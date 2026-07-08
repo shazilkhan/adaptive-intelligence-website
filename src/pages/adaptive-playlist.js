@@ -9,7 +9,7 @@ import { getStrapiApiUrl, getStrapiMediaUrl } from '@/utils/strapi';
 
 const DEFAULT_SPOTIFY_EMBED = 'https://open.spotify.com/embed/playlist/37i9dQZF1EpoYM2VvfSDDr?utm_source=generator';
 
-const AdaptiveBeatsPage = ({ pageData }) => {
+const AdaptivePlaylistPage = ({ pageData }) => {
   const d = pageData || {};
 
   const heroType = d.heroBackgroundType || 'Image';
@@ -23,8 +23,8 @@ const AdaptiveBeatsPage = ({ pageData }) => {
   return (
     <>
       <SEO
-        pageTitle={d.pageTitle || 'Adaptive Beats'}
-        metaDescription={d.metaDescription || "The soundtrack to our work. Adaptive Beats is the living playlist inside Adaptive Intelligence — follow along and find your people."}
+        pageTitle={d.pageTitle || 'Adaptive Playlist'}
+        metaDescription={d.metaDescription || "The soundtrack to our work. The Adaptive Playlist is the living playlist inside Adaptive Intelligence — follow along and find your people."}
         ogImage={d.pagePreviewImage}
       />
       <Header menuTextColor="white" />
@@ -47,9 +47,9 @@ const AdaptiveBeatsPage = ({ pageData }) => {
               <p className="hero-breadcrumb">
                 <Link href="/creatives">Creatives</Link>
                 <span className="separator">/</span>
-                <span>Adaptive Beats</span>
+                <span>Adaptive Playlist</span>
               </p>
-              <h1 className="hero-title font-recoleta">{d.heroTitle || 'Adaptive Beats'}</h1>
+              <h1 className="hero-title font-recoleta">{d.heroTitle || 'Adaptive Playlist'}</h1>
               <p className="hero-subtitle">
                 {d.heroSubtitle || 'This is what it sounds like inside Adaptive Intelligence. Follow along and find your people.'}
               </p>
@@ -100,7 +100,7 @@ const AdaptiveBeatsPage = ({ pageData }) => {
                   allowFullScreen
                   allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                   loading="lazy"
-                  title="Adaptive Beats playlist"
+                  title="Adaptive Playlist"
                 />
               </div>
             </div>
@@ -216,6 +216,9 @@ export async function getStaticProps() {
   let pageData = null;
   try {
     const { getStrapiApiUrl } = await import('@/utils/strapi');
+    // NOTE: the Strapi content type is still `adaptive-beats-page`. The page was
+    // renamed to "Adaptive Playlist" (URL + nav) but the CMS UID is deliberately
+    // unchanged — renaming it would create a new table and orphan the published entry.
     const url = `${getStrapiApiUrl()}/api/adaptive-beats-page?populate=*`;
     const res = await fetch(url);
     if (res.ok) {
@@ -223,9 +226,9 @@ export async function getStaticProps() {
       pageData = json.data || null;
     }
   } catch (error) {
-    console.error('Error fetching Adaptive Beats page data:', error.message);
+    console.error('Error fetching Adaptive Playlist page data:', error.message);
   }
   return { props: { pageData }, revalidate: 60 };
 }
 
-export default AdaptiveBeatsPage;
+export default AdaptivePlaylistPage;

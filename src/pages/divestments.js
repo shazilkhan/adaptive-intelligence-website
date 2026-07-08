@@ -48,7 +48,7 @@ Are committed to sustainable, long-term growth
 Prioritize quality, creativity, and thoughtful decision-making
 Understand the importance of building meaningful relationships with their audiences`;
 
-const NonCompliantIndustriesPage = ({ pageData }) => {
+const DivestmentsPage = ({ pageData }) => {
   const d = pageData || {};
 
   const heroType = d.heroBackgroundType || 'Image';
@@ -86,8 +86,8 @@ const NonCompliantIndustriesPage = ({ pageData }) => {
   return (
     <>
       <SEO
-        pageTitle={d.pageTitle || 'Non-Compliant Industries'}
-        metaDescription={d.metaDescription || "The industries and organizations Adaptive Intelligence declines to work with — and why. Transparency about the values behind our client standards."}
+        pageTitle={d.pageTitle || 'Divestments'}
+        metaDescription={d.metaDescription || "The industries and organizations Adaptive Intelligence divests from — and why. Transparency about the values behind our client standards."}
         ogImage={d.pagePreviewImage}
       />
       <Header menuTextColor="white" />
@@ -110,7 +110,7 @@ const NonCompliantIndustriesPage = ({ pageData }) => {
               <p className="hero-breadcrumb">
                 <Link href="/eco">Eco</Link>
                 <span className="separator">/</span>
-                <span>Non-Compliant Industries</span>
+                <span>Divestments</span>
               </p>
               <h1 className="hero-title font-recoleta">{d.heroTitle || 'Drawing The Line'}</h1>
               <p className="hero-subtitle">
@@ -305,6 +305,9 @@ export async function getStaticProps() {
   let pageData = null;
   try {
     const { getStrapiApiUrl } = await import('@/utils/strapi');
+    // NOTE: the Strapi content type is still `non-compliant-page`. The page was
+    // renamed to "Divestments" (URL + nav) but the CMS UID is deliberately
+    // unchanged — renaming it would create a new table and orphan the published entry.
     const url = `${getStrapiApiUrl()}/api/non-compliant-page?populate=*`;
     const res = await fetch(url);
     if (res.ok) {
@@ -312,9 +315,9 @@ export async function getStaticProps() {
       pageData = json.data || null;
     }
   } catch (error) {
-    console.error('Error fetching Non-Compliant Industries page data:', error.message);
+    console.error('Error fetching Divestments page data:', error.message);
   }
   return { props: { pageData }, revalidate: 60 };
 }
 
-export default NonCompliantIndustriesPage;
+export default DivestmentsPage;
