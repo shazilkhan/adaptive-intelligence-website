@@ -14,6 +14,37 @@
     "adaptiveScore": {
       "type": "integer"
     },
+    "integrityTransparencyScore": {
+      "type": "integer",
+      "min": 0,
+      "max": 5
+    },
+    "consumerWellbeingScore": {
+      "type": "integer",
+      "min": 0,
+      "max": 5
+    },
+    "ethicalCorporateGovernanceScore": {
+      "type": "integer",
+      "min": 0,
+      "max": 5
+    },
+    "lifecycleEnvironmentalImpactScore": {
+      "type": "integer",
+      "min": 0,
+      "max": 5
+    },
+    "scoreInfoTitle": {
+      "type": "string",
+      "default": "Understanding Scores"
+    },
+    "scoreInfoDescription": {
+      "type": "text",
+      "default": "Adaptive Intelligence conducts quarterly reviews and gives companies aggregate scores."
+    },
+    "scoreLastUpdated": {
+      "type": "date"
+    },
     "esgScoreUrl": {
       "type": "string"
     }

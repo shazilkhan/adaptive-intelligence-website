@@ -179,9 +179,18 @@ export interface NonCompliantCompanyCard extends Struct.ComponentSchema {
   };
   attributes: {
     adaptiveScore: Schema.Attribute.Integer;
+    consumerWellbeingScore: Schema.Attribute.Integer;
     description: Schema.Attribute.Text;
+    ethicalCorporateGovernanceScore: Schema.Attribute.Integer;
     esgScoreUrl: Schema.Attribute.String;
+    integrityTransparencyScore: Schema.Attribute.Integer;
+    lifecycleEnvironmentalImpactScore: Schema.Attribute.Integer;
     name: Schema.Attribute.String;
+    scoreInfoDescription: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Adaptive Intelligence conducts quarterly reviews and gives companies aggregate scores.'>;
+    scoreInfoTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Understanding Scores'>;
+    scoreLastUpdated: Schema.Attribute.Date;
   };
 }
 
