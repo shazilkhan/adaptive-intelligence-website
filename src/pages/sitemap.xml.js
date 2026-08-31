@@ -13,7 +13,6 @@ function generateSiteMap(caseStudies) {
         "contact",
         "cookie-policy",
         "creatives",
-        "divestments",
         "download",
         "eco",
         "preferred-partners",

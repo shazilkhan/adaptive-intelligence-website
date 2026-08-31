@@ -89,6 +89,7 @@ const DivestmentsPage = ({ pageData }) => {
         pageTitle={d.pageTitle || 'Divestments'}
         metaDescription={d.metaDescription || "The industries and organizations Adaptive Intelligence divests from — and why. Transparency about the values behind our client standards."}
         ogImage={d.pagePreviewImage}
+        noIndex
       />
       <Header menuTextColor="white" />
 

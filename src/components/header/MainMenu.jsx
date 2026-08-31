@@ -22,8 +22,9 @@ const MainMenu = () => {
   const clientsItems = [
     { name: "Services", link: "/services" },
     { name: "Case Studies", link: "/case-studies" },
-    { name: "Preferred Partners", link: "/preferred-partners" },
-    { name: "Divestments", link: "/divestments" }
+    { name: "Preferred Partners", link: "/preferred-partners" }
+    // "Divestments" is intentionally unlisted (link-only) — accessible at
+    // /divestments by direct link, but kept out of nav, sitemap, and search.
   ];
 
   const aboutItems = [

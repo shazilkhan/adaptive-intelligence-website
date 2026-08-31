@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useSettings } from '@/context/SettingsContext';
 import { getStrapiMediaUrl } from '@/utils/strapi';
 
-const SEO = ({ pageTitle, metaDescription, ogImage, canonicalUrl }) => {
+const SEO = ({ pageTitle, metaDescription, ogImage, canonicalUrl, noIndex = false }) => {
     const { settings } = useSettings();
 
     // 1. Resolve Title
@@ -38,6 +38,9 @@ const SEO = ({ pageTitle, metaDescription, ogImage, canonicalUrl }) => {
             <title>{fullTitle}</title>
             <meta name="description" content={description} />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+            {/* Unlisted pages: keep reachable by direct link but out of search results */}
+            {noIndex && <meta name="robots" content="noindex, nofollow" />}
 
             {/* Open Graph / Facebook */}
             <meta property="og:type" content="website" />
