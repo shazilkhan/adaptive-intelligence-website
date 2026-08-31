@@ -19,7 +19,7 @@ function generateSiteMap(caseStudies) {
         "privacy-policy",
         "services",
         "team",
-        "terms-conditions",
+        "terms-and-conditions",
         "terms-of-use",
         "case-studies"
     ];

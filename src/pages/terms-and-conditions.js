@@ -9,7 +9,7 @@ import FooterWithSettings from "@/components/footer/FooterWithSettings";
 
 import SEO from '@/components/SEO';
 
-const TermsConditionsPage = () => {
+const TermsAndConditionsPage = () => {
   return (
     <>
       <SEO pageTitle="Terms & Conditions" />
@@ -186,4 +186,4 @@ const TermsConditionsPage = () => {
   );
 };
 
-export default TermsConditionsPage;
+export default TermsAndConditionsPage;

@@ -103,11 +103,11 @@ const nextConfig = {
       // Privacy Policy (/privacy-policy/ trailing slash is handled by Next.js automatically)
       { source: '/privacy', destination: '/privacy-policy', permanent: true },
       { source: '/privacypolicy', destination: '/privacy-policy', permanent: true },
-      // Terms & Conditions — the live page is /terms-conditions; point the aliases there.
-      // (Doc listed /terms-and-conditions as primary, but no such page exists — see note to Stacy.)
-      { source: '/terms', destination: '/terms-conditions', permanent: true },
-      { source: '/terms-and-conditions', destination: '/terms-conditions', permanent: true },
-      { source: '/termsandconditions', destination: '/terms-conditions', permanent: true },
+      // Terms & Conditions — page renamed to /terms-and-conditions (canonical, per the doc).
+      // The old /terms-conditions URL now redirects to it.
+      { source: '/terms', destination: '/terms-and-conditions', permanent: true },
+      { source: '/terms-conditions', destination: '/terms-and-conditions', permanent: true },
+      { source: '/termsandconditions', destination: '/terms-and-conditions', permanent: true },
       // Terms of Use
       { source: '/termsofuse', destination: '/terms-of-use', permanent: true },
       { source: '/terms-use', destination: '/terms-of-use', permanent: true },
@@ -115,8 +115,11 @@ const nextConfig = {
       { source: '/cookies', destination: '/cookie-policy', permanent: true },
       { source: '/cookiepolicy', destination: '/cookie-policy', permanent: true },
       { source: '/cookies-policy', destination: '/cookie-policy', permanent: true },
-      // HELD (need target): /client, /our-clients, /client-list — the doc points these
-      // at /clients, which is a nav dropdown with no landing page. Awaiting confirmation.
+      // Clients — no /clients landing page exists (nav dropdown only); routed to Case Studies.
+      { source: '/client', destination: '/case-studies', permanent: true },
+      { source: '/our-clients', destination: '/case-studies', permanent: true },
+      { source: '/client-list', destination: '/case-studies', permanent: true },
+      { source: '/clients', destination: '/case-studies', permanent: true },
 
       // Add more specific redirects here as needed
     ];

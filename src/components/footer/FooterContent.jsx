@@ -54,7 +54,7 @@ const FooterContent = () => {
       title: "Legal",
       links: [
         { title: "Privacy Policy", url: "/privacy-policy" },
-        { title: "Terms & Conditions", url: "/terms-conditions" },
+        { title: "Terms & Conditions", url: "/terms-and-conditions" },
         { title: "Terms of Use", url: "/terms-of-use" },
         { title: "Cookie Policy", url: "/cookie-policy" },
       ],

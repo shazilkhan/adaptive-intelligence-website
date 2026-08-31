@@ -27,7 +27,7 @@ export const monitorConfig = {
     '/privacy-policy',
     '/services',
     '/team',
-    '/terms-conditions',
+    '/terms-and-conditions',
     '/terms-of-use',
   ],
 
