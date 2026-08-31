@@ -26,6 +26,9 @@
     "companyName": {
       "type": "string"
     },
+    "message": {
+      "type": "text"
+    },
     "emailOptin": {
       "type": "enumeration",
       "enum": [

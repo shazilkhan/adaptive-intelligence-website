@@ -1042,6 +1042,7 @@ export interface ApiContactFormSubmissionContactFormSubmission
       'api::contact-form-submission.contact-form-submission'
     > &
       Schema.Attribute.Private;
+    message: Schema.Attribute.Text;
     phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     servicesNeeded: Schema.Attribute.JSON;

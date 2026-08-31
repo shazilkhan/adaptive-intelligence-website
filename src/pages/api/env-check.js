@@ -36,6 +36,15 @@ export default function handler(req, res) {
       hasNextPublicStrapiApiUrl: has('NEXT_PUBLIC_STRAPI_API_URL'),
       hasRevalidationSecret: has('REVALIDATION_SECRET'),
     },
+
+    // Where contact-form data is delivered. If hasApolloFieldIdMessage is
+    // false, the submitter's message never reaches Apollo (only Slack/Strapi).
+    formDelivery: {
+      hasApolloFieldIdMessage: has('APOLLO_FIELD_ID_MESSAGE'),
+      hasApolloFieldIdServicesNeeded: has('APOLLO_FIELD_ID_SERVICES_NEEDED'),
+      hasSlackWebhookUrl: has('SLACK_WEBHOOK_URL'),
+      hasTurnstileSecretKey: has('TURNSTILE_SECRET_KEY'),
+    },
   });
 }
 

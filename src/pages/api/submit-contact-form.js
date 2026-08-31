@@ -183,7 +183,16 @@ export default async function handler(req, res) {
               firstName,
               lastName,
               email,
+              phone,
               companyName,
+              message: userMessage,
+              // servicesNeeded/leadSource are `json` fields; the contact form
+              // may send them as arrays (empty when the form omits them).
+              servicesNeeded: servicesArr,
+              leadSource: sourcesArr,
+              // Schema enum is 'yes' | 'no' — the form sends a boolean.
+              emailOptin: bodyData.emailOptin ? 'yes' : 'no',
+              submittedAt: new Date().toISOString(),
             }
           }),
         });
