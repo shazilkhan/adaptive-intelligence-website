@@ -18,6 +18,13 @@
         "research",
         "community"
       ]
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Learn More"
+    },
+    "buttonUrl": {
+      "type": "string"
     }
   },
   "config": {}

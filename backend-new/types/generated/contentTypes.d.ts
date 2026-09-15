@@ -774,10 +774,13 @@ export interface ApiNonCompliantPageNonCompliantPage
     qualificationsListIntro: Schema.Attribute.Text;
     qualificationsTagline: Schema.Attribute.String;
     qualificationsTitle: Schema.Attribute.String;
+    lastSweepDate: Schema.Attribute.Date;
     scoringButtonText: Schema.Attribute.String;
     scoringButtonUrl: Schema.Attribute.String;
     scoringDescription: Schema.Attribute.Text;
     scoringTitle: Schema.Attribute.String;
+    sweepCadenceText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Refreshed monthly'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1206,6 +1209,7 @@ export interface ApiEcoPageEcoPage extends Struct.SingleTypeSchema {
     noaaDownloadButtonText: Schema.Attribute.String;
     noaaDownloadUrl: Schema.Attribute.String;
     noaaImage: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    noaaPapers: Schema.Attribute.Media<'files', true>;
     noaaParagraph1: Schema.Attribute.Text;
     noaaParagraph2: Schema.Attribute.Text;
     noaaTitle: Schema.Attribute.String;
@@ -1214,6 +1218,10 @@ export interface ApiEcoPageEcoPage extends Struct.SingleTypeSchema {
     >;
     pageTitle: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    toolResources: Schema.Attribute.Component<'eco.resource-link', true>;
+    toolsDescription: Schema.Attribute.Text;
+    toolsTagline: Schema.Attribute.String;
+    toolsTitle: Schema.Attribute.String;
     treeCardButtonText: Schema.Attribute.String;
     treeCardButtonUrl: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;

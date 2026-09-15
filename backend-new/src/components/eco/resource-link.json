@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_eco_resource_links",
+  "info": {
+    "displayName": "Resource Link",
+    "description": "A practical tool or framework listed on the Eco page. Link to an external site with `url`, or upload a document to `file` (the file wins when both are set)."
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "sourceLabel": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "file": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "files",
+        "images"
+      ]
+    }
+  },
+  "config": {}
+}

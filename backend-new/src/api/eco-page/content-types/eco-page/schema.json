@@ -31,6 +31,20 @@
       "component": "eco.hub-card",
       "repeatable": true
     },
+    "toolsTagline": {
+      "type": "string"
+    },
+    "toolsTitle": {
+      "type": "string"
+    },
+    "toolsDescription": {
+      "type": "text"
+    },
+    "toolResources": {
+      "type": "component",
+      "component": "eco.resource-link",
+      "repeatable": true
+    },
     "impactTitle": {
       "type": "string"
     },
@@ -77,6 +91,13 @@
     },
     "noaaDownloadUrl": {
       "type": "string"
+    },
+    "noaaPapers": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "files"
+      ]
     },
     "communityTitle": {
       "type": "string"

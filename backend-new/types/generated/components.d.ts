@@ -51,9 +51,27 @@ export interface EcoHubCard extends Struct.ComponentSchema {
     displayName: 'Hub Card';
   };
   attributes: {
+    buttonText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Learn More'>;
+    buttonUrl: Schema.Attribute.String;
     description: Schema.Attribute.Text;
     iconType: Schema.Attribute.Enumeration<['tools', 'research', 'community']>;
     title: Schema.Attribute.String;
+  };
+}
+
+export interface EcoResourceLink extends Struct.ComponentSchema {
+  collectionName: 'components_eco_resource_links';
+  info: {
+    description: 'A practical tool or framework listed on the Eco page. Link to an external site with `url`, or upload a document to `file` (the file wins when both are set).';
+    displayName: 'Resource Link';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    file: Schema.Attribute.Media<'files' | 'images'>;
+    sourceLabel: Schema.Attribute.String;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    url: Schema.Attribute.String;
   };
 }
 
@@ -182,12 +200,22 @@ export interface NonCompliantCompanyCard extends Struct.ComponentSchema {
     consumerWellbeingScore: Schema.Attribute.Integer;
     description: Schema.Attribute.Text;
     ethicalCorporateGovernanceScore: Schema.Attribute.Integer;
+    esgRiskProvider: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Sustainalytics'>;
+    esgRiskScore: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 100;
+          min: 0;
+        },
+        number
+      >;
     esgScoreUrl: Schema.Attribute.String;
     integrityTransparencyScore: Schema.Attribute.Integer;
     lifecycleEnvironmentalImpactScore: Schema.Attribute.Integer;
     name: Schema.Attribute.String;
     scoreInfoDescription: Schema.Attribute.Text &
-      Schema.Attribute.DefaultTo<'Adaptive Intelligence conducts quarterly reviews and gives companies aggregate scores.'>;
+      Schema.Attribute.DefaultTo<'Adaptive Intelligence reviews every listed company monthly and gives each an aggregate score.'>;
     scoreInfoTitle: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Understanding Scores'>;
     scoreLastUpdated: Schema.Attribute.Date;
@@ -202,6 +230,7 @@ declare module '@strapi/strapi' {
       'about.what-we-do-card': AboutWhatWeDoCard;
       'case-studies-page.faq-item': CaseStudiesPageFaqItem;
       'eco.hub-card': EcoHubCard;
+      'eco.resource-link': EcoResourceLink;
       'homepage.counter-item': HomepageCounterItem;
       'homepage.feature-list-item': HomepageFeatureListItem;
       'homepage.text-chunk': HomepageTextChunk;
