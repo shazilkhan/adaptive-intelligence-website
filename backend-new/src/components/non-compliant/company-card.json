@@ -40,13 +40,22 @@
     },
     "scoreInfoDescription": {
       "type": "text",
-      "default": "Adaptive Intelligence conducts quarterly reviews and gives companies aggregate scores."
+      "default": "Adaptive Intelligence reviews every listed company monthly and gives each an aggregate score."
     },
     "scoreLastUpdated": {
       "type": "date"
     },
     "esgScoreUrl": {
       "type": "string"
+    },
+    "esgRiskScore": {
+      "type": "decimal",
+      "min": 0,
+      "max": 100
+    },
+    "esgRiskProvider": {
+      "type": "string",
+      "default": "Sustainalytics"
     }
   },
   "config": {}

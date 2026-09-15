@@ -8,6 +8,20 @@ import SEO from '@/components/SEO';
 import IndustryCards from '@/components/NonCompliantIndustry';
 import { getStrapiApiUrl, getStrapiMediaUrl } from '@/utils/strapi';
 
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+// "2026-09-01" -> "September 2026". Manual formatting keeps SSR and client
+// output identical regardless of locale/timezone.
+const formatSweepDate = (value) => {
+  if (!value) return null;
+  const [y, m] = String(value).slice(0, 10).split('-');
+  const month = MONTHS[Number(m) - 1];
+  return month && y ? `${month} ${y}` : null;
+};
+
+const newestDate = (dates) =>
+  dates.filter(Boolean).map((v) => String(v).slice(0, 10)).sort().pop() || null;
+
 // --- Fallback company data (used until the CMS entry is populated) ---
 const FB_BIG_OIL = [
   { name: 'ExxonMobil', description: 'Long-documented history of funding climate denial research while internally acknowledging climate risk since the 1970s.', adaptiveScore: 1 },
@@ -78,6 +92,13 @@ const DivestmentsPage = ({ pageData }) => {
     },
   ];
 
+  // "Fresh sweep every month": show when the list was last reviewed. Uses the
+  // page-level lastSweepDate, else the newest scoreLastUpdated across cards.
+  const lastSweep = formatSweepDate(
+    d.lastSweepDate || newestDate(industries.flatMap((ind) => ind.companies.map((c) => c.scoreLastUpdated)))
+  );
+  const sweepCadence = d.sweepCadenceText || 'Refreshed monthly';
+
   const qualificationsBullets = (d.qualificationsList || FB_QUALIFICATIONS)
     .split('\n')
     .map((line) => line.trim())
@@ -147,6 +168,19 @@ const DivestmentsPage = ({ pageData }) => {
 
       {/* Industry sections */}
       <div className="industries-band">
+        {/* Monthly sweep status — visible proof the list is kept current */}
+        <div className="container sweep-status-wrap">
+          <div className="sweep-status" role="status">
+            <span className="sweep-dot" aria-hidden="true" />
+            <span className="sweep-cadence">{sweepCadence}</span>
+            {lastSweep && (
+              <>
+                <span className="sweep-sep" aria-hidden="true">·</span>
+                <span className="sweep-date">Last reviewed {lastSweep}</span>
+              </>
+            )}
+          </div>
+        </div>
         {industries.map((ind, idx) => (
           <section key={idx} className={`industry-section ${idx % 2 === 1 ? 'industry-alt' : ''} pt-100 pb-100 md-pt-60 md-pb-60`}>
             <div className="container">
@@ -261,6 +295,16 @@ const DivestmentsPage = ({ pageData }) => {
 
         /* Industry sections */
         .industries-band { background: #ffffff; }
+        .sweep-status-wrap { padding-top: 70px; margin-bottom: -40px; position: relative; z-index: 1; }
+        .sweep-status {
+          display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px 10px;
+          margin: 0 auto; padding: 12px 22px; width: fit-content; max-width: 100%;
+          border: 1px solid #ececf1; border-radius: 999px; background: #f8f9fa;
+          color: #151937; font-size: 0.9rem; font-weight: 500;
+        }
+        .sweep-dot { width: 9px; height: 9px; border-radius: 50%; background: #2e7d32; box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.15); }
+        .sweep-sep { color: #b3b3bd; }
+        .sweep-date { color: #666; font-weight: 400; }
         .industry-section { background: #ffffff; }
         .industry-alt { background: #f8f9fa; }
         .industry-desc { max-width: 820px; margin-left: auto; margin-right: auto; }

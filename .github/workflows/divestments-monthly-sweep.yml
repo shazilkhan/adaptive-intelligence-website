@@ -1,0 +1,40 @@
+name: Divestments monthly sweep
+
+# Opens a checklist issue on the 1st of every month listing every company card
+# on /divestments with its last-updated date, flagging any that haven't been
+# refreshed in the last 31 days. Optional Slack ping via SLACK_WEBHOOK_URL.
+# Needs no secrets to run — Strapi's public API and GITHUB_TOKEN are enough.
+
+on:
+  schedule:
+    - cron: '0 13 1 * *' # 1st of the month, 13:00 UTC (09:00 ET)
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build sweep report
+        env:
+          STRAPI_API_URL: ${{ vars.STRAPI_API_URL || 'https://admin.adaptiveintelligence.online' }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          REPORT_FILE: sweep-report.md
+        run: node scripts/divestments-sweep-report.mjs
+
+      - name: Open sweep issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create divestments-sweep --description "Monthly Divestments card refresh" --color FF1292 --force
+          TITLE="Divestments sweep — $(date -u +'%B %Y')"
+          gh issue create --title "$TITLE" --body-file sweep-report.md --label divestments-sweep

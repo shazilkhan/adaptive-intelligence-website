@@ -101,6 +101,13 @@
       "component": "non-compliant.company-card",
       "repeatable": true
     },
+    "lastSweepDate": {
+      "type": "date"
+    },
+    "sweepCadenceText": {
+      "type": "string",
+      "default": "Refreshed monthly"
+    },
     "scoringTitle": {
       "type": "string"
     },

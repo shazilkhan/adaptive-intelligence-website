@@ -40,7 +40,7 @@ const InfoIcon = () => (
   </svg>
 );
 
-const DEFAULT_SCORE_INFO = 'Adaptive Intelligence conducts quarterly reviews and gives companies aggregate scores.';
+const DEFAULT_SCORE_INFO = 'Adaptive Intelligence reviews every listed company monthly and gives each an aggregate score.';
 
 const formatScoreDate = (value) => {
   if (!value) return 'Not yet provided';
@@ -49,6 +49,62 @@ const formatScoreDate = (value) => {
   if (parts.length !== 3) return value;
 
   return `${parts[1]}/${parts[2]}/${parts[0]}`;
+};
+
+/**
+ * ESG risk rating, on the same 0–100 scale and category bands Sustainalytics
+ * (Morningstar) uses, so a card's number can be compared directly with the
+ * public Sustainalytics rating for that company. Higher = more unmanaged risk.
+ * https://www.sustainalytics.com/esg-ratings
+ */
+export const ESG_RISK_BANDS = [
+  { label: 'Negligible', max: 10, color: '#2e7d32' },
+  { label: 'Low', max: 20, color: '#7cb342' },
+  { label: 'Medium', max: 30, color: '#f9a825' },
+  { label: 'High', max: 40, color: '#ef6c00' },
+  { label: 'Severe', max: Infinity, color: '#c62828' },
+];
+
+export const getEsgRiskBand = (score) => {
+  const n = Number(score);
+  if (score === null || score === undefined || score === '' || Number.isNaN(n)) return null;
+  return ESG_RISK_BANDS.find((band) => n < band.max) || ESG_RISK_BANDS[ESG_RISK_BANDS.length - 1];
+};
+
+const formatRiskScore = (score) => {
+  const n = Number(score);
+  return Number.isInteger(n) ? String(n) : n.toFixed(1);
+};
+
+const EsgRiskBadge = ({ company, tabIndex }) => {
+  const band = getEsgRiskBand(company.esgRiskScore);
+  if (!band) return null;
+
+  const provider = company.esgRiskProvider || 'Sustainalytics';
+  const content = (
+    <>
+      <span className="nc-risk-label">{provider} ESG Risk</span>
+      <span className="nc-risk-value">
+        <span className="nc-risk-dot" style={{ background: band.color }} aria-hidden="true" />
+        {formatRiskScore(company.esgRiskScore)} · {band.label}
+      </span>
+    </>
+  );
+
+  return company.esgScoreUrl ? (
+    <a
+      className="nc-risk-badge"
+      href={company.esgScoreUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      tabIndex={tabIndex}
+      title={`View ${company.name}'s ESG rating`}
+    >
+      {content}
+    </a>
+  ) : (
+    <span className="nc-risk-badge">{content}</span>
+  );
 };
 
 const StarRating = ({ score = 0, label = 'Adaptive score' }) => {
@@ -93,6 +149,23 @@ const ScoreInfoModal = ({ company, onClose }) => {
         <p className="nc-score-modal-copy">
           {company.scoreInfoDescription || DEFAULT_SCORE_INFO}
         </p>
+        {getEsgRiskBand(company.esgRiskScore) && (
+          <>
+            <div className="nc-score-modal-divider" />
+            <p className="nc-score-modal-copy">
+              <span className="nc-score-modal-strong">{company.esgRiskProvider || 'Sustainalytics'} ESG Risk Rating:</span>{' '}
+              {formatRiskScore(company.esgRiskScore)} ({getEsgRiskBand(company.esgRiskScore).label})
+            </p>
+            <ul className="nc-risk-legend" aria-label="ESG risk rating bands">
+              {ESG_RISK_BANDS.map((band, i) => (
+                <li key={band.label}>
+                  <span className="nc-risk-dot" style={{ background: band.color }} aria-hidden="true" />
+                  {band.label} {i === 0 ? `0–${band.max}` : band.max === Infinity ? `${ESG_RISK_BANDS[i - 1].max}+` : `${ESG_RISK_BANDS[i - 1].max}–${band.max}`}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
         <div className="nc-score-modal-divider" />
         <p className="nc-score-modal-date">
           <span>Score Last Updated:</span> {formatScoreDate(company.scoreLastUpdated)}
@@ -158,7 +231,9 @@ const CompanyCard = ({ company }) => {
                 <InfoIcon />
               </button>
             </div>
-            {company.esgScoreUrl ? (
+            {getEsgRiskBand(company.esgRiskScore) ? (
+              <EsgRiskBadge company={company} tabIndex={isFlipped ? -1 : 0} />
+            ) : company.esgScoreUrl ? (
               <a
                 className="nc-esg-link"
                 href={company.esgScoreUrl}
@@ -382,6 +457,43 @@ const IndustryCards = ({ companies = [] }) => {
         }
         .nc-esg-link:hover { color: #ff1292; }
         .nc-esg-static { cursor: default; }
+
+        /* Sustainalytics-comparable ESG risk badge (shown when esgRiskScore is set) */
+        .nc-risk-badge {
+          display: inline-flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 3px;
+          color: #151937;
+          text-decoration: none;
+          text-align: right;
+        }
+        .nc-risk-label { font-size: 0.68rem; color: #777; line-height: 1; white-space: nowrap; }
+        .nc-risk-value {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.9rem;
+          font-weight: 600;
+          line-height: 1;
+          white-space: nowrap;
+          transition: color 0.25s ease;
+        }
+        a.nc-risk-badge:hover .nc-risk-value { color: #ff1292; }
+        .nc-risk-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+        .nc-risk-legend {
+          list-style: none;
+          margin: 14px 0 0;
+          padding: 0;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 8px 16px;
+          font-size: 0.85rem;
+          color: #555;
+        }
+        .nc-risk-legend li { display: inline-flex; align-items: center; gap: 6px; }
+        .nc-score-modal-strong { font-weight: 600; }
 
         /* Flip side */
         .nc-criteria-title {
